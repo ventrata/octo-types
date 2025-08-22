@@ -10,6 +10,6 @@
 		"emitDeclarationOnly": true,
 		"outDir": "dist"
 	},
-	"include": ["src/**/*.ts"],
-	"exclude": ["node_modules", "src/utils/**/*"]
+	"include": ["src/models/**/*.ts", "src/schemas/**/*.ts", "src/index.ts"],
+	"exclude": ["node_modules", "src/utils/**/*", "src/rules/**/*"]
 }
