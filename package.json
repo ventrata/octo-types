@@ -28,7 +28,6 @@
 		"lint": "biome lint",
 		"lint:fix": "biome lint --write .",
 		"audit": "npm audit",
-		"test": "echo 'No tests configured'",
 		"prepublishOnly": "npm run generate && npm run build"
 	},
 	"peerDependencies": {
