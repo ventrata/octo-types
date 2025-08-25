@@ -29,7 +29,8 @@
 		"lint": "biome lint",
 		"lint:fix": "biome lint --write .",
 		"audit": "npm audit",
-		"prepublishOnly": "npm run generate && npm run build"
+		"prepare": "npm run build",
+		"test": ""
 	},
 	"peerDependencies": {
 		"zod": "^3.25.0"
