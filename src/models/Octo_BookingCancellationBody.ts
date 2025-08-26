@@ -3,13 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Octo_BookingCancellationBody = {
-  /**
-   * A text value describing why the cancellation happened.
-   */
-  reason?: string;
-  /**
-   * Whether you want OCTO Cloud to email the guest a copy of their receipt and tickets. (defaults to false)
-   */
-  force?: boolean;
+	/**
+	 * A text value describing why the cancellation happened.
+	 */
+	reason?: string;
+	/**
+	 * Whether you want OCTO Cloud to email the guest a copy of their receipt and tickets. (defaults to false)
+	 */
+	force?: boolean;
 };
-

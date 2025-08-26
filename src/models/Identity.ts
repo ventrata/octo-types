@@ -3,10 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Identity = {
-  /**
-   * A unique ID / UUID generated to identify the identity
-   */
-  id: string;
-  key: string;
+	/**
+	 * A unique ID / UUID generated to identify the identity
+	 */
+	id: string;
+	key: string;
 };
-

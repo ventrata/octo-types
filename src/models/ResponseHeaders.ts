@@ -4,4 +4,3 @@
 /* eslint-disable */
 import type { Octo_ResponseHeaders } from './Octo_ResponseHeaders';
 export type ResponseHeaders = Octo_ResponseHeaders;
-

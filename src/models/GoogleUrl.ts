@@ -3,9 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type GoogleUrl = {
-  /**
-   * Optional URL linking to the Google listing or resource.
-   */
-  url: string | null;
+	/**
+	 * Optional URL linking to the Google listing or resource.
+	 */
+	url: string | null;
 };
-

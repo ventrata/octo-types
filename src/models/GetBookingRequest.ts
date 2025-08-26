@@ -4,4 +4,3 @@
 /* eslint-disable */
 import type { Octo_GetBookingRequest } from './Octo_GetBookingRequest';
 export type GetBookingRequest = Octo_GetBookingRequest;
-

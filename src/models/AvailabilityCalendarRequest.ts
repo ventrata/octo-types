@@ -4,6 +4,5 @@
 /* eslint-disable */
 import type { AvailabilityCalendarBody } from './AvailabilityCalendarBody';
 export type AvailabilityCalendarRequest = {
-  body: AvailabilityCalendarBody;
+	body: AvailabilityCalendarBody;
 };
-

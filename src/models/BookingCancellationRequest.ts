@@ -4,7 +4,6 @@
 /* eslint-disable */
 import type { BookingCancellationBody } from './BookingCancellationBody';
 import type { Octo_BookingCancellationRequest } from './Octo_BookingCancellationRequest';
-export type BookingCancellationRequest = (Octo_BookingCancellationRequest & {
-  body: BookingCancellationBody;
-});
-
+export type BookingCancellationRequest = Octo_BookingCancellationRequest & {
+	body: BookingCancellationBody;
+};

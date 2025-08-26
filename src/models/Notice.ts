@@ -3,9 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Notice = {
-  id: string;
-  title: string | null;
-  shortDescription: string;
-  coverImageUrl: string | null;
+	id: string;
+	title: string | null;
+	shortDescription: string;
+	coverImageUrl: string | null;
 };
-

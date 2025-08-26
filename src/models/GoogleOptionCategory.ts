@@ -3,9 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type GoogleOptionCategory = {
-  /**
-   * Label representing the Google option category.
-   */
-  label: string;
+	/**
+	 * Label representing the Google option category.
+	 */
+	label: string;
 };
-

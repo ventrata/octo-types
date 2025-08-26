@@ -12,6 +12,14 @@ import type { Octo_ErrorInvalidUnitID } from './Octo_ErrorInvalidUnitID';
 import type { Octo_ErrorUnauthorized } from './Octo_ErrorUnauthorized';
 import type { Octo_ErrorUnprocessableEntity } from './Octo_ErrorUnprocessableEntity';
 export type Octo_BookingConfirmationErrorResponse = {
-  body: (Octo_ErrorInvalidProductID | Octo_ErrorInvalidOptionID | Octo_ErrorInvalidUnitID | Octo_ErrorInvalidAvailabilityID | Octo_ErrorInvalidBookingUUID | Octo_ErrorUnprocessableEntity | Octo_ErrorUnauthorized | Octo_ErrorInternalServerError | Octo_ErrorForbidden);
+	body:
+		| Octo_ErrorInvalidProductID
+		| Octo_ErrorInvalidOptionID
+		| Octo_ErrorInvalidUnitID
+		| Octo_ErrorInvalidAvailabilityID
+		| Octo_ErrorInvalidBookingUUID
+		| Octo_ErrorUnprocessableEntity
+		| Octo_ErrorUnauthorized
+		| Octo_ErrorInternalServerError
+		| Octo_ErrorForbidden;
 };
-

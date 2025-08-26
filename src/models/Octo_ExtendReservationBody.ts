@@ -3,6 +3,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Octo_ExtendReservationBody = {
-  expirationMinutes?: number;
+	expirationMinutes?: number;
 };
-

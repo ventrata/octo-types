@@ -3,8 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type GiftPayment = {
-  amount: number;
-  currency: string;
-  giftCode: string;
+	amount: number;
+	currency: string;
+	giftCode: string;
 };
-

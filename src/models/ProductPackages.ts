@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ProductPackages = {
-  isPackage?: boolean;
-  packageBookingAvailabilityRequired?: boolean;
+	isPackage?: boolean;
+	packageBookingAvailabilityRequired?: boolean;
 };
-

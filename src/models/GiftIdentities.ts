@@ -4,7 +4,6 @@
 /* eslint-disable */
 import type { Identity } from './Identity';
 export type GiftIdentities = {
-  identity?: Identity;
-  identityId?: string;
+	identity?: Identity;
+	identityId?: string;
 };
-

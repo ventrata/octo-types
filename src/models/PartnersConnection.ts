@@ -3,17 +3,16 @@
 /* tslint:disable */
 /* eslint-disable */
 export type PartnersConnection = {
-  /**
-   * Unique identifier for the GetYourGuide connection.
-   */
-  id: string;
-  /**
-   * Display name for the connection.
-   */
-  name: string;
-  /**
-   * Type of the connection.
-   */
-  type: string;
+	/**
+	 * Unique identifier for the GetYourGuide connection.
+	 */
+	id: string;
+	/**
+	 * Display name for the connection.
+	 */
+	name: string;
+	/**
+	 * Type of the connection.
+	 */
+	type: string;
 };
-

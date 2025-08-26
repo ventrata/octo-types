@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum DurationUnit {
-  MINUTE = 'minute',
-  HOUR = 'hour',
-  DAY = 'day',
+	MINUTE = 'minute',
+	HOUR = 'hour',
+	DAY = 'day',
 }

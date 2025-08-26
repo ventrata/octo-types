@@ -4,4 +4,3 @@
 /* eslint-disable */
 import type { Octo_GetProductsRequest } from './Octo_GetProductsRequest';
 export type GetProductsRequest = Octo_GetProductsRequest;
-

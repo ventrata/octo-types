@@ -3,9 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Octo_GetProductRequest = {
-  /**
-   * The product id
-   */
-  id: string;
+	/**
+	 * The product id
+	 */
+	id: string;
 };
-

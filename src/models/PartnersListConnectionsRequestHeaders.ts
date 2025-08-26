@@ -4,4 +4,3 @@
 /* eslint-disable */
 import type { RequestHeaders } from './RequestHeaders';
 export type PartnersListConnectionsRequestHeaders = RequestHeaders;
-

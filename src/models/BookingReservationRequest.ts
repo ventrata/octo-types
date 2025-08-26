@@ -4,6 +4,5 @@
 /* eslint-disable */
 import type { BookingReservationBody } from './BookingReservationBody';
 export type BookingReservationRequest = {
-  body: BookingReservationBody;
+	body: BookingReservationBody;
 };
-

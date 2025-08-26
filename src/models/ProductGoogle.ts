@@ -4,6 +4,5 @@
 /* eslint-disable */
 import type { GoogleOptions } from './GoogleOptions';
 export type ProductGoogle = {
-  googleOptions?: Array<GoogleOptions>;
+	googleOptions?: Array<GoogleOptions>;
 };
-

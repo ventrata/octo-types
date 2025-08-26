@@ -4,4 +4,3 @@
 /* eslint-disable */
 import type { Octo_ExtendReservationErrorResponse } from './Octo_ExtendReservationErrorResponse';
 export type ExtendReservationErrorResponse = Octo_ExtendReservationErrorResponse;
-

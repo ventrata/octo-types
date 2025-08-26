@@ -3,10 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type BrandContact = {
-  name: string | null;
-  email: string | null;
-  telephone: string | null;
-  address: string | null;
-  website: string | null;
+	name: string | null;
+	email: string | null;
+	telephone: string | null;
+	address: string | null;
+	website: string | null;
 };
-

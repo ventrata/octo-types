@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum ItineraryItemType {
-  START = 'START',
-  POI = 'POI',
-  END = 'END',
-  EVENT = 'EVENT',
+	START = 'START',
+	POI = 'POI',
+	END = 'END',
+	EVENT = 'EVENT',
 }

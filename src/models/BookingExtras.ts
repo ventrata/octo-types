@@ -4,6 +4,5 @@
 /* eslint-disable */
 import type { ExtraItem } from './ExtraItem';
 export type BookingExtras = {
-  extraItems?: Array<ExtraItem>;
+	extraItems?: Array<ExtraItem>;
 };
-

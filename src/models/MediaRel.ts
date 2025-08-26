@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum MediaRel {
-  LOGO = 'LOGO',
-  COVER = 'COVER',
-  GALLERY = 'GALLERY',
+	LOGO = 'LOGO',
+	COVER = 'COVER',
+	GALLERY = 'GALLERY',
 }

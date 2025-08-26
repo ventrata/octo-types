@@ -3,13 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 export type SelectOption = {
-  /**
-   * The label that will be shown to the customer.
-   */
-  label: string;
-  /**
-   * The value that will be sent to the supplier.
-   */
-  value: string;
+	/**
+	 * The label that will be shown to the customer.
+	 */
+	label: string;
+	/**
+	 * The value that will be sent to the supplier.
+	 */
+	value: string;
 };
-

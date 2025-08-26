@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum CancellationCutoffUnit {
-  HOUR = 'hour',
-  MINUTE = 'minute',
-  DAY = 'day',
+	HOUR = 'hour',
+	MINUTE = 'minute',
+	DAY = 'day',
 }

@@ -4,4 +4,3 @@
 /* eslint-disable */
 import type { Octo_BookingConfirmationErrorResponse } from './Octo_BookingConfirmationErrorResponse';
 export type BookingConfirmationErrorResponse = Octo_BookingConfirmationErrorResponse;
-

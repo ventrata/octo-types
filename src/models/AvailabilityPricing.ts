@@ -5,13 +5,12 @@
 import type { Pricing } from './Pricing';
 import type { PricingUnit } from './PricingUnit';
 export type AvailabilityPricing = {
-  /**
-   * Is on the object when Pricing capability is requested.
-   */
-  unitPricing?: Array<PricingUnit>;
-  /**
-   * Is on the object when Pricing capability is requested.
-   */
-  pricing?: Array<Pricing>;
+	/**
+	 * Is on the object when Pricing capability is requested.
+	 */
+	unitPricing?: Array<PricingUnit>;
+	/**
+	 * Is on the object when Pricing capability is requested.
+	 */
+	pricing?: Array<Pricing>;
 };
-

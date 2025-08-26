@@ -3,14 +3,13 @@
 /* tslint:disable */
 /* eslint-disable */
 export type GoogleLocation = {
-  /**
-   * Wrapper object containing the place ID.
-   */
-  location: {
-    /**
-     * Google Place ID for the location.
-     */
-    place_id: string;
-  };
+	/**
+	 * Wrapper object containing the place ID.
+	 */
+	location: {
+		/**
+		 * Google Place ID for the location.
+		 */
+		place_id: string;
+	};
 };
-

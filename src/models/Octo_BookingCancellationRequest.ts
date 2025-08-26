@@ -4,10 +4,9 @@
 /* eslint-disable */
 import type { Octo_BookingCancellationBody } from './Octo_BookingCancellationBody';
 export type Octo_BookingCancellationRequest = {
-  /**
-   * The UUID of the booking
-   */
-  uuid: string;
-  body: Octo_BookingCancellationBody;
+	/**
+	 * The UUID of the booking
+	 */
+	uuid: string;
+	body: Octo_BookingCancellationBody;
 };
-

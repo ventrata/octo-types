@@ -4,4 +4,3 @@
 /* eslint-disable */
 import type { Octo_BaseError } from './Octo_BaseError';
 export type Octo_ErrorBadRequest = Octo_BaseError;
-

@@ -4,6 +4,5 @@
 /* eslint-disable */
 import type { Extra } from './Extra';
 export type OptionExtras = {
-  extras?: Array<Extra>;
+	extras?: Array<Extra>;
 };
-

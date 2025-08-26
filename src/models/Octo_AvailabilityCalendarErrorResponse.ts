@@ -9,6 +9,11 @@ import type { Octo_ErrorInvalidOptionID } from './Octo_ErrorInvalidOptionID';
 import type { Octo_ErrorInvalidProductID } from './Octo_ErrorInvalidProductID';
 import type { Octo_ErrorUnauthorized } from './Octo_ErrorUnauthorized';
 export type Octo_AvailabilityCalendarErrorResponse = {
-  body: (Octo_ErrorInvalidProductID | Octo_ErrorInvalidOptionID | Octo_ErrorBadRequest | Octo_ErrorUnauthorized | Octo_ErrorInternalServerError | Octo_ErrorForbidden);
+	body:
+		| Octo_ErrorInvalidProductID
+		| Octo_ErrorInvalidOptionID
+		| Octo_ErrorBadRequest
+		| Octo_ErrorUnauthorized
+		| Octo_ErrorInternalServerError
+		| Octo_ErrorForbidden;
 };
-

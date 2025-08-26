@@ -235,7 +235,6 @@ export { WebhookEvent } from './models/WebhookEvent';
 export type { WhoIAm } from './models/WhoIAm';
 export type { WhoIAmRequest } from './models/WhoIAmRequest';
 
-
 // Zod Schemas
 export { whoIAmRequestSchema } from './schemas/WhoIAmRequest';
 export { whoIAmSchema } from './schemas/WhoIAm';

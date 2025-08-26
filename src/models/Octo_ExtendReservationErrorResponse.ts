@@ -8,6 +8,10 @@ import type { Octo_ErrorInvalidBookingUUID } from './Octo_ErrorInvalidBookingUUI
 import type { Octo_ErrorUnauthorized } from './Octo_ErrorUnauthorized';
 import type { Octo_ErrorUnprocessableEntity } from './Octo_ErrorUnprocessableEntity';
 export type Octo_ExtendReservationErrorResponse = {
-  body: (Octo_ErrorInvalidBookingUUID | Octo_ErrorUnprocessableEntity | Octo_ErrorUnauthorized | Octo_ErrorInternalServerError | Octo_ErrorForbidden);
+	body:
+		| Octo_ErrorInvalidBookingUUID
+		| Octo_ErrorUnprocessableEntity
+		| Octo_ErrorUnauthorized
+		| Octo_ErrorInternalServerError
+		| Octo_ErrorForbidden;
 };
-

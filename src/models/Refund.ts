@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum Refund {
-  FULL = 'FULL',
-  PARTIAL = 'PARTIAL',
-  NONE = 'NONE',
+	FULL = 'FULL',
+	PARTIAL = 'PARTIAL',
+	NONE = 'NONE',
 }

@@ -4,4 +4,3 @@
 /* eslint-disable */
 import type { Octo_AvailabilityCalendarErrorResponse } from './Octo_AvailabilityCalendarErrorResponse';
 export type AvailabilityCalendarErrorResponse = Octo_AvailabilityCalendarErrorResponse;
-

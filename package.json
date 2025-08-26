@@ -18,7 +18,7 @@
 		"generate:models": "openapi --input src/openapi.yaml --output src/ --exportCore false --exportServices false --client none --indent 2",
 		"generate:schemas": "ts-node src/utils/generate-schemas.ts",
 		"clean": "rm -rf dist",
-		"generate": "npm run get:openapi:yaml && npm run generate:models && npm run generate:schemas",
+		"generate": "npm run get:openapi:yaml && npm run generate:models && npm run generate:schemas && npm run fix",
 		"build": "npx tsc",
 		"build:dry": "tsc --noEmit",
 		"build:dry:ci": "tsc --noEmit",
