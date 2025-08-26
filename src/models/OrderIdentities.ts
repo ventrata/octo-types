@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { Identity } from './Identity';
 export type OrderIdentities = {
-	identity?: Identity;
-	identityId?: string;
+  identity?: Identity;
+  identityId?: string;
 };
+

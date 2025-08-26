@@ -3,7 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type BookingCart = {
-	primary?: boolean;
-	orderId?: string;
-	orderReference?: string;
+  primary?: boolean;
+  orderId?: string;
+  orderReference?: string;
 };
+

@@ -3,6 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum DeliveryMethod {
-	VOUCHER = 'VOUCHER',
-	TICKET = 'TICKET',
+  VOUCHER = 'VOUCHER',
+  TICKET = 'TICKET',
 }

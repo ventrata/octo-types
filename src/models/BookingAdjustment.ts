@@ -5,17 +5,18 @@
 import type { AdjustmentDiscount } from './AdjustmentDiscount';
 import type { AdjustmentPer } from './AdjustmentPer';
 export type BookingAdjustment = {
-	/**
-	 * The amount of the adjustment.
-	 */
-	per: AdjustmentPer;
-	/**
-	 * The amount of the adjustment.
-	 */
-	amount: number;
-	/**
-	 * Optional notes for the adjustment.
-	 */
-	notes: string | null;
-	netDiscount: AdjustmentDiscount;
+  /**
+   * The amount of the adjustment.
+   */
+  per: AdjustmentPer;
+  /**
+   * The amount of the adjustment.
+   */
+  amount: number;
+  /**
+   * Optional notes for the adjustment.
+   */
+  notes: string | null;
+  netDiscount: AdjustmentDiscount;
 };
+

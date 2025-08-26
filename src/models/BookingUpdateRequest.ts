@@ -4,5 +4,6 @@
 /* eslint-disable */
 import type { BookingUpdateBody } from './BookingUpdateBody';
 export type BookingUpdateRequest = {
-	body: BookingUpdateBody;
+  body: BookingUpdateBody;
 };
+

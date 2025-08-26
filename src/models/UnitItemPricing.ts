@@ -4,8 +4,9 @@
 /* eslint-disable */
 import type { Pricing } from './Pricing';
 export type UnitItemPricing = {
-	/**
-	 * Is on the object when Pricing capability is requested.
-	 */
-	pricing?: Pricing;
+  /**
+   * Is on the object when Pricing capability is requested.
+   */
+  pricing?: Pricing;
 };
+

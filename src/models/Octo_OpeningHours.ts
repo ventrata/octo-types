@@ -6,12 +6,13 @@
  * Defines the opening hours for this availability, even for start time-based availability. Supports multiple periods for breaks in the day.
  */
 export type Octo_OpeningHours = {
-	/**
-	 * The opening time
-	 */
-	from: string;
-	/**
-	 * The closing time
-	 */
-	to: string;
+  /**
+   * The opening time
+   */
+  from: string;
+  /**
+   * The closing time
+   */
+  to: string;
 };
+

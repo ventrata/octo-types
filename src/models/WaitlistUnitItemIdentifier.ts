@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type WaitlistUnitItemIdentifier = {
-	id: string;
-	quantity?: number;
+  id: string;
+  quantity?: number;
 };
+

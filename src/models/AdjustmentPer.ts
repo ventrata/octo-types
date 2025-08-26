@@ -6,7 +6,7 @@
  * The type of adjustment. Possible values are `BOOKING`, `UNIT` or `PERCENTAGE`
  */
 export enum AdjustmentPer {
-	BOOKING = 'BOOKING',
-	UNIT = 'UNIT',
-	PERCENTAGE = 'PERCENTAGE',
+  BOOKING = 'BOOKING',
+  UNIT = 'UNIT',
+  PERCENTAGE = 'PERCENTAGE',
 }

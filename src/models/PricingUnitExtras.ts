@@ -4,5 +4,6 @@
 /* eslint-disable */
 import type { Pricing } from './Pricing';
 export type PricingUnitExtras = {
-	extraPricing?: Array<Pricing>;
+  extraPricing?: Array<Pricing>;
 };
+

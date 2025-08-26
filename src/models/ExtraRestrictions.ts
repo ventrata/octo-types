@@ -3,20 +3,21 @@
 /* tslint:disable */
 /* eslint-disable */
 export type ExtraRestrictions = {
-	/**
-	 * Indicates whether this restriction is the default one.
-	 */
-	default: boolean;
-	/**
-	 * Specifies if this restriction is required.
-	 */
-	required: boolean;
-	/**
-	 * Minimum quantity required.
-	 */
-	minQuantity: number;
-	/**
-	 * Maximum quantity allowed (optional).
-	 */
-	maxQuantity: number | null;
+  /**
+   * Indicates whether this restriction is the default one.
+   */
+  default: boolean;
+  /**
+   * Specifies if this restriction is required.
+   */
+  required: boolean;
+  /**
+   * Minimum quantity required.
+   */
+  minQuantity: number;
+  /**
+   * Maximum quantity allowed (optional).
+   */
+  maxQuantity: number | null;
 };
+

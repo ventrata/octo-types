@@ -3,7 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Image = {
-	url: string;
-	title: string | null;
-	caption: string | null;
+  url: string;
+  title: string | null;
+  caption: string | null;
 };
+

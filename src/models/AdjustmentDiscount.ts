@@ -6,9 +6,9 @@
  * The type of discount. Possible values are `NONE`, `FULL`, `SPLIT`, `PRORATED` or `MANUAL`
  */
 export enum AdjustmentDiscount {
-	NONE = 'NONE',
-	FULL = 'FULL',
-	SPLIT = 'SPLIT',
-	PRORATED = 'PRORATED',
-	MANUAL = 'MANUAL',
+  NONE = 'NONE',
+  FULL = 'FULL',
+  SPLIT = 'SPLIT',
+  PRORATED = 'PRORATED',
+  MANUAL = 'MANUAL',
 }

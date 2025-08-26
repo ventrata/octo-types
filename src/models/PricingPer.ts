@@ -3,6 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum PricingPer {
-	BOOKING = 'BOOKING',
-	UNIT = 'UNIT',
+  BOOKING = 'BOOKING',
+  UNIT = 'UNIT',
 }

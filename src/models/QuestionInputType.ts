@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum QuestionInputType {
-	RADIO = 'radio',
-	SELECT = 'select',
-	TEXT_AREA = 'textArea',
+  RADIO = 'radio',
+  SELECT = 'select',
+  TEXT_AREA = 'textArea',
 }

@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { Destination } from './Destination';
 export type SupplierContent = {
-	country?: string | null;
-	destinations?: Array<Destination>;
+  country?: string | null;
+  destinations?: Array<Destination>;
 };
+

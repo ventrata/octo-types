@@ -4,9 +4,10 @@
 /* eslint-disable */
 import type { QuestionAnswer } from './QuestionAnswer';
 export type BookingQuestions = {
-	/**
-	 * An array of questions and andswers that will be included in the booking.
-	 * This field is only present when octo/questions capability is requested.
-	 */
-	questionAnswers?: Array<QuestionAnswer>;
+  /**
+   * An array of questions and andswers that will be included in the booking.
+   * This field is only present when octo/questions capability is requested.
+   */
+  questionAnswers?: Array<QuestionAnswer>;
 };
+

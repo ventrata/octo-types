@@ -7956,14 +7956,14 @@ components:
     OfferDiscount:
       type: object
       required:
-        - original
+        - net
         - retail
         - includedTaxes
       properties:
-        original:
+        net:
           type: number
           format: float
-          description: Original price before discount.
+          description: Net price before discount.
           example: 150
         retail:
           type: number
@@ -7977,7 +7977,7 @@ components:
           description: List of taxes included in the discounted price.
           example: []
       example:
-        original: 150
+        net: 150
         retail: 120
         includedTaxes: []
     OfferRestrictions:

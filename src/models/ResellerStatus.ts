@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum ResellerStatus {
-	ACTIVE = 'ACTIVE',
-	DISABLED = 'DISABLED',
-	DRAFT = 'DRAFT',
+  ACTIVE = 'ACTIVE',
+  DISABLED = 'DISABLED',
+  DRAFT = 'DRAFT',
 }

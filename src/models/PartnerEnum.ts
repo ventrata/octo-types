@@ -3,5 +3,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum PartnerEnum {
-	GET_YOUR_GUIDE = 'GetYourGuide',
+  GET_YOUR_GUIDE = 'GetYourGuide',
 }

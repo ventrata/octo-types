@@ -4,3 +4,4 @@
 /* eslint-disable */
 import type { Octo_AvailabilityCheckErrorResponse } from './Octo_AvailabilityCheckErrorResponse';
 export type AvailabilityCheckErrorResponse = Octo_AvailabilityCheckErrorResponse;
+

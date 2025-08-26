@@ -4,5 +4,6 @@
 /* eslint-disable */
 import type { AvailabilityCheckBody } from './AvailabilityCheckBody';
 export type AvailabilityCheckRequest = {
-	body: AvailabilityCheckBody;
+  body: AvailabilityCheckBody;
 };
+

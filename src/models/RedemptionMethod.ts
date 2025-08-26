@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum RedemptionMethod {
-	DIGITAL = 'DIGITAL',
-	PRINT = 'PRINT',
-	MANIFEST = 'MANIFEST',
+  DIGITAL = 'DIGITAL',
+  PRINT = 'PRINT',
+  MANIFEST = 'MANIFEST',
 }

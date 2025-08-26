@@ -3,6 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum WebhookEvent {
-	BOOKING_UPDATE = 'booking_update',
-	AVAILABILITY_UPDATE = 'availability_update',
+  BOOKING_UPDATE = 'booking_update',
+  AVAILABILITY_UPDATE = 'availability_update',
 }

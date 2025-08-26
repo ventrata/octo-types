@@ -4,8 +4,9 @@
 /* eslint-disable */
 import type { QuestionAnswer } from './QuestionAnswer';
 export type UnitItemQuestions = {
-	/**
-	 * Questions for this unit item. Only present when octo/questions capability is requested.
-	 */
-	questionAnswers?: Array<QuestionAnswer>;
+  /**
+   * Questions for this unit item. Only present when octo/questions capability is requested.
+   */
+  questionAnswers?: Array<QuestionAnswer>;
 };
+

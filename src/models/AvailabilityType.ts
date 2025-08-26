@@ -3,6 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum AvailabilityType {
-	START_TIME = 'START_TIME',
-	OPENING_HOURS = 'OPENING_HOURS',
+  START_TIME = 'START_TIME',
+  OPENING_HOURS = 'OPENING_HOURS',
 }

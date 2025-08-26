@@ -4,5 +4,6 @@
 /* eslint-disable */
 import type { OfferDiscount } from './OfferDiscount';
 export type PricingOffers = {
-	offerDiscount?: OfferDiscount | null;
+  offerDiscount?: OfferDiscount | null;
 };
+

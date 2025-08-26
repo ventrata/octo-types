@@ -5,12 +5,13 @@
 import type { DurationUnit } from './DurationUnit';
 import type { Notice } from './Notice';
 export type BookingContent = {
-	duration?: string;
-	durationAmount?: number;
-	durationUnit?: DurationUnit;
-	meetingLocalDateTime?: string | null;
-	meetingPoint?: string | null;
-	meetingPointCoordinates?: string | null;
-	notices?: Array<Notice>;
-	termsAccepted?: boolean;
+  duration?: string;
+  durationAmount?: number;
+  durationUnit?: DurationUnit;
+  meetingLocalDateTime?: string | null;
+  meetingPoint?: string | null;
+  meetingPointCoordinates?: string | null;
+  notices?: Array<Notice>;
+  termsAccepted?: boolean;
 };
+

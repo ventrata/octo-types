@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum NetDiscount {
-	NONE = 'NONE',
-	FULL = 'FULL',
-	SPLIT = 'SPLIT',
-	PRORATED = 'PRORATED',
+  NONE = 'NONE',
+  FULL = 'FULL',
+  SPLIT = 'SPLIT',
+  PRORATED = 'PRORATED',
 }

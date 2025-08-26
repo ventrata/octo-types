@@ -4,5 +4,6 @@
 /* eslint-disable */
 import type { GiftPayment } from './GiftPayment';
 export type OrderGifts = {
-	giftPayment?: GiftPayment | null;
+  giftPayment?: GiftPayment | null;
 };
+

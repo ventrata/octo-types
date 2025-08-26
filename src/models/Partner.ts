@@ -4,12 +4,13 @@
 /* eslint-disable */
 import type { PartnerEnum } from './PartnerEnum';
 export type Partner = {
-	/**
-	 * Unique identifier for the partner.
-	 */
-	id: string;
-	/**
-	 * The display name of the partner.
-	 */
-	name: PartnerEnum;
+  /**
+   * Unique identifier for the partner.
+   */
+  id: string;
+  /**
+   * The display name of the partner.
+   */
+  name: PartnerEnum;
 };
+

@@ -3,9 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Octo_BaseError } from './Octo_BaseError';
-export type Octo_ErrorInvalidUnitID = Octo_BaseError & {
-	/**
-	 * Missing or invalid `unitId` in the request
-	 */
-	unitId: string;
-};
+export type Octo_ErrorInvalidUnitID = (Octo_BaseError & {
+  /**
+   * Missing or invalid `unitId` in the request
+   */
+  unitId: string;
+});
+

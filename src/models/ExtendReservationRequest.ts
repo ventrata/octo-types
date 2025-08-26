@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { ExtendReservationBody } from './ExtendReservationBody';
 import type { Octo_ExtendReservationRequest } from './Octo_ExtendReservationRequest';
-export type ExtendReservationRequest = Octo_ExtendReservationRequest & {
-	body: ExtendReservationBody;
-};
+export type ExtendReservationRequest = (Octo_ExtendReservationRequest & {
+  body: ExtendReservationBody;
+});
+

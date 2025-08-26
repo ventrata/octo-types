@@ -4,5 +4,6 @@
 /* eslint-disable */
 import type { GetYourGuideActivateBody } from './GetYourGuideActivateBody';
 export type GetYourGuideActivateRequest = {
-	body: GetYourGuideActivateBody;
+  body: GetYourGuideActivateBody;
 };
+
