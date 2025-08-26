@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"target": "ES2021",
+		"module": "CommonJS",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"resolveJsonModule": true,
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"outDir": "dist"
+	},
+	"include": ["src/models/**/*.ts", "src/schemas/**/*.ts", "src/index.ts"],
+	"exclude": ["node_modules", "src/utils/**/*", "src/rules/**/*"]
+}
