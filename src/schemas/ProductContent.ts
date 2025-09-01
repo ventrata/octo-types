@@ -31,6 +31,8 @@ export const productContentSchema = z.object({
 	galleryImages: z.array(imageSchema).optional(),
 	bannerImages: z.array(imageSchema).optional(),
 	googlePlaceId: z.string().optional().nullable(),
+	latitude: z.number().optional(),
+	longitude: z.number().optional(),
 	address: z.string().optional(),
 	keywords: z.array(z.string()).optional(),
 	tagline: z.string().optional(),

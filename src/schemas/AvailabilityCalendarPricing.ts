@@ -5,5 +5,5 @@ import { pricingSchema } from './Pricing';
 
 export const availabilityCalendarPricingSchema = z.object({
 	unitPricingFrom: z.array(pricingUnitSchema).optional(),
-	pricingFrom: z.array(pricingSchema).optional(),
+	pricingFrom: pricingSchema.optional(),
 });

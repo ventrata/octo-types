@@ -20,6 +20,8 @@ export const optionSchema: z.ZodSchema<Option> = z.lazy(() =>
 		internalName: z.string(),
 		reference: z.string().nullable(),
 		availabilityLocalStartTimes: z.array(z.string()),
+		availabilityLocalDateStart: z.string(),
+		availabilityLocalDateEnd: z.string().nullable(),
 		cancellationCutoff: z.string(),
 		cancellationCutoffAmount: z.number(),
 		cancellationCutoffUnit: durationUnitSchema,

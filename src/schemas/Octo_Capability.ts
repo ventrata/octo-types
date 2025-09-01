@@ -2,7 +2,7 @@
 import { z } from 'zod';
 import { octo_CapabilityIdSchema } from './Octo_CapabilityId';
 
-export const capabilitySchema = z.object({
+export const octo_CapabilitySchema = z.object({
 	id: octo_CapabilityIdSchema,
 	revision: z.number(),
 	required: z.boolean(),

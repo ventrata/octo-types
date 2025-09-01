@@ -90,7 +90,7 @@ export type Availability = {
 	/**
 	 * Is on the object when Pricing capability is requested.
 	 */
-	pricing?: Array<Pricing>;
+	pricing?: Pricing;
 	/**
 	 * Optional code used to apply a specific offer.
 	 */

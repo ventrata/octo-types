@@ -5,5 +5,5 @@ import { pricingSchema } from './Pricing';
 
 export const availabilityPricingSchema = z.object({
 	unitPricing: z.array(pricingUnitSchema).optional(),
-	pricing: z.array(pricingSchema).optional(),
+	pricing: pricingSchema.optional(),
 });

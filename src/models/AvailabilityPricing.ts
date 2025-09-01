@@ -12,5 +12,5 @@ export type AvailabilityPricing = {
 	/**
 	 * Is on the object when Pricing capability is requested.
 	 */
-	pricing?: Array<Pricing>;
+	pricing?: Pricing;
 };

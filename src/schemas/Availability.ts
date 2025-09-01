@@ -33,7 +33,7 @@ export const availabilitySchema = z.object({
 	pickupRequired: z.boolean().optional(),
 	pickupPoints: z.array(pickupPointSchema).optional(),
 	unitPricing: z.array(pricingUnitSchema).optional(),
-	pricing: z.array(pricingSchema).optional(),
+	pricing: pricingSchema.optional(),
 	offerCode: z.string().optional().nullable(),
 	offerTitle: z.string().optional().nullable(),
 	offers: z.array(offerSchema).optional(),

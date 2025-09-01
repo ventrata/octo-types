@@ -173,6 +173,8 @@ export type Product = {
 	 */
 	bannerImages?: Array<Image>;
 	googlePlaceId?: string | null;
+	latitude?: number;
+	longitude?: number;
 	address?: string;
 	keywords?: Array<string>;
 	tagline?: string;

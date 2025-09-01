@@ -21,7 +21,7 @@ export const availabilityCalendarSchema = z.object({
 	utcCutoffAt: z.string(),
 	availabilityLocalStartTimes: z.array(z.string()),
 	unitPricingFrom: z.array(pricingUnitSchema).optional(),
-	pricingFrom: z.array(pricingSchema).optional(),
+	pricingFrom: pricingSchema.optional(),
 	offerCode: z.string().optional().nullable(),
 	offerTitle: z.string().optional().nullable(),
 	offers: z.array(offerSchema).optional(),

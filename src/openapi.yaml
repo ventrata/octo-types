@@ -7,6 +7,7 @@ tags:
   - name: Products
   - name: Availability
   - name: Bookings
+  - name: Capabilities
   - name: Webhooks
   - name: WHOIAM
   - name: GetYourGuide
@@ -321,6 +322,8 @@ paths:
                                   - firstName
                                 tags: []
                                 visibleContactFields: []
+                            availabilityLocalDateStart: '2025-09-01'
+                            availabilityLocalDateEnd: null
                             tags: []
                             availabilityCutoff: 1 hour
                             availabilityCutoffAmount: 1
@@ -369,6 +372,8 @@ paths:
                               - firstName
                             tags: []
                             visibleContactFields: []
+                        availabilityLocalDateStart: '2025-09-01'
+                        availabilityLocalDateEnd: null
                         tags: []
                         availabilityCutoff: 1 hour
                         availabilityCutoffAmount: 1
@@ -715,6 +720,8 @@ paths:
                                 - firstName
                               tags: []
                               visibleContactFields: []
+                          availabilityLocalDateStart: '2025-09-01'
+                          availabilityLocalDateEnd: null
                           tags: []
                           availabilityCutoff: 1 hour
                           availabilityCutoffAmount: 1
@@ -763,6 +770,8 @@ paths:
                             - firstName
                           tags: []
                           visibleContactFields: []
+                      availabilityLocalDateStart: '2025-09-01'
+                      availabilityLocalDateEnd: null
                       tags: []
                       availabilityCutoff: 1 hour
                       availabilityCutoffAmount: 1
@@ -1094,6 +1103,62 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/ExtendReservationBody'
+  /capabilities/:
+    get:
+      operationId: Capabilities_get
+      summary: List capabilities
+      description: List capabiliteis
+      parameters:
+        - $ref: '#/components/parameters/Octo.RequestHeadersContent'
+      responses:
+        '200':
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: 'This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability.'
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Capability'
+              examples:
+                Capabilities:
+                  summary: Capabilities
+                  description: Capabilities
+                  value:
+                    - id: octo/pricing
+                      revision: 3
+                      required: true
+                      dependencies: []
+                      docs: This capability enables booking creation.
+      tags:
+        - Capabilities
   /products/:
     get:
       operationId: Products_GetProducts
@@ -1196,6 +1261,8 @@ paths:
                                 - firstName
                               tags: []
                               visibleContactFields: []
+                          availabilityLocalDateStart: '2025-09-01'
+                          availabilityLocalDateEnd: null
                           tags: []
                           availabilityCutoff: 1 hour
                           availabilityCutoffAmount: 1
@@ -1337,6 +1404,8 @@ paths:
                               - firstName
                             tags: []
                             visibleContactFields: []
+                        availabilityLocalDateStart: '2025-09-01'
+                        availabilityLocalDateEnd: null
                         tags: []
                         availabilityCutoff: 1 hour
                         availabilityCutoffAmount: 1
@@ -1773,7 +1842,7 @@ paths:
                 required: true
       tags:
         - Webhooks
-  /whoami:
+  /whoami/:
     get:
       operationId: WhoIAmSection_get
       summary: Check token
@@ -2259,17 +2328,16 @@ components:
             capability: octo/pricing
             required: true
         pricing:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pricing'
+          allOf:
+            - $ref: '#/components/schemas/Pricing'
           description: 'Is on the object when Pricing capability is requested. '
           example:
-            - original: 2000
-              retail: 2000
-              net: 1600
-              currency: EUR
-              currencyPrecision: 2
-              includedTaxes: []
+            original: 2000
+            retail: 2000
+            net: 1600
+            currency: EUR
+            currencyPrecision: 2
+            includedTaxes: []
           x-oapi-codegen-extra-tags:
             capability: octo/pricing
             required: true
@@ -2586,17 +2654,16 @@ components:
             capability: octo/pricing
             required: true
         pricingFrom:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pricing'
+          allOf:
+            - $ref: '#/components/schemas/Pricing'
           description: 'Is on the object when Pricing capability is requested. '
           example:
-            - original: 2000
-              retail: 2000
-              net: 1600
-              currency: EUR
-              currencyPrecision: 2
-              includedTaxes: []
+            original: 2000
+            retail: 2000
+            net: 1600
+            currency: EUR
+            currencyPrecision: 2
+            includedTaxes: []
           x-oapi-codegen-extra-tags:
             capability: octo/pricing
             required: true
@@ -2887,17 +2954,16 @@ components:
             capability: octo/pricing
             required: true
         pricingFrom:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pricing'
+          allOf:
+            - $ref: '#/components/schemas/Pricing'
           description: 'Is on the object when Pricing capability is requested. '
           example:
-            - original: 2000
-              retail: 2000
-              net: 1600
-              currency: EUR
-              currencyPrecision: 2
-              includedTaxes: []
+            original: 2000
+            retail: 2000
+            net: 1600
+            currency: EUR
+            currencyPrecision: 2
+            includedTaxes: []
           x-oapi-codegen-extra-tags:
             capability: octo/pricing
             required: true
@@ -3285,17 +3351,16 @@ components:
             capability: octo/pricing
             required: true
         pricing:
-          type: array
-          items:
-            $ref: '#/components/schemas/Pricing'
+          allOf:
+            - $ref: '#/components/schemas/Pricing'
           description: 'Is on the object when Pricing capability is requested. '
           example:
-            - original: 2000
-              retail: 2000
-              net: 1600
-              currency: EUR
-              currencyPrecision: 2
-              includedTaxes: []
+            original: 2000
+            retail: 2000
+            net: 1600
+            currency: EUR
+            currencyPrecision: 2
+            includedTaxes: []
           x-oapi-codegen-extra-tags:
             capability: octo/pricing
             required: true
@@ -3596,6 +3661,8 @@ components:
                       - firstName
                     tags: []
                     visibleContactFields: []
+                availabilityLocalDateStart: '2025-09-01'
+                availabilityLocalDateEnd: null
                 tags: []
                 availabilityCutoff: 1 hour
                 availabilityCutoffAmount: 1
@@ -3651,6 +3718,8 @@ components:
                   - firstName
                 tags: []
                 visibleContactFields: []
+            availabilityLocalDateStart: '2025-09-01'
+            availabilityLocalDateEnd: null
             tags: []
             availabilityCutoff: 1 hour
             availabilityCutoffAmount: 1
@@ -4443,6 +4512,8 @@ components:
                     - firstName
                   tags: []
                   visibleContactFields: []
+              availabilityLocalDateStart: '2025-09-01'
+              availabilityLocalDateEnd: null
               tags: []
               availabilityCutoff: 1 hour
               availabilityCutoffAmount: 1
@@ -4491,6 +4562,8 @@ components:
                 - firstName
               tags: []
               visibleContactFields: []
+          availabilityLocalDateStart: '2025-09-01'
+          availabilityLocalDateEnd: null
           tags: []
           availabilityCutoff: 1 hour
           availabilityCutoffAmount: 1
@@ -5200,6 +5273,8 @@ components:
                         - firstName
                       tags: []
                       visibleContactFields: []
+                  availabilityLocalDateStart: '2025-09-01'
+                  availabilityLocalDateEnd: null
                   tags: []
                   availabilityCutoff: 1 hour
                   availabilityCutoffAmount: 1
@@ -5799,6 +5874,8 @@ components:
                       - firstName
                     tags: []
                     visibleContactFields: []
+                availabilityLocalDateStart: '2025-09-01'
+                availabilityLocalDateEnd: null
                 tags: []
                 availabilityCutoff: 1 hour
                 availabilityCutoffAmount: 1
@@ -5847,6 +5924,8 @@ components:
                   - firstName
                 tags: []
                 visibleContactFields: []
+            availabilityLocalDateStart: '2025-09-01'
+            availabilityLocalDateEnd: null
             tags: []
             availabilityCutoff: 1 hour
             availabilityCutoffAmount: 1
@@ -6261,6 +6340,46 @@ components:
         address: null
         website: null
     Capability:
+      type: object
+      required:
+        - id
+        - revision
+        - required
+        - dependencies
+        - docs
+      properties:
+        id:
+          allOf:
+            - $ref: '#/components/schemas/Octo.CapabilityId'
+          description: Unique identifier of the capability.
+          example: octo/pricing
+        revision:
+          type: integer
+          format: int32
+          description: Revision number for the capability.
+          example: 3
+        required:
+          type: boolean
+          description: Whether this capability is required.
+          example: true
+        dependencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Octo.CapabilityId'
+          description: List of dependent capability IDs.
+          example: []
+        docs:
+          type: string
+          nullable: true
+          description: Optional documentation or description for this capability.
+          example: This capability enables booking creation.
+      example:
+        id: octo/pricing
+        revision: 3
+        required: true
+        dependencies: []
+        docs: This capability enables booking creation.
+    CapabilityId:
       type: string
       enum:
         - octo/content
@@ -6286,7 +6405,7 @@ components:
         - ventrata/partners
       x-go-type-import:
         path: ventrata-octo-api/pkg/id
-      x-go-type: id.Capability
+      x-go-type: id.CapabilityId
     Category:
       type: object
       required:
@@ -6445,7 +6564,7 @@ components:
         capabilities:
           type: array
           items:
-            $ref: '#/components/schemas/Capability'
+            $ref: '#/components/schemas/CapabilityId'
           description: A list of capabilities that will be activated before triggering the webhook which will affect the data included in the webhook body.
           example:
             - octo/pricing
@@ -8028,6 +8147,10 @@ components:
       example:
         id: ''
         name: ''
+    ListCapabilitiesRequest:
+      type: object
+    ListCapabilitiesRequestHeaders:
+      type: object
     ListOrdersRequest:
       type: object
       properties:
@@ -8315,6 +8438,17 @@ components:
             - $ref: '#/components/schemas/Octo.ErrorUnauthorized'
             - $ref: '#/components/schemas/Octo.ErrorInternalServerError'
             - $ref: '#/components/schemas/Octo.ErrorForbidden'
+    Octo.CapabilityId:
+      type: string
+      enum:
+        - octo/adjustments
+        - octo/cart
+        - octo/content
+        - octo/mappings
+        - octo/packages
+        - octo/pickups
+        - octo/pricing
+        - octo/questions
     Octo.ErrorBadRequest:
       type: object
       allOf:
@@ -8900,6 +9034,8 @@ components:
                     - firstName
                   tags: []
                   visibleContactFields: []
+              availabilityLocalDateStart: '2025-09-01'
+              availabilityLocalDateEnd: null
               tags: []
               availabilityCutoff: 1 hour
               availabilityCutoffAmount: 1
@@ -9104,6 +9240,8 @@ components:
         - internalName
         - reference
         - availabilityLocalStartTimes
+        - availabilityLocalDateStart
+        - availabilityLocalDateEnd
         - cancellationCutoff
         - cancellationCutoffAmount
         - cancellationCutoffUnit
@@ -9145,6 +9283,11 @@ components:
           description: An array containing all possible start times for the option that can be returned during availability. For example a tour with multiple departure times may have multiple:["09:00", "14:00", "17:00"].
           example:
             - '00:00'
+        availabilityLocalDateStart:
+          type: string
+        availabilityLocalDateEnd:
+          type: string
+          nullable: true
         cancellationCutoff:
           type: string
           description: A text description of the option's cancellation policy, providing clear guidelines to customers.
@@ -9503,6 +9646,8 @@ components:
               - firstName
             tags: []
             visibleContactFields: []
+        availabilityLocalDateStart: '2025-09-01'
+        availabilityLocalDateEnd: null
         tags: []
         availabilityCutoff: 1 hour
         availabilityCutoffAmount: 1
@@ -10956,6 +11101,10 @@ components:
           x-capability-data:
             capability: ventrata/content
             required: true
+        latitude:
+          type: number
+        longitude:
+          type: number
         address:
           type: string
           description: ''
@@ -11123,6 +11272,8 @@ components:
                   - firstName
                 tags: []
                 visibleContactFields: []
+            availabilityLocalDateStart: '2025-09-01'
+            availabilityLocalDateEnd: null
             tags: []
             availabilityCutoff: 1 hour
             availabilityCutoffAmount: 1
@@ -11476,6 +11627,10 @@ components:
           x-capability-data:
             capability: ventrata/content
             required: true
+        latitude:
+          type: number
+        longitude:
+          type: number
         address:
           type: string
           description: ''
@@ -13650,7 +13805,7 @@ components:
         capabilities:
           type: array
           items:
-            $ref: '#/components/schemas/Capability'
+            $ref: '#/components/schemas/CapabilityId'
           description: List of capability identifiers associated with this webhook.
           example:
             - octo/pricing

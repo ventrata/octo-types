@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Capability } from './Capability';
+import type { CapabilityId } from './CapabilityId';
 import type { WebhookEvent } from './WebhookEvent';
 export type Webhook = {
 	/**
@@ -32,5 +32,5 @@ export type Webhook = {
 	/**
 	 * List of capability identifiers associated with this webhook.
 	 */
-	capabilities: Array<Capability>;
+	capabilities: Array<CapabilityId>;
 };

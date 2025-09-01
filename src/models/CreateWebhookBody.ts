@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Capability } from './Capability';
+import type { CapabilityId } from './CapabilityId';
 import type { WebhookEvent } from './WebhookEvent';
 export type CreateWebhookBody = {
 	/**
@@ -35,5 +35,5 @@ export type CreateWebhookBody = {
 	/**
 	 * A list of capabilities that will be activated before triggering the webhook which will affect the data included in the webhook body.
 	 */
-	capabilities?: Array<Capability>;
+	capabilities?: Array<CapabilityId>;
 };

@@ -59,7 +59,7 @@ export type AvailabilityCalendar = {
 	/**
 	 * Is on the object when Pricing capability is requested.
 	 */
-	pricingFrom?: Array<Pricing>;
+	pricingFrom?: Pricing;
 	/**
 	 * Optional code used to apply a specific offer.
 	 */
