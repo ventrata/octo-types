@@ -6260,13 +6260,6 @@ components:
         telephone: null
         address: null
         website: null
-    CancellationCutoffUnit:
-      type: string
-      enum:
-        - hour
-        - minute
-        - day
-      example: hour
     Capability:
       type: string
       enum:
@@ -6649,6 +6642,7 @@ components:
         - featured
         - country
         - contact
+        - brand
         - latitude
         - longitude
         - googlePlaceId
@@ -6709,6 +6703,8 @@ components:
             telephone: null
             address: Marble Arch, London, W1H 7EJ, United Kingdom
             website: null
+        brand:
+          $ref: '#/components/schemas/Brand'
         latitude:
           type: number
           nullable: true
@@ -6823,6 +6819,31 @@ components:
           telephone: null
           address: Marble Arch, London, W1H 7EJ, United Kingdom
           website: null
+        brand:
+          id: ''
+          name: ''
+          contact:
+            name: null
+            email: null
+            telephone: null
+            address: null
+            website: null
+          color: ''
+          secondaryColor: ''
+          backgroundColor: ''
+          accentFont:
+            id: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
+            name: ''
+            normalTtfUrl: ''
+            italicTtfUrl: ''
+            boldItalicTtfUrl: ''
+            boldTtfUrl: ''
+          bodyFont: null
+          headerFont: null
+          checkoutLogoUrl: ''
+          logoUrl: ''
+          logoWhiteUrl: ''
+          faviconUrl: ''
         latitude: 55.9533
         longitude: -3.1883
         googlePlaceId: ChIJZ2j5yZcEdkgRqVqkuXQkj7c
@@ -9134,7 +9155,7 @@ components:
           example: 1
         cancellationCutoffUnit:
           allOf:
-            - $ref: '#/components/schemas/CancellationCutoffUnit'
+            - $ref: '#/components/schemas/DurationUnit'
           description: |-
             The time unit associated with the cutoff period. Possible values are:
             hour: Cutoff is measured in hours.
@@ -10634,6 +10655,31 @@ components:
               telephone: null
               address: Marble Arch, London, W1H 7EJ, United Kingdom
               website: null
+            brand:
+              id: ''
+              name: ''
+              contact:
+                name: null
+                email: null
+                telephone: null
+                address: null
+                website: null
+              color: ''
+              secondaryColor: ''
+              backgroundColor: ''
+              accentFont:
+                id: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
+                name: ''
+                normalTtfUrl: ''
+                italicTtfUrl: ''
+                boldItalicTtfUrl: ''
+                boldTtfUrl: ''
+              bodyFont: null
+              headerFont: null
+              checkoutLogoUrl: ''
+              logoUrl: ''
+              logoWhiteUrl: ''
+              faviconUrl: ''
             latitude: 55.9533
             longitude: -3.1883
             googlePlaceId: ChIJZ2j5yZcEdkgRqVqkuXQkj7c
@@ -10668,6 +10714,7 @@ components:
             required: true
         alert:
           type: string
+          nullable: true
           description: Alert message for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -10688,6 +10735,7 @@ components:
             required: true
         subtitle:
           type: string
+          nullable: true
           description: Subtitle for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -10698,6 +10746,7 @@ components:
             required: true
         description:
           type: string
+          nullable: true
           description: Description for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -10781,6 +10830,7 @@ components:
             required: true
         bookingTerms:
           type: string
+          nullable: true
           description: Booking terms for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -10791,6 +10841,7 @@ components:
             required: true
         privacyTerms:
           type: string
+          nullable: true
           description: Privacy terms for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -10801,6 +10852,7 @@ components:
             required: true
         redemptionInstructions:
           type: string
+          nullable: true
           description: Redemption instructions for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -10811,6 +10863,7 @@ components:
             required: true
         cancellationPolicy:
           type: string
+          nullable: true
           description: Cancellation policy for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -10857,6 +10910,7 @@ components:
         videoUrl:
           type: string
           format: uri
+          nullable: true
           description: ''
           example: ''
           x-oapi-codegen-extra-tags:
@@ -10893,6 +10947,7 @@ components:
             required: true
         googlePlaceId:
           type: string
+          nullable: true
           description: ''
           example: ''
           x-oapi-codegen-extra-tags:
@@ -11120,6 +11175,31 @@ components:
               telephone: null
               address: Marble Arch, London, W1H 7EJ, United Kingdom
               website: null
+            brand:
+              id: ''
+              name: ''
+              contact:
+                name: null
+                email: null
+                telephone: null
+                address: null
+                website: null
+              color: ''
+              secondaryColor: ''
+              backgroundColor: ''
+              accentFont:
+                id: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
+                name: ''
+                normalTtfUrl: ''
+                italicTtfUrl: ''
+                boldItalicTtfUrl: ''
+                boldTtfUrl: ''
+              bodyFont: null
+              headerFont: null
+              checkoutLogoUrl: ''
+              logoUrl: ''
+              logoWhiteUrl: ''
+              faviconUrl: ''
             latitude: 55.9533
             longitude: -3.1883
             googlePlaceId: ChIJZ2j5yZcEdkgRqVqkuXQkj7c
@@ -11154,6 +11234,7 @@ components:
             required: true
         alert:
           type: string
+          nullable: true
           description: Alert message for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -11174,6 +11255,7 @@ components:
             required: true
         subtitle:
           type: string
+          nullable: true
           description: Subtitle for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -11184,6 +11266,7 @@ components:
             required: true
         description:
           type: string
+          nullable: true
           description: Description for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -11267,6 +11350,7 @@ components:
             required: true
         bookingTerms:
           type: string
+          nullable: true
           description: Booking terms for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -11277,6 +11361,7 @@ components:
             required: true
         privacyTerms:
           type: string
+          nullable: true
           description: Privacy terms for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -11287,6 +11372,7 @@ components:
             required: true
         redemptionInstructions:
           type: string
+          nullable: true
           description: Redemption instructions for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -11297,6 +11383,7 @@ components:
             required: true
         cancellationPolicy:
           type: string
+          nullable: true
           description: Cancellation policy for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -11343,6 +11430,7 @@ components:
         videoUrl:
           type: string
           format: uri
+          nullable: true
           description: ''
           example: ''
           x-oapi-codegen-extra-tags:
@@ -11379,6 +11467,7 @@ components:
             required: true
         googlePlaceId:
           type: string
+          nullable: true
           description: ''
           example: ''
           x-oapi-codegen-extra-tags:
@@ -11445,6 +11534,31 @@ components:
             telephone: null
             address: Marble Arch, London, W1H 7EJ, United Kingdom
             website: null
+          brand:
+            id: ''
+            name: ''
+            contact:
+              name: null
+              email: null
+              telephone: null
+              address: null
+              website: null
+            color: ''
+            secondaryColor: ''
+            backgroundColor: ''
+            accentFont:
+              id: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
+              name: ''
+              normalTtfUrl: ''
+              italicTtfUrl: ''
+              boldItalicTtfUrl: ''
+              boldTtfUrl: ''
+            bodyFont: null
+            headerFont: null
+            checkoutLogoUrl: ''
+            logoUrl: ''
+            logoWhiteUrl: ''
+            faviconUrl: ''
           latitude: 55.9533
           longitude: -3.1883
           googlePlaceId: ChIJZ2j5yZcEdkgRqVqkuXQkj7c
@@ -12171,6 +12285,31 @@ components:
                 telephone: null
                 address: Marble Arch, London, W1H 7EJ, United Kingdom
                 website: null
+              brand:
+                id: ''
+                name: ''
+                contact:
+                  name: null
+                  email: null
+                  telephone: null
+                  address: null
+                  website: null
+                color: ''
+                secondaryColor: ''
+                backgroundColor: ''
+                accentFont:
+                  id: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
+                  name: ''
+                  normalTtfUrl: ''
+                  italicTtfUrl: ''
+                  boldItalicTtfUrl: ''
+                  boldTtfUrl: ''
+                bodyFont: null
+                headerFont: null
+                checkoutLogoUrl: ''
+                logoUrl: ''
+                logoWhiteUrl: ''
+                faviconUrl: ''
               latitude: 55.9533
               longitude: -3.1883
               googlePlaceId: ChIJZ2j5yZcEdkgRqVqkuXQkj7c
@@ -12280,6 +12419,31 @@ components:
                 telephone: null
                 address: Marble Arch, London, W1H 7EJ, United Kingdom
                 website: null
+              brand:
+                id: ''
+                name: ''
+                contact:
+                  name: null
+                  email: null
+                  telephone: null
+                  address: null
+                  website: null
+                color: ''
+                secondaryColor: ''
+                backgroundColor: ''
+                accentFont:
+                  id: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
+                  name: ''
+                  normalTtfUrl: ''
+                  italicTtfUrl: ''
+                  boldItalicTtfUrl: ''
+                  boldTtfUrl: ''
+                bodyFont: null
+                headerFont: null
+                checkoutLogoUrl: ''
+                logoUrl: ''
+                logoWhiteUrl: ''
+                faviconUrl: ''
               latitude: 55.9533
               longitude: -3.1883
               googlePlaceId: ChIJZ2j5yZcEdkgRqVqkuXQkj7c
@@ -12328,6 +12492,31 @@ components:
               telephone: null
               address: Marble Arch, London, W1H 7EJ, United Kingdom
               website: null
+            brand:
+              id: ''
+              name: ''
+              contact:
+                name: null
+                email: null
+                telephone: null
+                address: null
+                website: null
+              color: ''
+              secondaryColor: ''
+              backgroundColor: ''
+              accentFont:
+                id: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
+                name: ''
+                normalTtfUrl: ''
+                italicTtfUrl: ''
+                boldItalicTtfUrl: ''
+                boldTtfUrl: ''
+              bodyFont: null
+              headerFont: null
+              checkoutLogoUrl: ''
+              logoUrl: ''
+              logoWhiteUrl: ''
+              faviconUrl: ''
             latitude: 55.9533
             longitude: -3.1883
             googlePlaceId: ChIJZ2j5yZcEdkgRqVqkuXQkj7c
