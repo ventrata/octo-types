@@ -449,7 +449,6 @@ export { createWaitlistRequestSchema } from './schemas/CreateWaitlistRequest';
 export { contactFieldSchema } from './schemas/ContactField';
 export { categorySchema } from './schemas/Category';
 export { capabilitySchema } from './schemas/Capability';
-export { cancellationCutoffUnitSchema } from './schemas/CancellationCutoffUnit';
 export { brandContactSchema } from './schemas/BrandContact';
 export { brandSchema } from './schemas/Brand';
 export { bookingUpdateRequestSchema } from './schemas/BookingUpdateRequest';
