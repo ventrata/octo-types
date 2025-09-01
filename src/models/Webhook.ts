@@ -16,7 +16,7 @@ export type Webhook = {
 	/**
 	 * Target URL where the webhook payload is sent.
 	 */
-	url?: string;
+	url: string | null;
 	/**
 	 * Whether to retry delivery if an error occurs.
 	 */

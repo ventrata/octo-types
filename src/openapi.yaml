@@ -7,6 +7,7 @@ tags:
   - name: Products
   - name: Availability
   - name: Bookings
+  - name: Webhooks
   - name: WHOIAM
   - name: GetYourGuide
   - name: Partners
@@ -120,7 +121,7 @@ paths:
                 anyOf:
                   - type: array
                     items:
-                      $ref: "#/components/schemas/Octo.AvailabilityCalendar"
+                      $ref: "#/components/schemas/AvailabilityCalendar"
                   - $ref: "#/components/schemas/AvailabilityCalendarErrorResponse"
       tags:
         - Availability
@@ -1605,6 +1606,131 @@ paths:
                       apiKey: 5d25b9be-9c1e-4a44-b6c6-117aa419cf6c
       tags:
         - Partners
+  /webhooks/:
+    post:
+      operationId: Webhooks_post
+      summary: Create a new webhook
+      description: Create a new webhook
+      parameters:
+        - $ref: "#/components/parameters/CreateWebhookRequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Webhook"
+              examples:
+                Create webhook response:
+                  summary: Create webhook response
+                  description: Create webhook response
+                  value:
+                    id: webhook-001
+                    event: booking_update
+                    url: https://api.example.com/webhooks
+                    retryOnError: true
+                    useContactLanguage: false
+                    headers: {}
+                    capabilities:
+                      - octo/pricing
+                      - octo/offers
+      tags:
+        - Webhooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateWebhookBody"
+    get:
+      operationId: Webhooks_get
+      summary: List all webhooks
+      description: List all webhooks
+      parameters:
+        - $ref: "#/components/parameters/ListWebhooksRequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Webhook"
+              examples:
+                List webhooks response:
+                  summary: List webhooks response
+                  description: List webhooks response
+                  value:
+                    - id: webhook-001
+                      event: booking_update
+                      url: https://api.example.com/webhooks
+                      retryOnError: true
+                      useContactLanguage: false
+                      headers: {}
+                      capabilities:
+                        - octo/pricing
+                        - octo/offers
+      tags:
+        - Webhooks
   /whoami:
     get:
       operationId: WhoIAmSection_get
@@ -1691,7 +1817,21 @@ components:
       description: The UUID of the booking
       schema:
         type: string
+    CreateWebhookRequestHeaders.octoCapabilities:
+      name: Octo-Capabilities
+      in: header
+      required: true
+      description: A list of the Capabilities (their IDs) initialized with your request. ventrata/getyourguide capability is required
+      schema:
+        type: string
     GetYourGuideActivateRequestHeaders.octoCapabilities:
+      name: Octo-Capabilities
+      in: header
+      required: true
+      description: A list of the Capabilities (their IDs) initialized with your request. ventrata/getyourguide capability is required
+      schema:
+        type: string
+    ListWebhooksRequestHeaders.octoCapabilities:
       name: Octo-Capabilities
       in: header
       required: true
@@ -2039,6 +2179,7 @@ components:
               currency: EUR
               currencyPrecision: 2
               includedTaxes: []
+              unitType: ADULT
             - unitId: child_797e3ce8-1860-4cbf-80ad-95857df1f640
               original: 500
               retail: 500
@@ -2046,6 +2187,7 @@ components:
               currency: EUR
               currencyPrecision: 2
               includedTaxes: []
+              unitType: CHILD
             - unitId: infant_897e3ce8-1860-4cbf-80ad-95857df1f640
               original: 0
               retail: 0
@@ -2053,6 +2195,7 @@ components:
               currency: EUR
               currencyPrecision: 2
               includedTaxes: []
+              unitType: INFANT
           x-oapi-codegen-extra-tags:
             capability: octo/pricing
             required: true
@@ -2258,6 +2401,246 @@ components:
         totalPaxCount: 0
         limitPaxCount: 10
         limitCapacity: 10
+    AvailabilityCalendar:
+      type: object
+      required:
+        - localDate
+        - available
+        - status
+        - vacancies
+        - capacity
+        - openingHours
+        - limitCapacity
+        - totalCapacity
+        - limitPaxCount
+        - totalPaxCount
+        - paxCount
+        - utcCutoffAt
+        - availabilityLocalStartTimes
+      properties:
+        localDate:
+          type: string
+          description: The specific date for querying availability on Availability Calendar endpoint. This field must follow the ISO 8601 date format (e.g., 2024-11-18). It ensures standardized representation of dates across different systems.
+          example: "2022-05-12"
+        available:
+          type: boolean
+          description: |-
+            Indicates whether there is any remaining availability for the specified date.
+            true: Availability exists.
+            false: Fully booked or unavailable.
+          example: true
+        status:
+          allOf:
+            - $ref: "#/components/schemas/AvailabilityStatus"
+          description: |-
+            Defines the current status of the availability date:
+            AVAILABLE: Open for booking.
+            FREESALE: Unlimited availability, no capacity limits.
+            SOLD_OUT: No spots available.
+            LIMITED: Less than 50% capacity remaining.
+            CLOSED: The availability is closed.
+          example: AVAILABLE
+        vacancies:
+          type: integer
+          nullable: true
+          description: Specifies the number of available slots remaining quantity (highest remaining vacancies from all availabilities of this day). Should be nulled or omitted when status is FREESALE.
+          example: 10
+        capacity:
+          type: integer
+          nullable: true
+          description: "The total capacity for this availability date. "
+          example: 10
+        openingHours:
+          type: array
+          items:
+            $ref: "#/components/schemas/OpeningHours"
+          description: Defines the opening hours for this availability, even for start time-based availability. Supports multiple periods for breaks in the day.
+          example:
+            - from: "08:00"
+              to: "16:00"
+        limitCapacity:
+          type: integer
+          nullable: true
+          x-go-type: float64
+        totalCapacity:
+          type: integer
+          nullable: true
+          x-go-type: float64
+        limitPaxCount:
+          type: integer
+          x-go-type: float64
+        totalPaxCount:
+          type: integer
+          x-go-type: float64
+        paxCount:
+          type: integer
+          x-go-type: float64
+        utcCutoffAt:
+          type: string
+          format: date-time
+          description: The time by which the booking must be confirmed at
+          example: "2022-05-22T23:00:00Z"
+          x-go-type-import:
+            path: ventrata-octo-api/pkg/types
+          x-go-type: types.TimeRFC3339
+        availabilityLocalStartTimes:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          description: List of local start times for the availability.
+          example:
+            - "10:00"
+            - "12:00"
+            - "14:00"
+        unitPricingFrom:
+          type: array
+          items:
+            $ref: "#/components/schemas/PricingUnit"
+          description: "Is on the object when Pricing capability is requested. "
+          example:
+            - unitId: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
+              original: 1000
+              retail: 1000
+              net: 8000
+              currency: EUR
+              currencyPrecision: 2
+              includedTaxes: []
+              unitType: ADULT
+            - unitId: child_797e3ce8-1860-4cbf-80ad-95857df1f640
+              original: 500
+              retail: 500
+              net: 400
+              currency: EUR
+              currencyPrecision: 2
+              includedTaxes: []
+              unitType: CHILD
+            - unitId: infant_897e3ce8-1860-4cbf-80ad-95857df1f640
+              original: 0
+              retail: 0
+              net: 0
+              currency: EUR
+              currencyPrecision: 2
+              includedTaxes: []
+              unitType: INFANT
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+        pricingFrom:
+          type: array
+          items:
+            $ref: "#/components/schemas/Pricing"
+          description: "Is on the object when Pricing capability is requested. "
+          example:
+            - original: 2000
+              retail: 2000
+              net: 1600
+              currency: EUR
+              currencyPrecision: 2
+              includedTaxes: []
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+        offerCode:
+          type: string
+          nullable: true
+          description: Optional code used to apply a specific offer.
+          example: SUMMER25
+          x-oapi-codegen-extra-tags:
+            capability: octo/offers
+            required: true
+          x-capability-data:
+            capability: octo/offers
+            required: true
+        offerTitle:
+          type: string
+          nullable: true
+          description: Optional display title of the offer.
+          example: Summer Promo
+          x-oapi-codegen-extra-tags:
+            capability: octo/offers
+            required: true
+          x-capability-data:
+            capability: octo/offers
+            required: true
+        offers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Offer"
+          description: List of available offers for the availability.
+          example:
+            - title: Summer Promo
+              code: SUMMER25
+              description: Get 25% off selected tours!
+              netDiscount: FULL
+              restrictions:
+                minUnits: 1
+                maxUnits: 10
+                minTotal: 50
+                maxTotal: 500
+                unitIds:
+                  - unit-1
+                  - unit-2
+                  - unit-3
+              usable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/offers
+            required: true
+          x-capability-data:
+            capability: octo/offers
+            required: true
+        offer:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Offer"
+          nullable: true
+          description: Best or selected offer for this availability.
+          example:
+            title: Summer Promo
+            code: SUMMER25
+            description: Get 25% off selected tours!
+            netDiscount: FULL
+            restrictions:
+              minUnits: 1
+              maxUnits: 10
+              minTotal: 50
+              maxTotal: 500
+              unitIds:
+                - unit-1
+                - unit-2
+                - unit-3
+            usable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/offers
+            required: true
+          x-capability-data:
+            capability: octo/offers
+            required: true
+      example:
+        localDate: "2022-05-12"
+        available: true
+        status: AVAILABLE
+        vacancies: 10
+        capacity: 10
+        openingHours:
+          - from: "08:00"
+            to: "16:00"
+        limitCapacity: null
+        totalCapacity: null
+        limitPaxCount: 10
+        totalPaxCount: 10
+        paxCount: 100
+        utcCutoffAt: "2023-10-01T12:00:00Z"
+        availabilityLocalStartTimes:
+          - "10:00"
+          - "12:00"
+          - "14:00"
     AvailabilityCalendarBody:
       type: object
       required:
@@ -2297,6 +2680,174 @@ components:
       type: object
       allOf:
         - $ref: "#/components/schemas/Octo.AvailabilityCalendarErrorResponse"
+    AvailabilityCalendarOffers:
+      type: object
+      properties:
+        offerCode:
+          type: string
+          nullable: true
+          description: Optional code used to apply a specific offer.
+          example: SUMMER25
+          x-oapi-codegen-extra-tags:
+            capability: octo/offers
+            required: true
+          x-capability-data:
+            capability: octo/offers
+            required: true
+        offerTitle:
+          type: string
+          nullable: true
+          description: Optional display title of the offer.
+          example: Summer Promo
+          x-oapi-codegen-extra-tags:
+            capability: octo/offers
+            required: true
+          x-capability-data:
+            capability: octo/offers
+            required: true
+        offers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Offer"
+          description: List of available offers for the availability.
+          example:
+            - title: Summer Promo
+              code: SUMMER25
+              description: Get 25% off selected tours!
+              netDiscount: FULL
+              restrictions:
+                minUnits: 1
+                maxUnits: 10
+                minTotal: 50
+                maxTotal: 500
+                unitIds:
+                  - unit-1
+                  - unit-2
+                  - unit-3
+              usable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/offers
+            required: true
+          x-capability-data:
+            capability: octo/offers
+            required: true
+        offer:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Offer"
+          nullable: true
+          description: Best or selected offer for this availability.
+          example:
+            title: Summer Promo
+            code: SUMMER25
+            description: Get 25% off selected tours!
+            netDiscount: FULL
+            restrictions:
+              minUnits: 1
+              maxUnits: 10
+              minTotal: 50
+              maxTotal: 500
+              unitIds:
+                - unit-1
+                - unit-2
+                - unit-3
+            usable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/offers
+            required: true
+          x-capability-data:
+            capability: octo/offers
+            required: true
+      example:
+        offerCode: SUMMER25
+        offerTitle: Summer Promo
+        offers:
+          - title: Summer Promo
+            code: SUMMER25
+            description: Get 25% off selected tours!
+            netDiscount: FULL
+            restrictions:
+              minUnits: 1
+              maxUnits: 10
+              minTotal: 50
+              maxTotal: 500
+              unitIds:
+                - unit-1
+                - unit-2
+                - unit-3
+            usable: true
+        offer:
+          title: Summer Promo
+          code: SUMMER25
+          description: Get 25% off selected tours!
+          netDiscount: FULL
+          restrictions:
+            minUnits: 1
+            maxUnits: 10
+            minTotal: 50
+            maxTotal: 500
+            unitIds:
+              - unit-1
+              - unit-2
+              - unit-3
+          usable: true
+    AvailabilityCalendarPricing:
+      type: object
+      properties:
+        unitPricingFrom:
+          type: array
+          items:
+            $ref: "#/components/schemas/PricingUnit"
+          description: "Is on the object when Pricing capability is requested. "
+          example:
+            - unitId: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
+              original: 1000
+              retail: 1000
+              net: 8000
+              currency: EUR
+              currencyPrecision: 2
+              includedTaxes: []
+              unitType: ADULT
+            - unitId: child_797e3ce8-1860-4cbf-80ad-95857df1f640
+              original: 500
+              retail: 500
+              net: 400
+              currency: EUR
+              currencyPrecision: 2
+              includedTaxes: []
+              unitType: CHILD
+            - unitId: infant_897e3ce8-1860-4cbf-80ad-95857df1f640
+              original: 0
+              retail: 0
+              net: 0
+              currency: EUR
+              currencyPrecision: 2
+              includedTaxes: []
+              unitType: INFANT
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+        pricingFrom:
+          type: array
+          items:
+            $ref: "#/components/schemas/Pricing"
+          description: "Is on the object when Pricing capability is requested. "
+          example:
+            - original: 2000
+              retail: 2000
+              net: 1600
+              currency: EUR
+              currencyPrecision: 2
+              includedTaxes: []
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
     AvailabilityCalendarRequest:
       type: object
       required:
@@ -2654,6 +3205,7 @@ components:
               currency: EUR
               currencyPrecision: 2
               includedTaxes: []
+              unitType: ADULT
             - unitId: child_797e3ce8-1860-4cbf-80ad-95857df1f640
               original: 500
               retail: 500
@@ -2661,6 +3213,7 @@ components:
               currency: EUR
               currencyPrecision: 2
               includedTaxes: []
+              unitType: CHILD
             - unitId: infant_897e3ce8-1860-4cbf-80ad-95857df1f640
               original: 0
               retail: 0
@@ -2668,6 +3221,7 @@ components:
               currency: EUR
               currencyPrecision: 2
               includedTaxes: []
+              unitType: INFANT
           x-oapi-codegen-extra-tags:
             capability: octo/pricing
             required: true
@@ -2726,6 +3280,80 @@ components:
       example:
         id: adult
         quantity: 2
+    AvailabilityUpdate:
+      type: object
+      required:
+        - webhook
+        - availability
+        - productId
+        - optionId
+        - supplier
+      properties:
+        webhook:
+          allOf:
+            - $ref: "#/components/schemas/Webhook"
+          description: Webhook metadata for this availability update.
+        availability:
+          allOf:
+            - $ref: "#/components/schemas/Availability"
+          description: The updated availability block.
+        productId:
+          type: string
+          description: ID of the product the availability belongs to.
+          example: prod-001
+        optionId:
+          type: string
+          description: ID of the option the availability belongs to.
+          example: opt-001
+        supplier:
+          allOf:
+            - $ref: "#/components/schemas/Supplier"
+          description: The supplier associated with the availability.
+      example:
+        webhook:
+          id: webhook-001
+          event: booking_update
+          url: https://api.example.com/webhooks
+          retryOnError: true
+          useContactLanguage: false
+          headers: {}
+          capabilities:
+            - octo/pricing
+            - octo/offers
+        availability:
+          id: "2022-05-23T00:00:00+01:00"
+          localDateTimeStart: "2022-05-23T00:00:00+01:00"
+          localDateTimeEnd: "2022-05-24T00:00:00+01:00"
+          utcCutoffAt: "2022-05-22T23:00:00Z"
+          allDay: false
+          available: true
+          status: AVAILABLE
+          vacancies: 10
+          capacity: 10
+          maxUnits: null
+          openingHours:
+            - from: "08:00"
+              to: "16:00"
+          paxCount: 0
+          maxPaxCount: null
+          totalCapacity: 0
+          noShows: 0
+          totalNoShows: 0
+          totalPaxCount: 0
+          limitPaxCount: 10
+          limitCapacity: 10
+        productId: prod-001
+        optionId: opt-001
+        supplier:
+          id: 697e3ce8-1860-4cbf-80ad-95857df1f640
+          name: Merlin Entertainments
+          endpoint: https://api.my-booking-platform.com/v1
+          contact:
+            website: null
+            email: support@ventrata.com
+            telephone: null
+            address: Marble Arch, London, W1H 7EJ, United Kingdom
+          destinations: []
     Booking:
       type: object
       required:
@@ -5013,6 +5641,302 @@ components:
         - NOSHOW
         - UPGRADED
       example: CONFIRMED
+    BookingUpdate:
+      type: object
+      required:
+        - webhook
+        - booking
+        - diff
+        - supplier
+      properties:
+        webhook:
+          allOf:
+            - $ref: "#/components/schemas/Webhook"
+          description: Webhook metadata for this update.
+        booking:
+          allOf:
+            - $ref: "#/components/schemas/Booking"
+          description: Current state of the booking.
+        diff:
+          type: array
+          items:
+            $ref: "#/components/schemas/Diff"
+          description: List of changes between previous and current state.
+        supplier:
+          allOf:
+            - $ref: "#/components/schemas/Supplier"
+          description: ""
+      example:
+        webhook:
+          id: webhook-001
+          event: booking_update
+          url: https://api.example.com/webhooks
+          retryOnError: true
+          useContactLanguage: false
+          headers: {}
+          capabilities:
+            - octo/pricing
+            - octo/offers
+        booking:
+          id: bbbb6227-54fc-4c32-9ed7-dc3eb99966ea
+          uuid: 559aed3d-6d5b-4fe0-bfca-99f5e7218a56
+          testMode: false
+          resellerReference: null
+          supplierReference: XOPSUT
+          status: ON_HOLD
+          utcCreatedAt: "2022-05-25T10:34:22Z"
+          utcUpdatedAt: "2022-05-25T10:34:22Z"
+          utcExpiresAt: "2022-05-25T11:04:22Z"
+          utcRedeemedAt: null
+          utcConfirmedAt: null
+          productId: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
+          product:
+            id: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
+            internalName: London Eye General Admission
+            reference: LEYE-GA
+            locale: en-GB
+            timeZone: Europe/London
+            allowFreesale: true
+            instantConfirmation: true
+            instantDelivery: true
+            availabilityRequired: true
+            availabilityType: START_TIME
+            deliveryFormats:
+              - QRCODE
+            deliveryMethods:
+              - TICKET
+            redemptionMethod: DIGITAL
+            options:
+              - id: DEFAULT
+                default: true
+                internalName: DEFAULT
+                reference: null
+                availabilityLocalStartTimes:
+                  - "00:00"
+                cancellationCutoff: 1 hour
+                cancellationCutoffAmount: 1
+                cancellationCutoffUnit: hour
+                requiredContactFields:
+                  - firstName
+                restrictions:
+                  minUnits: 0
+                  maxUnits: 9
+                  minPaxCount: 0
+                  maxPaxCount: null
+                units:
+                  - id: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
+                    internalName: Adult(s)
+                    reference: LR1-01-new
+                    type: ADULT
+                    restrictions:
+                      minAge: 3
+                      maxAge: 17
+                      idRequired: true
+                      minQuantity: 2
+                      maxQuantity: 7
+                      paxCount: 1
+                      accompaniedBy:
+                        - adult_697e3ce8-1860-4cbf-80ad-95857df1f640
+                      required: false
+                      accompaniedByRatio: null
+                    requiredContactFields:
+                      - firstName
+                    tags: []
+                    visibleContactFields: []
+                tags: []
+                availabilityCutoff: 1 hour
+                availabilityCutoffAmount: 1
+                availabilityCutoffUnit: hour
+                visibleContactFields: []
+            tags: []
+            settlementMethods:
+              - direct
+            freesaleDurationAmount: 2
+            freesaleDurationUnit: hour
+          optionId: DEFAULT
+          option:
+            id: DEFAULT
+            default: true
+            internalName: DEFAULT
+            reference: null
+            availabilityLocalStartTimes:
+              - "00:00"
+            cancellationCutoff: 1 hour
+            cancellationCutoffAmount: 1
+            cancellationCutoffUnit: hour
+            requiredContactFields:
+              - firstName
+            restrictions:
+              minUnits: 0
+              maxUnits: 9
+              minPaxCount: 0
+              maxPaxCount: null
+            units:
+              - id: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
+                internalName: Adult(s)
+                reference: LR1-01-new
+                type: ADULT
+                restrictions:
+                  minAge: 3
+                  maxAge: 17
+                  idRequired: true
+                  minQuantity: 2
+                  maxQuantity: 7
+                  paxCount: 1
+                  accompaniedBy:
+                    - adult_697e3ce8-1860-4cbf-80ad-95857df1f640
+                  required: false
+                  accompaniedByRatio: null
+                requiredContactFields:
+                  - firstName
+                tags: []
+                visibleContactFields: []
+            tags: []
+            availabilityCutoff: 1 hour
+            availabilityCutoffAmount: 1
+            availabilityCutoffUnit: hour
+            visibleContactFields: []
+          cancellable: true
+          cancellation:
+            refund: FULL
+            reason: this product sucks
+            utcCancelledAt: "2022-05-25T11:00:22Z"
+          freesale: false
+          availabilityId: ""
+          availability:
+            id: "2022-05-23T00:00:00+01:00"
+            localDateTimeStart: "2022-05-23T00:00:00+01:00"
+            localDateTimeEnd: "2022-05-24T00:00:00+01:00"
+            utcCutoffAt: "2022-05-22T23:00:00Z"
+            allDay: false
+            available: true
+            status: AVAILABLE
+            vacancies: 10
+            capacity: 10
+            maxUnits: null
+            openingHours:
+              - from: "08:00"
+                to: "16:00"
+            paxCount: 0
+            maxPaxCount: null
+            totalCapacity: 0
+            noShows: 0
+            totalNoShows: 0
+            totalPaxCount: 0
+            limitPaxCount: 10
+            limitCapacity: 10
+          contact:
+            fullName: John Doe
+            firstName: John
+            lastName: Doe
+            emailAddress: johndoe@email.com
+            phoneNumber: ""
+            locales:
+              - en
+            postalCode: ""
+            country: ""
+            notes: ""
+            taxId: ""
+            title: ""
+            streetAddress: ""
+            city: ""
+            state: ""
+            allowMarketing: true
+          notes: Optional notes for the booking
+          deliveryMethods:
+            - TICKET
+            - VOUCHER
+          voucher: null
+          unitItems:
+            - uuid: 3b1bc2ee-3155-4738-9471-f49842a07327
+              resellerReference: A reference the reseller uses to identify the unit within all bookings.
+              supplierReference: A reference the supplier uses to identify the unit within all bookings.
+              unitId: This MUST be a unique identifier within the scope of the option.
+              unit:
+                id: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
+                internalName: Adult(s)
+                reference: LR1-01-new
+                type: ADULT
+                restrictions:
+                  minAge: 3
+                  maxAge: 17
+                  idRequired: true
+                  minQuantity: 2
+                  maxQuantity: 7
+                  paxCount: 1
+                  accompaniedBy:
+                    - adult_697e3ce8-1860-4cbf-80ad-95857df1f640
+                  required: false
+                  accompaniedByRatio: null
+                requiredContactFields:
+                  - firstName
+                tags: []
+                visibleContactFields: []
+              status: CONFIRMED
+              utcRedeemedAt: "2021-10-27 23:28:43Z"
+              contact:
+                fullName: John Doe
+                firstName: John
+                lastName: Doe
+                emailAddress: johndoe@email.com
+                phoneNumber: ""
+                locales:
+                  - en
+                postalCode: ""
+                country: ""
+                notes: ""
+                taxId: ""
+                title: ""
+                streetAddress: ""
+                city: ""
+                state: ""
+                allowMarketing: true
+              ticket: null
+              id: ""
+              alias: ""
+              rebookingUuid: ""
+              rebookingUnitItemUuid: ""
+              originalRebookingUuid: ""
+              originalRebookingUnitItemUuid: ""
+              utcRebookedAt: "2021-10-27 23:28:43Z"
+              utcNoshowedAt: "2021-10-27 23:28:43Z"
+              unitType: ADULT
+          rebookingUuid: ""
+          originalRebookingUuid: ""
+          alias: ""
+          settlementMethod: direct
+          quote: false
+          confirmable: true
+          agent: null
+          reseller: null
+          requiredContactFields: []
+          visibleContactFields: []
+          rejection:
+            reason: null
+            utcRejectedAt: "2022-06-29T22:00:00Z"
+          utcNoshowedAt: null
+          utcRebookedAt: null
+          seller: null
+          user: null
+          localDateTimeStart: "2022-05-23T00:00:00+01:00"
+          localDateTimeEnd: "2022-05-23T00:00:00+01:00"
+          emailReceipt: false
+          label: null
+        diff:
+          - op: replace
+            path: /title
+            was: Old Tour Title
+            value: New Tour Title
+        supplier:
+          id: 697e3ce8-1860-4cbf-80ad-95857df1f640
+          name: Merlin Entertainments
+          endpoint: https://api.my-booking-platform.com/v1
+          contact:
+            website: null
+            email: support@ventrata.com
+            telephone: null
+            address: Marble Arch, London, W1H 7EJ, United Kingdom
+          destinations: []
     BookingUpdateBody:
       type: object
       properties:
@@ -5431,6 +6355,66 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/WaitlistUnitItemIdentifier"
+    CreateWebhookBody:
+      type: object
+      required:
+        - url
+        - event
+      properties:
+        url:
+          type: string
+          description: |-
+            A fully formed URL. If you want to include basic authentication credentials that is supported also. For example:
+
+            https://user:pass@example.com/webook
+            https://example.com/webhook
+          example: https://api.example.com/webhook
+        event:
+          allOf:
+            - $ref: "#/components/schemas/WebhookEvent"
+          description: |-
+            The event that will trigger the webhook. Possible values are:
+
+            booking_update triggered when an existing booking is confirmed, updated or cancelled.
+
+            availability_update triggered when an availability changes.
+          example: booking_update
+        retryOnError:
+          type: boolean
+          description: Whether the webhook should be retried if the HTTP endpoint doesn't return a success status (200 to 299), default is true.
+          example: true
+        useContactLanguage:
+          type: boolean
+          description: Whether the webhook event should attempt to use the language configured by the guest when they booked. This makes sure the data in the webhook body is in the guest's language, default is true.
+          example: false
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          description: A object of headers to be used on each webhook request. This can be useful to keep your endpoint secure.
+          example: {}
+        capabilities:
+          type: array
+          items:
+            $ref: "#/components/schemas/Capability"
+          description: A list of capabilities that will be activated before triggering the webhook which will affect the data included in the webhook body.
+          example:
+            - octo/pricing
+      example:
+        url: https://api.example.com/webhook
+        event: booking_update
+        retryOnError: true
+        useContactLanguage: false
+        headers: {}
+        capabilities:
+          - octo/pricing
+    CreateWebhookRequest:
+      type: object
+      required:
+        - body
+      properties:
+        body:
+          $ref: "#/components/schemas/CreateWebhookBody"
     CustomerContact:
       type: object
       required:
@@ -5842,6 +6826,35 @@ components:
         telephone: null
         address: Marble Arch, London, W1H 7EJ, United Kingdom
         website: null
+    Diff:
+      type: object
+      required:
+        - op
+        - path
+        - was
+        - value
+      properties:
+        op:
+          type: string
+          description: The operation type (e.g., replace, add, remove).
+          example: replace
+        path:
+          type: string
+          description: The JSON path to the modified value.
+          example: /title
+        was:
+          type: string
+          description: The original value before the change.
+          example: Old Tour Title
+        value:
+          type: string
+          description: The new value after the change.
+          example: New Tour Title
+      example:
+        op: replace
+        path: /title
+        was: Old Tour Title
+        value: New Tour Title
     DurationUnit:
       type: string
       enum:
@@ -6985,6 +7998,8 @@ components:
           x-go-type-import:
             path: ventrata-octo-api/pkg/types
           x-go-type: types.TimeRFC3339
+    ListWebhooksRequest:
+      type: object
     Mapping:
       type: object
       required:
@@ -7110,110 +8125,6 @@ components:
         coverImageUrl:
           type: string
           nullable: true
-    Octo.AvailabilityCalendar:
-      type: object
-      required:
-        - localDate
-        - available
-        - status
-        - vacancies
-        - capacity
-        - openingHours
-      properties:
-        localDate:
-          type: string
-          description: The specific date for querying availability on Availability Calendar endpoint. This field must follow the ISO 8601 date format (e.g., 2024-11-18). It ensures standardized representation of dates across different systems.
-          example: "2022-05-12"
-        available:
-          type: boolean
-          description: |-
-            Indicates whether there is any remaining availability for the specified date.
-            true: Availability exists.
-            false: Fully booked or unavailable.
-          example: true
-        status:
-          allOf:
-            - $ref: "#/components/schemas/AvailabilityStatus"
-          description: |-
-            Defines the current status of the availability date:
-            AVAILABLE: Open for booking.
-            FREESALE: Unlimited availability, no capacity limits.
-            SOLD_OUT: No spots available.
-            LIMITED: Less than 50% capacity remaining.
-            CLOSED: The availability is closed.
-          example: AVAILABLE
-        vacancies:
-          type: integer
-          nullable: true
-          description: Specifies the number of available slots remaining quantity (highest remaining vacancies from all availabilities of this day). Should be nulled or omitted when status is FREESALE.
-          example: 10
-        capacity:
-          type: integer
-          nullable: true
-          description: "The total capacity for this availability date. "
-          example: 10
-        openingHours:
-          type: array
-          items:
-            $ref: "#/components/schemas/Octo.OpeningHours"
-          description: Defines the opening hours for this availability, even for start time-based availability. Supports multiple periods for breaks in the day.
-          example:
-            - from: "08:00"
-              to: "16:00"
-        unitPricingFrom:
-          type: array
-          items:
-            $ref: "#/components/schemas/Octo.PricingUnit"
-          description: "Is on the object when Pricing capability is requested. "
-          example:
-            - unitId: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
-              original: 1000
-              retail: 1000
-              net: 8000
-              currency: EUR
-              currencyPrecision: 2
-              includedTaxes: []
-            - unitId: child_797e3ce8-1860-4cbf-80ad-95857df1f640
-              original: 500
-              retail: 500
-              net: 400
-              currency: EUR
-              currencyPrecision: 2
-              includedTaxes: []
-            - unitId: infant_897e3ce8-1860-4cbf-80ad-95857df1f640
-              original: 0
-              retail: 0
-              net: 0
-              currency: EUR
-              currencyPrecision: 2
-              includedTaxes: []
-          x-capability-data:
-            capability: octo/pricing
-            required: true
-        pricingFrom:
-          type: array
-          items:
-            $ref: "#/components/schemas/Octo.Pricing"
-          description: "Is on the object when Pricing capability is requested. "
-          example:
-            - original: 2000
-              retail: 2000
-              net: 1600
-              currency: EUR
-              currencyPrecision: 2
-              includedTaxes: []
-          x-capability-data:
-            capability: octo/pricing
-            required: true
-      example:
-        localDate: "2022-05-12"
-        available: true
-        status: AVAILABLE
-        vacancies: 10
-        capacity: 10
-        openingHours:
-          - from: "08:00"
-            to: "16:00"
     Octo.AvailabilityCalendarErrorResponse:
       type: object
       required:
@@ -7554,24 +8465,6 @@ components:
         title: ""
         caption: ""
         copyright: ""
-    Octo.OpeningHours:
-      type: object
-      required:
-        - from
-        - to
-      properties:
-        from:
-          type: string
-          description: The opening time
-          example: "08:00"
-        to:
-          type: string
-          description: The closing time
-          example: "16:00"
-      description: Defines the opening hours for this availability, even for start time-based availability. Supports multiple periods for breaks in the day.
-      example:
-        from: "08:00"
-        to: "16:00"
     Octo.Pricing:
       type: object
       required:
@@ -8819,7 +9712,6 @@ components:
       properties:
         minUnits:
           type: integer
-          nullable: true
           description: The minimum number of units (tickets) that can be purchased in a single booking. A null value indicates no minimum.
           example: 0
         maxUnits:
@@ -9443,6 +10335,7 @@ components:
         - currencyPrecision
         - includedTaxes
         - unitId
+        - unitType
       properties:
         original:
           type: integer
@@ -9483,6 +10376,8 @@ components:
           type: string
           description: ID of the unit this pricing is related to
           example: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
+        unitType:
+          $ref: "#/components/schemas/UnitType"
         extraPricing:
           type: array
           items:
@@ -12465,6 +13360,7 @@ components:
       required:
         - id
         - event
+        - url
         - retryOnError
         - useContactLanguage
         - headers
@@ -12481,6 +13377,7 @@ components:
           example: booking_update
         url:
           type: string
+          nullable: true
           description: Target URL where the webhook payload is sent.
           example: https://api.example.com/webhooks
         retryOnError:

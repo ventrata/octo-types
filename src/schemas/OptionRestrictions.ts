@@ -2,7 +2,7 @@
 import { z } from 'zod';
 
 export const optionRestrictionsSchema = z.object({
-	minUnits: z.number().nullable(),
+	minUnits: z.number(),
 	maxUnits: z.number().nullable(),
 	minPaxCount: z.number().nullable(),
 	maxPaxCount: z.number().nullable(),

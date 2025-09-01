@@ -1,6 +1,6 @@
 {
 	"name": "@ventrata/octo-types",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"private": false,
 	"license": "ISC",
 	"files": [
@@ -15,7 +15,7 @@
 	"main": "dist/index.js",
 	"scripts": {
 		"get:openapi:yaml": "ts-node src/utils/get-openapi-yaml.ts",
-		"generate:models": "openapi --input src/openapi.yaml --output src/ --exportCore false --exportServices false --client none --indent 2",
+		"generate:models": "openapi --input src/openapi.yaml --output src/ --exportCore false --exportServices false --client none",
 		"generate:schemas": "ts-node src/utils/generate-schemas.ts",
 		"clean": "rm -rf dist",
 		"generate": "npm run get:openapi:yaml && npm run generate:models && npm run generate:schemas && npm run fix",

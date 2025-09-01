@@ -3,10 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AvailabilityStatus } from './AvailabilityStatus';
-import type { Octo_OpeningHours } from './Octo_OpeningHours';
-import type { Octo_Pricing } from './Octo_Pricing';
-import type { Octo_PricingUnit } from './Octo_PricingUnit';
-export type Octo_AvailabilityCalendar = {
+import type { Offer } from './Offer';
+import type { OpeningHours } from './OpeningHours';
+import type { Pricing } from './Pricing';
+import type { PricingUnit } from './PricingUnit';
+export type AvailabilityCalendar = {
 	/**
 	 * The specific date for querying availability on Availability Calendar endpoint. This field must follow the ISO 8601 date format (e.g., 2024-11-18). It ensures standardized representation of dates across different systems.
 	 */
@@ -37,13 +38,42 @@ export type Octo_AvailabilityCalendar = {
 	/**
 	 * Defines the opening hours for this availability, even for start time-based availability. Supports multiple periods for breaks in the day.
 	 */
-	openingHours: Array<Octo_OpeningHours>;
+	openingHours: Array<OpeningHours>;
+	limitCapacity: number | null;
+	totalCapacity: number | null;
+	limitPaxCount: number;
+	totalPaxCount: number;
+	paxCount: number;
+	/**
+	 * The time by which the booking must be confirmed at
+	 */
+	utcCutoffAt: string;
+	/**
+	 * List of local start times for the availability.
+	 */
+	availabilityLocalStartTimes: Array<string>;
 	/**
 	 * Is on the object when Pricing capability is requested.
 	 */
-	unitPricingFrom?: Array<Octo_PricingUnit>;
+	unitPricingFrom?: Array<PricingUnit>;
 	/**
 	 * Is on the object when Pricing capability is requested.
 	 */
-	pricingFrom?: Array<Octo_Pricing>;
+	pricingFrom?: Array<Pricing>;
+	/**
+	 * Optional code used to apply a specific offer.
+	 */
+	offerCode?: string | null;
+	/**
+	 * Optional display title of the offer.
+	 */
+	offerTitle?: string | null;
+	/**
+	 * List of available offers for the availability.
+	 */
+	offers?: Array<Offer>;
+	/**
+	 * Best or selected offer for this availability.
+	 */
+	offer?: Offer | null;
 };

@@ -6,7 +6,7 @@ import { capabilitySchema } from './Capability';
 export const webhookSchema = z.object({
 	id: z.string(),
 	event: webhookEventSchema,
-	url: z.string().optional(),
+	url: z.string().nullable(),
 	retryOnError: z.boolean(),
 	useContactLanguage: z.boolean(),
 	headers: z.record(z.string()),

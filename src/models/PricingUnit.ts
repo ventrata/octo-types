@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { Pricing } from './Pricing';
 import type { Tax } from './Tax';
+import type { UnitType } from './UnitType';
 export type PricingUnit = {
 	/**
 	 * Represents the advertised marketing price, which must be equal to or higher than pricingFrom.retail. Typically used for strike-through pricing, it highlights the original or component-based value of the product when the retail price reflects a discount or bundled offer. For example, a package product combining multiple components (e.g., hotel + tour + meals) may have a total component value of $500 (original), while the bundled retail price is $400. In such cases, the original price is displayed to show savings.This field should only be shown when it is higher than pricingFrom.retail and must accurately reflect a valid reference price, ensuring transparency and trust.
@@ -33,5 +34,6 @@ export type PricingUnit = {
 	 * ID of the unit this pricing is related to
 	 */
 	unitId: string;
+	unitType: UnitType;
 	extraPricing?: Array<Pricing>;
 };
