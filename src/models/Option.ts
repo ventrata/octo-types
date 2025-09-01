@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancellationCutoffUnit } from './CancellationCutoffUnit';
 import type { ContactField } from './ContactField';
 import type { DurationUnit } from './DurationUnit';
 import type { Extra } from './Extra';
@@ -51,7 +50,7 @@ export type Option = {
 	 * minute: Cutoff is measured in minutes.
 	 * day: Cutoff is measured in days.
 	 */
-	cancellationCutoffUnit: CancellationCutoffUnit;
+	cancellationCutoffUnit: DurationUnit;
 	/**
 	 * An array specifying the contact fields required to confirm a booking. These apply to the lead traveler, not individual tickets. Possible values:
 	 * firstName: The first name of the traveler.

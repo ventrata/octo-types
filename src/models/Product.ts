@@ -104,7 +104,7 @@ export type Product = {
 	/**
 	 * Alert message for this product. Only present when ventrata/content capability is requested.
 	 */
-	alert?: string;
+	alert?: string | null;
 	/**
 	 * Title for this product. Only present when ventrata/content capability is requested.
 	 */
@@ -112,11 +112,11 @@ export type Product = {
 	/**
 	 * Subtitle for this product. Only present when ventrata/content capability is requested.
 	 */
-	subtitle?: string;
+	subtitle?: string | null;
 	/**
 	 * Description for this product. Only present when ventrata/content capability is requested.
 	 */
-	description?: string;
+	description?: string | null;
 	/**
 	 * Short description for this product. Only present when ventrata/content capability is requested.
 	 */
@@ -144,26 +144,26 @@ export type Product = {
 	/**
 	 * Booking terms for this product. Only present when ventrata/content capability is requested.
 	 */
-	bookingTerms?: string;
+	bookingTerms?: string | null;
 	/**
 	 * Privacy terms for this product. Only present when ventrata/content capability is requested.
 	 */
-	privacyTerms?: string;
+	privacyTerms?: string | null;
 	/**
 	 * Redemption instructions for this product. Only present when ventrata/content capability is requested.
 	 */
-	redemptionInstructions?: string;
+	redemptionInstructions?: string | null;
 	/**
 	 * Cancellation policy for this product. Only present when ventrata/content capability is requested.
 	 */
-	cancellationPolicy?: string;
+	cancellationPolicy?: string | null;
 	/**
 	 * FAQs for this product. Only present when ventrata/content capability is requested.
 	 */
 	faqs?: Array<FAQ>;
 	coverImageUrl?: string;
 	bannerImageUrl?: string;
-	videoUrl?: string;
+	videoUrl?: string | null;
 	/**
 	 * Gallery image URLs for this product. Only present when ventrata/content capability is requested.
 	 */
@@ -172,7 +172,7 @@ export type Product = {
 	 * Banner image URLs for this product. Only present when ventrata/content capability is requested.
 	 */
 	bannerImages?: Array<Image>;
-	googlePlaceId?: string;
+	googlePlaceId?: string | null;
 	address?: string;
 	keywords?: Array<string>;
 	tagline?: string;

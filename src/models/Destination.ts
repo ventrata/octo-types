@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Brand } from './Brand';
 import type { Category } from './Category';
 import type { DestinationContact } from './DestinationContact';
 import type { Notice } from './Notice';
@@ -35,6 +36,7 @@ export type Destination = {
 	 */
 	country: string | null;
 	contact: DestinationContact;
+	brand: Brand;
 	/**
 	 * The latitude of the destination.
 	 */

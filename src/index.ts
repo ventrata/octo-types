@@ -56,7 +56,6 @@ export type { BookingUpdateBody } from './models/BookingUpdateBody';
 export type { BookingUpdateRequest } from './models/BookingUpdateRequest';
 export type { Brand } from './models/Brand';
 export type { BrandContact } from './models/BrandContact';
-export { CancellationCutoffUnit } from './models/CancellationCutoffUnit';
 export { Capability } from './models/Capability';
 export type { Category } from './models/Category';
 export { ContactField } from './models/ContactField';
