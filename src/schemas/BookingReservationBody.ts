@@ -23,4 +23,5 @@ export const bookingReservationBodySchema = z.object({
 	uuid: z.string().optional(),
 	tags: z.array(z.string()).optional(),
 	orderId: z.string().optional(),
+	metadata: z.record(z.string()).optional(),
 });

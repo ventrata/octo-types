@@ -64,4 +64,5 @@ export type BookingUpdateBody = {
 	 */
 	uuid?: string;
 	tags?: Array<string>;
+	metadata?: Record<string, string>;
 };

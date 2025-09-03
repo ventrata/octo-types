@@ -21,4 +21,5 @@ export const bookingUpdateBodySchema = z.object({
 	redeemed: z.boolean().optional(),
 	uuid: z.string().optional(),
 	tags: z.array(z.string()).optional(),
+	metadata: z.record(z.string()).optional(),
 });

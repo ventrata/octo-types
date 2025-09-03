@@ -3,4 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Octo_BookingCancellationBody } from './Octo_BookingCancellationBody';
-export type BookingCancellationBody = Octo_BookingCancellationBody;
+export type BookingCancellationBody = Octo_BookingCancellationBody & {
+	emailReceipt?: boolean;
+};

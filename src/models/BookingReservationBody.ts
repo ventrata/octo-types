@@ -69,4 +69,5 @@ export type BookingReservationBody = {
 	uuid?: string;
 	tags?: Array<string>;
 	orderId?: string;
+	metadata?: Record<string, string>;
 };

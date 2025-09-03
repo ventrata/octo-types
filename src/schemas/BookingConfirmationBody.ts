@@ -8,4 +8,6 @@ export const bookingConfirmationBodySchema = z.object({
 	resellerReference: z.string().optional(),
 	unitItems: z.array(unitItemIdentifierSchema),
 	contact: bookingContactSchema,
+	notes: z.string().optional(),
+	metadata: z.record(z.string()).optional(),
 });

@@ -21,4 +21,6 @@ export type BookingConfirmationBody = {
 	 * Contact details for the main guest who will attend the tour/attraction. Contact Body can be applied to both the booking object (the main reservation) or the unit object (individual ticket holders - if the supplier requires this information).
 	 */
 	contact: BookingContact;
+	notes?: string;
+	metadata?: Record<string, string>;
 };
