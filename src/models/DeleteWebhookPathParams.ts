@@ -4,7 +4,7 @@
 /* eslint-disable */
 export type DeleteWebhookPathParams = {
 	/**
-	 * The webhook id
+	 * The booking uuid
 	 */
 	id: string;
 };

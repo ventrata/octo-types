@@ -2,7 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/**
- * The booking uuid
- */
-export type BookingConfirmationRequest_uuid = string;
+export type ExtendReservationPathParams = {
+	/**
+	 * The booking uuid
+	 */
+	uuid: string;
+};

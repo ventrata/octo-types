@@ -5,4 +5,4 @@
 /**
  * The booking uuid
  */
-export type BookingConfirmationRequest_uuid = string;
+export type BookingUpdateRequest_uuid = string;

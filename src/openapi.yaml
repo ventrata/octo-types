@@ -541,71 +541,6 @@ paths:
                     errorMessage: either resellerReference, supplierReference, localDate or localDateStart/localDateEnd is required
       tags:
         - Bookings
-    patch:
-      operationId: Bookings_BookingUpdate
-      summary: Booking Update
-      description: Updates a booking before and after it has been confirmed as long as it hasn''t been redeemed or within the cancellation cutoff window. To know if the booking can be updated check the booking''s `cancellable` field. If the booking can be cancelled, it can also be updated. It''s generally preferred to update a booking rather than cancelling it and rebooking
-      parameters:
-        - $ref: '#/components/parameters/Octo.RequestHeaders.octoCapabilities'
-        - $ref: '#/components/parameters/Octo.RequestHeadersContent'
-      responses:
-        '200':
-          description: The request has succeeded.
-          headers:
-            Octo-Capabilities:
-              required: true
-              description: A list of the Capabilities (their IDs) initialized with your request.
-              schema:
-                type: string
-            Content-Language:
-              required: false
-              description: 'This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability.'
-              schema:
-                type: string
-                x-capability-data:
-                  capability: octo/content
-                  required: true
-              x-capability-data:
-                capability: octo/content
-                required: true
-            Available-Languages:
-              required: false
-              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
-              schema:
-                type: string
-                x-capability-data:
-                  capability: octo/content
-                  required: true
-              x-capability-data:
-                capability: octo/content
-                required: true
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Booking'
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                anyOf:
-                  - $ref: '#/components/schemas/Octo.ErrorInvalidProductID'
-                  - $ref: '#/components/schemas/Octo.ErrorInvalidOptionID'
-                  - $ref: '#/components/schemas/Octo.ErrorInvalidUnitID'
-                  - $ref: '#/components/schemas/Octo.ErrorInvalidAvailabilityID'
-                  - $ref: '#/components/schemas/Octo.ErrorInvalidBookingUUID'
-                  - $ref: '#/components/schemas/Octo.ErrorUnprocessableEntity'
-                  - $ref: '#/components/schemas/Octo.ErrorUnauthorized'
-                  - $ref: '#/components/schemas/Octo.ErrorInternalServerError'
-                  - $ref: '#/components/schemas/Octo.ErrorForbidden'
-      tags:
-        - Bookings
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BookingUpdateBody'
   /bookings/{uuid}:
     get:
       operationId: Bookings_GetBooking
@@ -941,15 +876,81 @@ paths:
                     uuid: bbbb6227-54fc-4c32-9ed7-dc3eb99966ea
       tags:
         - Bookings
+    patch:
+      operationId: Bookings_BookingUpdate
+      summary: Booking Update
+      description: Updates a booking before and after it has been confirmed as long as it hasn''t been redeemed or within the cancellation cutoff window. To know if the booking can be updated check the booking''s `cancellable` field. If the booking can be cancelled, it can also be updated. It''s generally preferred to update a booking rather than cancelling it and rebooking
+      parameters:
+        - $ref: '#/components/parameters/BookingUpdateRequest.uuid'
+        - $ref: '#/components/parameters/Octo.RequestHeaders.octoCapabilities'
+        - $ref: '#/components/parameters/Octo.RequestHeadersContent'
+      responses:
+        '200':
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: 'This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability.'
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Octo.ErrorInvalidProductID'
+                  - $ref: '#/components/schemas/Octo.ErrorInvalidOptionID'
+                  - $ref: '#/components/schemas/Octo.ErrorInvalidUnitID'
+                  - $ref: '#/components/schemas/Octo.ErrorInvalidAvailabilityID'
+                  - $ref: '#/components/schemas/Octo.ErrorInvalidBookingUUID'
+                  - $ref: '#/components/schemas/Octo.ErrorUnprocessableEntity'
+                  - $ref: '#/components/schemas/Octo.ErrorUnauthorized'
+                  - $ref: '#/components/schemas/Octo.ErrorInternalServerError'
+                  - $ref: '#/components/schemas/Octo.ErrorForbidden'
+      tags:
+        - Bookings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingUpdateBody'
   /bookings/{uuid}/cancel:
     post:
       operationId: Bookings_BookingCancellation
       summary: Booking Cancellation
       description: For cancelling bookings. You can only cancel a booking if `booking.cancellable` is `TRUE`, and is within the booking cancellation cut-off window.
       parameters:
+        - $ref: '#/components/parameters/BookingCancellationRequest.uuid'
         - $ref: '#/components/parameters/Octo.RequestHeaders.octoCapabilities'
         - $ref: '#/components/parameters/Octo.RequestHeadersContent'
-        - $ref: '#/components/parameters/Octo.BookingCancellationRequest.uuid'
       responses:
         '200':
           description: The request has succeeded.
@@ -1055,9 +1056,9 @@ paths:
       summary: Extend Reservation
       description: Use this endpoint to hold the availability for a booking longer if the status is `ON_HOLD`.
       parameters:
+        - $ref: '#/components/parameters/ExtendReservationRequest.uuid'
         - $ref: '#/components/parameters/Octo.RequestHeaders.octoCapabilities'
         - $ref: '#/components/parameters/Octo.RequestHeadersContent'
-        - $ref: '#/components/parameters/Octo.ExtendReservationRequest.uuid'
       responses:
         '200':
           description: The request has succeeded.
@@ -1921,11 +1922,25 @@ security:
   - BearerAuth: []
 components:
   parameters:
+    BookingCancellationRequest.uuid:
+      name: uuid
+      in: path
+      required: true
+      description: The booking uuid
+      schema:
+        type: string
     BookingConfirmationRequest.uuid:
       name: uuid
       in: path
       required: true
-      description: The UUID of the booking
+      description: The booking uuid
+      schema:
+        type: string
+    BookingUpdateRequest.uuid:
+      name: uuid
+      in: path
+      required: true
+      description: The booking uuid
       schema:
         type: string
     CreateWebhookRequestHeaders.octoCapabilities:
@@ -1939,7 +1954,7 @@ components:
       name: id
       in: path
       required: true
-      description: The webhook id
+      description: The booking uuid
       schema:
         type: string
     DeleteWebhookRequestHeaders.octoCapabilities:
@@ -1947,6 +1962,13 @@ components:
       in: header
       required: true
       description: A list of the Capabilities (their IDs) initialized with your request. ventrata/getyourguide capability is required
+      schema:
+        type: string
+    ExtendReservationRequest.uuid:
+      name: uuid
+      in: path
+      required: true
+      description: The booking uuid
       schema:
         type: string
     GetYourGuideActivateRequestHeaders.octoCapabilities:
@@ -1961,20 +1983,6 @@ components:
       in: header
       required: true
       description: A list of the Capabilities (their IDs) initialized with your request. ventrata/getyourguide capability is required
-      schema:
-        type: string
-    Octo.BookingCancellationRequest.uuid:
-      name: uuid
-      in: path
-      required: true
-      description: The UUID of the booking
-      schema:
-        type: string
-    Octo.ExtendReservationRequest.uuid:
-      name: uuid
-      in: path
-      required: true
-      description: The UUID of the booking
       schema:
         type: string
     Octo.GetBookingRequest.uuid:
@@ -4783,15 +4791,14 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/Octo.BookingCancellationErrorResponse'
-    BookingCancellationRequest:
+    BookingCancellationPathParams:
       type: object
       required:
-        - body
+        - uuid
       properties:
-        body:
-          $ref: '#/components/schemas/BookingCancellationBody'
-      allOf:
-        - $ref: '#/components/schemas/Octo.BookingCancellationRequest'
+        uuid:
+          type: string
+          description: The booking uuid
     BookingCart:
       type: object
       properties:
@@ -4891,6 +4898,14 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/Octo.BookingConfirmationErrorResponse'
+    BookingConfirmationPathParams:
+      type: object
+      required:
+        - uuid
+      properties:
+        uuid:
+          type: string
+          description: The booking uuid
     BookingContact:
       type: object
       properties:
@@ -6180,36 +6195,14 @@ components:
             - en-GB
             - en-US
           country: GB
-    BookingUpdateRequest:
+    BookingUpdatePathParams:
       type: object
       required:
-        - body
+        - uuid
       properties:
-        body:
-          allOf:
-            - $ref: '#/components/schemas/BookingUpdateBody'
-          example:
-            resellerReference: VOUCHER-0123
-            productId: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
-            optionId: DEFAULT
-            availabilityId: '2022-05-23T00:00:00+01:00'
-            expirationMinutes: 15
-            notes: Optional notes
-            emailReceipt: true
-            unitItems:
-              - uuid: 3b1bc2ee-3155-4738-9471-f49842a07327
-                unitId: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
-            contact:
-              fullName: John Doe
-              firstName: John
-              lastName: Doe
-              emailAddress: johndoe@email.com
-              phoneNumber: '+447840739436'
-              locales:
-                - en
-                - en-GB
-                - en-US
-              country: GB
+        uuid:
+          type: string
+          description: The booking uuid
     Brand:
       type: object
       required:
@@ -6350,7 +6343,7 @@ components:
       properties:
         id:
           allOf:
-            - $ref: '#/components/schemas/Octo.CapabilityId'
+            - $ref: '#/components/schemas/CapabilityId'
           description: Unique identifier of the capability.
           example: octo/pricing
         revision:
@@ -6710,7 +6703,7 @@ components:
       properties:
         id:
           type: string
-          description: The webhook id
+          description: The booking uuid
     DeliveryFormat:
       type: string
       enum:
@@ -7076,15 +7069,14 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/Octo.ExtendReservationErrorResponse'
-    ExtendReservationRequest:
+    ExtendReservationPathParams:
       type: object
       required:
-        - body
+        - uuid
       properties:
-        body:
-          $ref: '#/components/schemas/ExtendReservationBody'
-      allOf:
-        - $ref: '#/components/schemas/Octo.ExtendReservationRequest'
+        uuid:
+          type: string
+          description: The booking uuid
     Extra:
       type: object
       required:
@@ -8396,17 +8388,6 @@ components:
             - $ref: '#/components/schemas/Octo.ErrorUnauthorized'
             - $ref: '#/components/schemas/Octo.ErrorInternalServerError'
             - $ref: '#/components/schemas/Octo.ErrorForbidden'
-    Octo.BookingCancellationRequest:
-      type: object
-      required:
-        - uuid
-        - body
-      properties:
-        uuid:
-          type: string
-          description: The UUID of the booking
-        body:
-          $ref: '#/components/schemas/Octo.BookingCancellationBody'
     Octo.BookingConfirmationErrorResponse:
       type: object
       required:
@@ -8573,17 +8554,6 @@ components:
             - $ref: '#/components/schemas/Octo.ErrorUnauthorized'
             - $ref: '#/components/schemas/Octo.ErrorInternalServerError'
             - $ref: '#/components/schemas/Octo.ErrorForbidden'
-    Octo.ExtendReservationRequest:
-      type: object
-      required:
-        - uuid
-        - body
-      properties:
-        uuid:
-          type: string
-          description: The UUID of the booking
-        body:
-          $ref: '#/components/schemas/Octo.ExtendReservationBody'
     Octo.GetBookingRequest:
       type: object
       required:

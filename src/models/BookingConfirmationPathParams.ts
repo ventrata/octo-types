@@ -2,7 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BookingUpdateBody } from './BookingUpdateBody';
-export type BookingUpdateRequest = {
-	body: BookingUpdateBody;
+export type BookingConfirmationPathParams = {
+	/**
+	 * The booking uuid
+	 */
+	uuid: string;
 };

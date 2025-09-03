@@ -2,12 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { CapabilityId } from './CapabilityId';
 import type { Octo_CapabilityId } from './Octo_CapabilityId';
 export type Capability = {
 	/**
 	 * Unique identifier of the capability.
 	 */
-	id: Octo_CapabilityId;
+	id: CapabilityId;
 	/**
 	 * Revision number for the capability.
 	 */

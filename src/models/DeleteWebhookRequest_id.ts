@@ -3,6 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * The webhook id
+ * The booking uuid
  */
 export type DeleteWebhookRequest_id = string;

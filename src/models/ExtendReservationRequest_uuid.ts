@@ -3,6 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * The UUID of the booking
+ * The booking uuid
  */
-export type Octo_ExtendReservationRequest_uuid = string;
+export type ExtendReservationRequest_uuid = string;
