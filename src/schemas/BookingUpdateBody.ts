@@ -22,4 +22,8 @@ export const bookingUpdateBodySchema = z.object({
 	uuid: z.string().optional(),
 	tags: z.array(z.string()).optional(),
 	metadata: z.record(z.string()).optional(),
+	pickupRequested: z.boolean().optional(),
+	pickupPointId: z.string().optional(),
+	pickupHotel: z.string().optional(),
+	pickupHotelRoom: z.string().optional(),
 });

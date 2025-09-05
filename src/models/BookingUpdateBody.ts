@@ -65,4 +65,20 @@ export type BookingUpdateBody = {
 	uuid?: string;
 	tags?: Array<string>;
 	metadata?: Record<string, string>;
+	/**
+	 * Whether the customer requested pickup.
+	 */
+	pickupRequested?: boolean;
+	/**
+	 * The ID of the chosen pickup point.
+	 */
+	pickupPointId?: string;
+	/**
+	 * The hotel address (optional).
+	 */
+	pickupHotel?: string;
+	/**
+	 * The hotel room number (optional).
+	 */
+	pickupHotelRoom?: string;
 };

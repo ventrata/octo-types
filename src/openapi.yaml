@@ -8,6 +8,8 @@ tags:
   - name: Availability
   - name: Bookings
   - name: Capabilities
+  - name: Orders
+  - name: Mappings
   - name: Webhooks
   - name: WHOIAM
   - name: GetYourGuide
@@ -1160,6 +1162,450 @@ paths:
                       docs: This capability enables booking creation.
       tags:
         - Capabilities
+  /mappings/mappings:
+    post:
+      operationId: Mappings_put
+      summary: Update Mappings
+      description: Update Mappings
+      parameters:
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Mapping"
+              examples:
+                Update Mappings response:
+                  summary: Update Mappings response
+                  description: Update Mappings response
+                  value:
+                    - id: map-001
+                      resellerReference: res-789
+                      resellerStatus: ACTIVE
+                      title: GetYourGuide - London Tour
+                      url: https://reseller.example.com/product/123
+                      webhookUrl: https://webhooks.example.com/gyg
+                      optionRequired: true
+                      unitRequired: false
+                      productId: prod-001
+                      optionId: opt-001
+                      unitId: unit-001
+                      connected: true
+      tags:
+        - Mappings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/MappingToUpdate"
+    get:
+      operationId: Mappings_get
+      summary: List all mappings
+      description: List all mappings
+      parameters:
+        - $ref: "#/components/parameters/GetMappingsQueryParams.productId"
+        - $ref: "#/components/parameters/GetMappingsQueryParams.optionId"
+        - $ref: "#/components/parameters/GetMappingsQueryParams.resellerReference"
+        - $ref: "#/components/parameters/GetMappingsQueryParams.resellerStatus"
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Mapping"
+              examples:
+                Get Mappings response:
+                  summary: Get Mappings response
+                  description: Get Mappings response
+                  value:
+                    - id: map-001
+                      resellerReference: res-789
+                      resellerStatus: ACTIVE
+                      title: GetYourGuide - London Tour
+                      url: https://reseller.example.com/product/123
+                      webhookUrl: https://webhooks.example.com/gyg
+                      optionRequired: true
+                      unitRequired: false
+                      productId: prod-001
+                      optionId: opt-001
+                      unitId: unit-001
+                      connected: true
+      tags:
+        - Mappings
+  /order/{id}:
+    post:
+      operationId: Orders_CreateOrder
+      summary: Create Order
+      description: Using this endpoint is optional if you prefer to create the order first before creating your first booking.
+      parameters:
+        - $ref: "#/components/parameters/CreateOrderRequest.id"
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderBody"
+    get:
+      operationId: Orders_GetOrder
+      summary: Get Order
+      description: A convenient method to retrieve an existing order
+      parameters:
+        - $ref: "#/components/parameters/GetOrderRequest.id"
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+      tags:
+        - Orders
+  /order/{id}/cancel:
+    post:
+      operationId: Orders_OrderCancellation
+      summary: Order Cancellation
+      description: This cancels the order and any bookings inside it.
+      parameters:
+        - $ref: "#/components/parameters/CancelOrderRequest.id"
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CancelOrderBody"
+  /order/{id}/confirm:
+    post:
+      operationId: Orders_ConfirmOrder
+      summary: Order Confirmation
+      description: Confirms the order and all the bookings it contains.
+      parameters:
+        - $ref: "#/components/parameters/ConfirmOrderRequest.id"
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfirmOrderBody"
+  /order/{id}/extend:
+    post:
+      operationId: Orders_ExtendOrder
+      summary: Extend Order
+      description: If the order has a status of ON_HOLD and you need more time before confirming the order.
+      parameters:
+        - $ref: "#/components/parameters/ExtendOrderRequest.id"
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExtendOrderBody"
+  /order/{id}/update:
+    patch:
+      operationId: Orders_OrderUpdate
+      summary: Order Update
+      description: Updates the order and all the bookings it contains.
+      parameters:
+        - $ref: "#/components/parameters/UpdateOrderRequest.id"
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateOrderBody"
   /products/:
     get:
       operationId: Products_GetProducts
@@ -1943,6 +2389,27 @@ components:
       description: The booking uuid
       schema:
         type: string
+    CancelOrderRequest.id:
+      name: id
+      in: path
+      required: true
+      description: 0effd05e-d61e-47f2-8fc9-512f3144c69d
+      schema:
+        type: string
+    ConfirmOrderRequest.id:
+      name: id
+      in: path
+      required: true
+      description: 0effd05e-d61e-47f2-8fc9-512f3144c69d
+      schema:
+        type: string
+    CreateOrderRequest.id:
+      name: id
+      in: path
+      required: true
+      description: 0effd05e-d61e-47f2-8fc9-512f3144c69d
+      schema:
+        type: string
     CreateWebhookRequestHeaders.octoCapabilities:
       name: Octo-Capabilities
       in: header
@@ -1964,11 +2431,57 @@ components:
       description: A list of the Capabilities (their IDs) initialized with your request. ventrata/getyourguide capability is required
       schema:
         type: string
+    ExtendOrderRequest.id:
+      name: id
+      in: path
+      required: true
+      description: 0effd05e-d61e-47f2-8fc9-512f3144c69d
+      schema:
+        type: string
     ExtendReservationRequest.uuid:
       name: uuid
       in: path
       required: true
       description: The booking uuid
+      schema:
+        type: string
+    GetMappingsQueryParams.optionId:
+      name: optionId
+      in: query
+      required: false
+      description: Optional option ID to filter mappings.
+      schema:
+        type: string
+      explode: false
+    GetMappingsQueryParams.productId:
+      name: productId
+      in: query
+      required: false
+      description: Optional product ID to filter mappings.
+      schema:
+        type: string
+      explode: false
+    GetMappingsQueryParams.resellerReference:
+      name: resellerReference
+      in: query
+      required: false
+      description: Optional external reference from the reseller.
+      schema:
+        type: string
+      explode: false
+    GetMappingsQueryParams.resellerStatus:
+      name: resellerStatus
+      in: query
+      required: false
+      description: Optional status of the mapping on the reseller side.
+      schema:
+        $ref: "#/components/schemas/ResellerStatus"
+      explode: false
+    GetOrderRequest.id:
+      name: id
+      in: path
+      required: true
+      description: 0effd05e-d61e-47f2-8fc9-512f3144c69d
       schema:
         type: string
     GetYourGuideActivateRequestHeaders.octoCapabilities:
@@ -2086,6 +2599,13 @@ components:
       name: Ventrata-Partner-Key
       in: header
       required: true
+      schema:
+        type: string
+    UpdateOrderRequest.id:
+      name: id
+      in: path
+      required: true
+      description: 0effd05e-d61e-47f2-8fc9-512f3144c69d
       schema:
         type: string
   schemas:
@@ -4834,7 +5354,6 @@ components:
     BookingConfirmationBody:
       type: object
       required:
-        - unitItems
         - contact
       properties:
         emailReceipt:
@@ -4881,6 +5400,46 @@ components:
           type: object
           additionalProperties:
             type: string
+        pickupRequested:
+          type: boolean
+          description: Whether the customer requested pickup.
+          example: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupPointId:
+          type: string
+          description: The ID of the chosen pickup point.
+          example: pickup-123
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupHotel:
+          type: string
+          description: The hotel address (optional).
+          example: 123 City Hotel, Downtown
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupHotelRoom:
+          type: string
+          description: The hotel room number (optional).
+          example: Room 405
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
       example:
         resellerReference: VOUCHER-0123
         contact:
@@ -5408,6 +5967,54 @@ components:
         packageIncludeId: ""
         packageInclude: null
         packageBookings: []
+    BookingPickupBody:
+      type: object
+      properties:
+        pickupRequested:
+          type: boolean
+          description: Whether the customer requested pickup.
+          example: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupPointId:
+          type: string
+          description: The ID of the chosen pickup point.
+          example: pickup-123
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupHotel:
+          type: string
+          description: The hotel address (optional).
+          example: 123 City Hotel, Downtown
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupHotelRoom:
+          type: string
+          description: The hotel room number (optional).
+          example: Room 405
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+      example:
+        pickupRequested: true
+        pickupPointId: pickup-123
+        pickupHotel: 123 City Hotel, Downtown
+        pickupHotelRoom: Room 405
     BookingPickups:
       type: object
       properties:
@@ -5693,6 +6300,46 @@ components:
           type: object
           additionalProperties:
             type: string
+        pickupRequested:
+          type: boolean
+          description: Whether the customer requested pickup.
+          example: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupPointId:
+          type: string
+          description: The ID of the chosen pickup point.
+          example: pickup-123
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupHotel:
+          type: string
+          description: The hotel address (optional).
+          example: 123 City Hotel, Downtown
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupHotelRoom:
+          type: string
+          description: The hotel room number (optional).
+          example: Room 405
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
       example:
         productId: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
         optionId: DEFAULT
@@ -6191,6 +6838,46 @@ components:
           type: object
           additionalProperties:
             type: string
+        pickupRequested:
+          type: boolean
+          description: Whether the customer requested pickup.
+          example: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupPointId:
+          type: string
+          description: The ID of the chosen pickup point.
+          example: pickup-123
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupHotel:
+          type: string
+          description: The hotel address (optional).
+          example: 123 City Hotel, Downtown
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupHotelRoom:
+          type: string
+          description: The hotel room number (optional).
+          example: Room 405
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
       example:
         resellerReference: VOUCHER-0123
         productId: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
@@ -6350,6 +7037,15 @@ components:
         telephone: null
         address: null
         website: null
+    CancelOrderBody:
+      type: object
+      properties:
+        reason:
+          type: string
+          description: A text description reason for cancelling
+          example: Customer Requested
+      example:
+        reason: A text description reason for cancelling
     Capability:
       type: object
       required:
@@ -6494,6 +7190,83 @@ components:
         bannerImageUrl: The URL of the image that represents the category.
         productIds:
           - 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
+    ConfirmOrderBody:
+      type: object
+      properties:
+        expirationMinutes:
+          type: integer
+          format: int32
+          description: Optional expiration duration for the order, in minutes.
+          example: 30
+        emailReceipt:
+          type: boolean
+          description: Whether to send a receipt to the customer's email.
+          example: true
+        contact:
+          allOf:
+            - $ref: "#/components/schemas/BookingContact"
+          description: Contact information for the order.
+          example:
+            fullName: John Doe
+            firstName: John
+            lastName: Doe
+            emailAddress: johndoe@email.com
+            phoneNumber: "+447840739436"
+            locales:
+              - en
+              - en-GB
+              - en-US
+            country: GB
+            taxId: ""
+            streetAddress: ""
+            city: ""
+            state: ""
+            allowMarketing: true
+        currency:
+          type: string
+          description: Optional ISO 4217 currency code for the order.
+          example: USD
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+      example:
+        expirationMinutes: 30
+        emailReceipt: true
+        contact:
+          fullName: John Doe
+          firstName: John
+          lastName: Doe
+          emailAddress: johndoe@email.com
+          phoneNumber: "+447840739436"
+          locales:
+            - en
+            - en-GB
+            - en-US
+          country: GB
+          taxId: ""
+          streetAddress: ""
+          city: ""
+          state: ""
+          allowMarketing: true
+        currency: USD
+    ConfirmOrderPricingBody:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: Optional ISO 4217 currency code for the order.
+          example: USD
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+      example:
+        currency: USD
     ContactField:
       type: string
       enum:
@@ -6507,6 +7280,83 @@ components:
         - allowMarketing
         - postalCode
       example: emailAddress
+    CreateOrderBody:
+      type: object
+      properties:
+        expirationMinutes:
+          type: integer
+          format: int32
+          description: Optional expiration duration for the order, in minutes.
+          example: 30
+        emailReceipt:
+          type: boolean
+          description: Whether to send a receipt to the customer's email.
+          example: true
+        contact:
+          allOf:
+            - $ref: "#/components/schemas/BookingContact"
+          description: Contact information for the order.
+          example:
+            fullName: John Doe
+            firstName: John
+            lastName: Doe
+            emailAddress: johndoe@email.com
+            phoneNumber: "+447840739436"
+            locales:
+              - en
+              - en-GB
+              - en-US
+            country: GB
+            taxId: ""
+            streetAddress: ""
+            city: ""
+            state: ""
+            allowMarketing: true
+        currency:
+          type: string
+          description: Optional ISO 4217 currency code for the order.
+          example: USD
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+      example:
+        expirationMinutes: 30
+        emailReceipt: true
+        contact:
+          fullName: John Doe
+          firstName: John
+          lastName: Doe
+          emailAddress: johndoe@email.com
+          phoneNumber: "+447840739436"
+          locales:
+            - en
+            - en-GB
+            - en-US
+          country: GB
+          taxId: ""
+          streetAddress: ""
+          city: ""
+          state: ""
+          allowMarketing: true
+        currency: USD
+    CreateOrderPricingBody:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: Optional ISO 4217 currency code for the order.
+          example: USD
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+      example:
+        currency: USD
     CreateWaitlistRequest:
       type: object
       required:
@@ -7077,6 +7927,13 @@ components:
         - hour
         - day
       example: hour
+    ExtendOrderBody:
+      type: object
+      properties:
+        expirationMinutes:
+          type: integer
+      example:
+        expirationMinutes: 15
     ExtendReservationBody:
       type: object
       allOf:
@@ -7391,6 +8248,26 @@ components:
       type: object
       allOf:
         - $ref: "#/components/schemas/Octo.GetBookingsRequest"
+    GetMappingsRequest:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: Optional product ID to filter mappings.
+          example: prod_123
+        optionId:
+          type: string
+          description: Optional option ID to filter mappings.
+          example: opt_456
+        resellerReference:
+          type: string
+          description: Optional external reference from the reseller.
+          example: ABC-987
+        resellerStatus:
+          allOf:
+            - $ref: "#/components/schemas/ResellerStatus"
+          description: Optional status of the mapping on the reseller side.
+          example: ACTIVE
     GetProductRequest:
       type: object
       allOf:
@@ -8300,6 +9177,55 @@ components:
         optionId: opt-001
         unitId: unit-001
         connected: true
+    MappingToUpdate:
+      type: object
+      required:
+        - resellerReference
+        - resellerStatus
+        - title
+        - url
+        - webhookUrl
+        - optionRequired
+        - unitRequired
+      properties:
+        resellerReference:
+          type: string
+          description: Reference string provided by the reseller.
+          example: res-789
+        resellerStatus:
+          allOf:
+            - $ref: "#/components/schemas/ResellerStatus"
+          description: Current status of the mapping from the reseller perspective.
+          example: ACTIVE
+        title:
+          type: string
+          description: Display title of the mapping.
+          example: GetYourGuide - London Tour
+        url:
+          type: string
+          description: Public-facing URL of the mapping.
+          example: https://reseller.example.com/product/123
+        webhookUrl:
+          type: string
+          nullable: true
+          description: Optional webhook URL for updates.
+          example: https://webhooks.example.com/gyg
+        optionRequired:
+          type: boolean
+          description: Indicates whether the product option is required.
+          example: true
+        unitRequired:
+          type: boolean
+          description: Indicates whether a unit is required.
+          example: false
+      example:
+        resellerReference: res-789
+        resellerStatus: ACTIVE
+        title: GetYourGuide - London Tour
+        url: https://reseller.example.com/product/123
+        webhookUrl: https://webhooks.example.com/gyg
+        optionRequired: true
+        unitRequired: false
     MediaRel:
       type: string
       enum:
@@ -10115,6 +11041,15 @@ components:
           x-capability-data:
             capability: octo/offers
             required: true
+    OrderPathParams:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: The order ID
+          example: 0effd05e-d61e-47f2-8fc9-512f3144c69d
     PackageInclude:
       type: object
       required:
@@ -13675,6 +14610,92 @@ components:
         - MILITARY
         - OTHER
       example: ADULT
+    UpdateMappingsRequest:
+      type: object
+      required:
+        - body
+      properties:
+        body:
+          type: array
+          items:
+            $ref: "#/components/schemas/MappingToUpdate"
+    UpdateOrderBody:
+      type: object
+      properties:
+        expirationMinutes:
+          type: integer
+          format: int32
+          description: Optional expiration duration for the order, in minutes.
+          example: 30
+        emailReceipt:
+          type: boolean
+          description: Whether to send a receipt to the customer's email.
+          example: true
+        contact:
+          allOf:
+            - $ref: "#/components/schemas/BookingContact"
+          description: Contact information for the order.
+          example:
+            fullName: John Doe
+            firstName: John
+            lastName: Doe
+            emailAddress: johndoe@email.com
+            phoneNumber: "+447840739436"
+            locales:
+              - en
+              - en-GB
+              - en-US
+            country: GB
+            taxId: ""
+            streetAddress: ""
+            city: ""
+            state: ""
+            allowMarketing: true
+        currency:
+          type: string
+          description: Optional ISO 4217 currency code for the order.
+          example: USD
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+      example:
+        expirationMinutes: 30
+        emailReceipt: true
+        contact:
+          fullName: John Doe
+          firstName: John
+          lastName: Doe
+          emailAddress: johndoe@email.com
+          phoneNumber: "+447840739436"
+          locales:
+            - en
+            - en-GB
+            - en-US
+          country: GB
+          taxId: ""
+          streetAddress: ""
+          city: ""
+          state: ""
+          allowMarketing: true
+        currency: USD
+    UpdateOrderPricingBody:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: Optional ISO 4217 currency code for the order.
+          example: USD
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+      example:
+        currency: USD
     User:
       type: object
       required:

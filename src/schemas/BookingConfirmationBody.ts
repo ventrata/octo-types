@@ -6,8 +6,12 @@ import { bookingContactSchema } from './BookingContact';
 export const bookingConfirmationBodySchema = z.object({
 	emailReceipt: z.boolean().optional(),
 	resellerReference: z.string().optional(),
-	unitItems: z.array(unitItemIdentifierSchema),
+	unitItems: z.array(unitItemIdentifierSchema).optional(),
 	contact: bookingContactSchema,
 	notes: z.string().optional(),
 	metadata: z.record(z.string()).optional(),
+	pickupRequested: z.boolean().optional(),
+	pickupPointId: z.string().optional(),
+	pickupHotel: z.string().optional(),
+	pickupHotelRoom: z.string().optional(),
 });
