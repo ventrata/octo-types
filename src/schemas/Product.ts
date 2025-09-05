@@ -72,6 +72,6 @@ export const productSchema: z.ZodSchema<Product> = z.lazy(() =>
 		includeTax: z.boolean().optional(),
 		isPackage: z.boolean().optional(),
 		packageBookingAvailabilityRequired: z.boolean().optional(),
-		googleOptions: z.array(googleOptionsSchema).optional(),
+		googleOptions: googleOptionsSchema.optional(),
 	}),
 );

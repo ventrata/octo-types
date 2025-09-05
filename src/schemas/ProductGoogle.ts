@@ -3,5 +3,5 @@ import { z } from 'zod';
 import { googleOptionsSchema } from './GoogleOptions';
 
 export const productGoogleSchema = z.object({
-	googleOptions: z.array(googleOptionsSchema).optional(),
+	googleOptions: googleOptionsSchema.optional(),
 });

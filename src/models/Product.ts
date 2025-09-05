@@ -194,5 +194,5 @@ export type Product = {
 	includeTax?: boolean;
 	isPackage?: boolean;
 	packageBookingAvailabilityRequired?: boolean;
-	googleOptions?: Array<GoogleOptions>;
+	googleOptions?: GoogleOptions;
 };
