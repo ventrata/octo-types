@@ -10,7 +10,7 @@ export const googleOptionsSchema = z.object({
 	operator: googleOperatorSchema.nullable(),
 	rating: googleRatingSchema.nullable(),
 	landing_page: googleUrlSchema,
-	inventory_type: z.string(),
+	inventory_types: z.array(z.string()),
 	landing_page_list_view: googleUrlSchema,
 	option_categories: z.array(googleOptionCategorySchema),
 	related_locations: z.array(googleRelatedLocationSchema),

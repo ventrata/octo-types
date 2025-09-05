@@ -8673,7 +8673,7 @@ components:
         - operator
         - rating
         - landing_page
-        - inventory_type
+        - inventory_types
         - landing_page_list_view
         - option_categories
         - related_locations
@@ -8694,10 +8694,13 @@ components:
           allOf:
             - $ref: '#/components/schemas/GoogleUrl'
           description: Google landing page URL.
-        inventory_type:
-          type: string
+        inventory_types:
+          type: array
+          items:
+            type: string
           description: Type of inventory (e.g., TICKETED, SCHEDULED).
-          example: ''
+          example:
+            - INVENTORY_TYPE_OFFICIAL
         landing_page_list_view:
           allOf:
             - $ref: '#/components/schemas/GoogleUrl'
@@ -8728,7 +8731,8 @@ components:
           rating_count: 1245
         landing_page:
           url: https://maps.google.com/?cid=123456789
-        inventory_type: ''
+        inventory_types:
+          - INVENTORY_TYPE_OFFICIAL
         landing_page_list_view:
           url: https://maps.google.com/?cid=123456789
         option_categories:
@@ -11531,6 +11535,17 @@ components:
           example: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
         unitType:
           $ref: '#/components/schemas/UnitType'
+        offerDiscount:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/OfferDiscount'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/offers
+            required: true
+          x-capability-data:
+            capability: octo/offers
+            required: true
         extraPricing:
           type: array
           items:

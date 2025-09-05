@@ -23,7 +23,7 @@ export type GoogleOptions = {
 	/**
 	 * Type of inventory (e.g., TICKETED, SCHEDULED).
 	 */
-	inventory_type: string;
+	inventory_types: Array<string>;
 	/**
 	 * Google list view landing page URL.
 	 */
