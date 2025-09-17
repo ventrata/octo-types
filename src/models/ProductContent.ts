@@ -39,7 +39,7 @@ export type ProductContent = {
 	/**
 	 * Short description for this product. Only present when ventrata/content capability is requested.
 	 */
-	shortDescription?: string;
+	shortDescription?: string | null;
 	/**
 	 * Categories for this product. Only present when ventrata/content capability is requested.
 	 */
@@ -80,8 +80,8 @@ export type ProductContent = {
 	 * FAQs for this product. Only present when ventrata/content capability is requested.
 	 */
 	faqs?: Array<FAQ>;
-	coverImageUrl?: string;
-	bannerImageUrl?: string;
+	coverImageUrl?: string | null;
+	bannerImageUrl?: string | null;
 	videoUrl?: string | null;
 	/**
 	 * Gallery image URLs for this product. Only present when ventrata/content capability is requested.
@@ -96,6 +96,6 @@ export type ProductContent = {
 	longitude?: number;
 	address?: string;
 	keywords?: Array<string>;
-	tagline?: string;
+	tagline?: string | null;
 	brand?: Brand;
 };

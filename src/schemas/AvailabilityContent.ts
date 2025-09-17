@@ -4,11 +4,13 @@ import { tourGroupSchema } from './TourGroup';
 import { noticeSchema } from './Notice';
 
 export const availabilityContentSchema = z.object({
-	meetingPoint: z.string().optional(),
-	meetingPointCoordinates: z.array(z.number()).optional(),
-	meetingPointLatitude: z.number().optional(),
-	meetingPointLongitude: z.number().optional(),
-	meetingLocalDateTime: z.string().optional(),
-	tourGroup: tourGroupSchema.optional(),
+	meetingPoint: z.string().optional().nullable(),
+	meetingPointCoordinates: z.string().optional().nullable(),
+	meetingPointDirections: z.string().optional().nullable(),
+	meetingPointLatitude: z.number().optional().nullable(),
+	meetingPointLongitude: z.number().optional().nullable(),
+	meetingLocalDateTime: z.string().optional().nullable(),
+	tourGroup: tourGroupSchema.optional().nullable(),
+	fare: z.any().optional(),
 	notices: z.array(noticeSchema).optional(),
 });

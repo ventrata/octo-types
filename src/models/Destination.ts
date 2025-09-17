@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Brand } from './Brand';
-import type { Category } from './Category';
 import type { DestinationContact } from './DestinationContact';
 import type { Notice } from './Notice';
 export type Destination = {
@@ -82,11 +81,15 @@ export type Destination = {
 	 * The Instagram URL for the destination.
 	 */
 	instagramUrl: string | null;
-	/**
-	 * An array of categories that the destination falls under.
-	 */
-	categories: Array<Category>;
 	tags: Array<string>;
 	address: string | null;
 	notices: Array<Notice>;
+	/**
+	 * Is on the object when Pricing capability is requested. Default currency for this product, if you omit the currency parameter on future endpoints this is the value the reservation system will fallback to.
+	 */
+	defaultCurrency?: string;
+	/**
+	 * Is on the object when Pricing capability is requested. All the possible currencies that we accept for this product.
+	 */
+	availableCurrencies?: Array<string>;
 };

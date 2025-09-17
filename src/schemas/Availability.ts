@@ -8,6 +8,7 @@ import { pricingSchema } from './Pricing';
 import { offerSchema } from './Offer';
 import { tourGroupSchema } from './TourGroup';
 import { noticeSchema } from './Notice';
+import { extraPricingSchema } from './ExtraPricing';
 
 export const availabilitySchema = z.object({
 	id: z.string(),
@@ -21,6 +22,7 @@ export const availabilitySchema = z.object({
 	capacity: z.number().nullable(),
 	maxUnits: z.number().nullable(),
 	openingHours: z.array(openingHoursSchema),
+	code: z.string().nullable(),
 	totalCapacity: z.number().nullable(),
 	limitCapacity: z.number().nullable(),
 	limitPaxCount: z.number(),
@@ -38,11 +40,15 @@ export const availabilitySchema = z.object({
 	offerTitle: z.string().optional().nullable(),
 	offers: z.array(offerSchema).optional(),
 	offer: offerSchema.optional().nullable(),
-	meetingPoint: z.string().optional(),
-	meetingPointCoordinates: z.array(z.number()).optional(),
-	meetingPointLatitude: z.number().optional(),
-	meetingPointLongitude: z.number().optional(),
-	meetingLocalDateTime: z.string().optional(),
-	tourGroup: tourGroupSchema.optional(),
+	meetingPoint: z.string().optional().nullable(),
+	meetingPointCoordinates: z.string().optional().nullable(),
+	meetingPointDirections: z.string().optional().nullable(),
+	meetingPointLatitude: z.number().optional().nullable(),
+	meetingPointLongitude: z.number().optional().nullable(),
+	meetingLocalDateTime: z.string().optional().nullable(),
+	tourGroup: tourGroupSchema.optional().nullable(),
+	fare: z.any().optional(),
 	notices: z.array(noticeSchema).optional(),
+	extraPricing: z.array(extraPricingSchema).optional(),
+	hasResources: z.boolean().optional(),
 });

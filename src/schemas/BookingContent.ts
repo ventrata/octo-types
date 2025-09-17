@@ -10,6 +10,7 @@ export const bookingContentSchema = z.object({
 	meetingLocalDateTime: z.string().optional().nullable(),
 	meetingPoint: z.string().optional().nullable(),
 	meetingPointCoordinates: z.string().optional().nullable(),
+	meetingPointDirections: z.string().optional().nullable(),
 	notices: z.array(noticeSchema).optional(),
 	termsAccepted: z.boolean().optional(),
 });

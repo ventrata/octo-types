@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { taxSchema } from './Tax';
 import { unitTypeSchema } from './UnitType';
 import { offerDiscountSchema } from './OfferDiscount';
-import { pricingSchema } from './Pricing';
+import { extraPricingSchema } from './ExtraPricing';
 
 export const pricingUnitSchema = z.object({
 	original: z.number(),
@@ -15,5 +15,6 @@ export const pricingUnitSchema = z.object({
 	unitId: z.string(),
 	unitType: unitTypeSchema,
 	offerDiscount: offerDiscountSchema.optional().nullable(),
-	extraPricing: z.array(pricingSchema).optional(),
+	extraPricing: z.array(extraPricingSchema).optional(),
+	extraPricingFrom: z.array(extraPricingSchema).optional(),
 });

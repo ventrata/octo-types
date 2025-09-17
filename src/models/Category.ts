@@ -35,8 +35,4 @@ export type Category = {
 	 * The URL of the image that represents the category.
 	 */
 	bannerImageUrl: string | null;
-	/**
-	 * An array of product IDs that the category falls under. This field is not visible if this Category is a product category.
-	 */
-	productIds: Array<string>;
 };

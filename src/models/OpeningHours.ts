@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { DurationUnit } from './DurationUnit';
 /**
  * Defines the opening hours for this availability, even for start time-based availability. Supports multiple periods for breaks in the day.
  */
@@ -17,13 +18,13 @@ export type OpeningHours = {
 	/**
 	 * Optional label for how frequently the event occurs (e.g., daily, weekly).
 	 */
-	frequency?: string;
+	frequency?: string | null;
 	/**
 	 * Optional numeric amount representing the interval frequency.
 	 */
-	frequencyAmount?: number;
+	frequencyAmount?: number | null;
 	/**
 	 * Optional unit for frequency (e.g., day, week, month).
 	 */
-	frequencyUnit?: string;
+	frequencyUnit?: DurationUnit;
 };

@@ -8,15 +8,19 @@ import type { BookingAdjustment } from './BookingAdjustment';
 import type { BookingCancellation } from './BookingCancellation';
 import type { BookingRejection } from './BookingRejection';
 import type { BookingStatus } from './BookingStatus';
+import type { CardPayment } from './CardPayment';
 import type { ContactField } from './ContactField';
 import type { CustomerContact } from './CustomerContact';
 import type { DeliveryMethod } from './DeliveryMethod';
 import type { DurationUnit } from './DurationUnit';
 import type { ExtraItem } from './ExtraItem';
+import type { ExtraPricing } from './ExtraPricing';
 import type { GiftPayment } from './GiftPayment';
 import type { Identity } from './Identity';
 import type { Include } from './Include';
 import type { Label } from './Label';
+import type { Membership } from './Membership';
+import type { MembershipBenefit } from './MembershipBenefit';
 import type { Notice } from './Notice';
 import type { Offer } from './Offer';
 import type { OfferComparison } from './OfferComparison';
@@ -25,6 +29,7 @@ import type { PickupPoint } from './PickupPoint';
 import type { Pricing } from './Pricing';
 import type { Product } from './Product';
 import type { QuestionAnswer } from './QuestionAnswer';
+import type { RentalDuration } from './RentalDuration';
 import type { Reseller } from './Reseller';
 import type { ResourceAllocation } from './ResourceAllocation';
 import type { Seller } from './Seller';
@@ -98,7 +103,7 @@ export type Booking = {
 	/**
 	 * The ID of option booked.
 	 */
-	option?: Option;
+	option: Option;
 	/**
 	 * The object of booked option.
 	 */
@@ -190,14 +195,16 @@ export type Booking = {
 	localDateTimeEnd: string;
 	emailReceipt: boolean;
 	label: Label | null;
+	metadata: Record<string, string>;
+	updatable: boolean;
+	availabilityLocalDateStart: string | null;
+	availabilityLocalDateEnd: string | null;
+	guide: Seller | null;
+	driver: Seller | null;
 	/**
 	 * Whether the booking requires a pickup. This field is only present when octo/pickups capability is requested.
 	 */
 	pickupRequested?: boolean;
-	/**
-	 * The pickup ID that identifies the pickup in the booking system to make this reservation. This field is only present when octo/pickups capability is requested.
-	 */
-	pickupId?: string | null;
 	/**
 	 * A hotel name and address that will be included in the booking.
 	 * This field is only present when octo/pickups capability is requested.
@@ -216,12 +223,17 @@ export type Booking = {
 	 * A pickup point that will be included in the booking. This field is only present when octo/pickups capability is requested.
 	 */
 	pickupPoint?: PickupPoint | null;
+	pickupPointId?: string | null;
+	pickupHotelRoom?: string | null;
+	pickupDispatch?: string | null;
+	dropoffDispatch?: string | null;
 	duration?: string;
 	durationAmount?: number;
 	durationUnit?: DurationUnit;
 	meetingLocalDateTime?: string | null;
 	meetingPoint?: string | null;
 	meetingPointCoordinates?: string | null;
+	meetingPointDirections?: string | null;
 	notices?: Array<Notice>;
 	termsAccepted?: boolean;
 	primary?: boolean;
@@ -256,6 +268,7 @@ export type Booking = {
 	resourceAllocations?: Array<ResourceAllocation>;
 	giftPayment?: GiftPayment | null;
 	extraItems?: Array<ExtraItem>;
+	extraPricing?: Array<ExtraPricing>;
 	/**
 	 * Whether the booking is a package.
 	 * This field is only present when octo/packages capability is requested.
@@ -265,7 +278,7 @@ export type Booking = {
 	 * The package ID that identifies the package in the booking system to make this reservation.
 	 * This field is only present when octo/packages capability is requested.
 	 */
-	packageIncludeId?: string;
+	packageIncludeId?: string | null;
 	/**
 	 * A package that will be included in the booking.
 	 * This field is only present when octo/packages capability is requested.
@@ -276,10 +289,21 @@ export type Booking = {
 	 * This field is only present when octo/packages capability is requested.
 	 */
 	packageBookings?: Array<Booking>;
+	packageUnitItemUuid?: any;
 	/**
 	 * An array of adjustments that will be included in the booking. This field is only present when octo/adjustments capability is requested.
 	 */
 	adjustments?: Array<BookingAdjustment>;
 	identity?: Identity;
 	identityId?: string;
+	checkedIn?: boolean;
+	checkinAvailable?: boolean;
+	checkinUrl?: string | null;
+	membershipBenefit?: MembershipBenefit | null;
+	membership?: Membership | null;
+	isRental?: boolean;
+	rentalDurationId?: string | null;
+	rentalDuration?: RentalDuration | null;
+	cardPayment?: CardPayment | null;
+	returnUrl?: string | null;
 };

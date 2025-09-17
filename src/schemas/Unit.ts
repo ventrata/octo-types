@@ -6,6 +6,7 @@ import { unitRestrictionsSchema } from './UnitRestrictions';
 import { pricingSchema } from './Pricing';
 import { questionSchema } from './Question';
 import { extraSchema } from './Extra';
+import { membershipBenefitSchema } from './MembershipBenefit';
 
 export const unitSchema = z.object({
 	id: z.string(),
@@ -23,4 +24,5 @@ export const unitSchema = z.object({
 	pricing: z.array(pricingSchema).optional(),
 	questions: z.array(questionSchema).optional(),
 	extras: z.array(extraSchema).optional(),
+	membershipBenefit: membershipBenefitSchema.optional().nullable(),
 });

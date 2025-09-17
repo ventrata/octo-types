@@ -14,6 +14,7 @@ import { bookingStatusSchema } from './BookingStatus';
 import { userSchema } from './User';
 import { ticketSchema } from './Ticket';
 import { identitySchema } from './Identity';
+import { cardPaymentSchema } from './CardPayment';
 
 export const giftSchema = z.object({
 	agent: agentSchema.nullable(),
@@ -50,4 +51,6 @@ export const giftSchema = z.object({
 	voucher: ticketSchema,
 	identity: identitySchema.optional(),
 	identityId: z.string().optional(),
+	cardPayment: cardPaymentSchema.optional().nullable(),
+	returnUrl: z.string().optional().nullable(),
 });

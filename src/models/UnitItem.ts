@@ -4,8 +4,10 @@
 /* eslint-disable */
 import type { BookingStatus } from './BookingStatus';
 import type { CustomerContact } from './CustomerContact';
+import type { ExtraItem } from './ExtraItem';
 import type { Pricing } from './Pricing';
 import type { QuestionAnswer } from './QuestionAnswer';
+import type { Scan } from './Scan';
 import type { Ticket } from './Ticket';
 import type { Unit } from './Unit';
 import type { UnitType } from './UnitType';
@@ -77,7 +79,9 @@ export type UnitItem = {
 	utcNoshowedAt: string | null;
 	requiredContactFields?: Array<string>;
 	visibleContactFields?: Array<string>;
-	unitType?: UnitType;
+	unitType: UnitType;
+	localDateTimeStart: string | null;
+	localDateTimeEnd: string | null;
 	/**
 	 * Is on the object when Pricing capability is requested.
 	 */
@@ -86,4 +90,6 @@ export type UnitItem = {
 	 * Questions for this unit item. Only present when octo/questions capability is requested.
 	 */
 	questionAnswers?: Array<QuestionAnswer>;
+	extraItems?: Array<ExtraItem>;
+	scans?: Array<Scan>;
 };

@@ -3,9 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum SettlementMethod {
-	DEFERRED = 'deferred',
-	DEPOSIT = 'deposit',
-	DIRECT = 'direct',
-	VOUCHER = 'voucher',
-	WHOLESALE = 'wholesale',
+	DEFERRED = 'DEFERRED',
+	DEPOSIT = 'DEPOSIT',
+	DIRECT = 'DIRECT',
+	VOUCHER = 'VOUCHER',
+	WHOLESALE = 'WHOLESALE',
 }

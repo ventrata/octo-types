@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { MembershipBenefit } from './MembershipBenefit';
 import type { NetDiscount } from './NetDiscount';
 import type { OfferRestrictions } from './OfferRestrictions';
 export type Offer = {
@@ -9,6 +10,10 @@ export type Offer = {
 	 * The title or name of the offer.
 	 */
 	title: string;
+	/**
+	 * The label of the offer.
+	 */
+	label: string;
 	/**
 	 * The unique code used to apply the offer.
 	 */
@@ -29,4 +34,6 @@ export type Offer = {
 	 * Indicates whether the offer can currently be applied.
 	 */
 	usable: boolean;
+	unusableReason: string | null;
+	membershipBenefit?: MembershipBenefit | null;
 };

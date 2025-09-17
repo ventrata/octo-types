@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AvailabilityStatus } from './AvailabilityStatus';
+import type { ExtraPricing } from './ExtraPricing';
 import type { Offer } from './Offer';
 import type { OpeningHours } from './OpeningHours';
 import type { Pricing } from './Pricing';
@@ -76,4 +77,5 @@ export type AvailabilityCalendar = {
 	 * Best or selected offer for this availability.
 	 */
 	offer?: Offer | null;
+	extraPricingFrom?: Array<ExtraPricing>;
 };

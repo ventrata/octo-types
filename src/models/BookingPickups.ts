@@ -9,10 +9,6 @@ export type BookingPickups = {
 	 */
 	pickupRequested?: boolean;
 	/**
-	 * The pickup ID that identifies the pickup in the booking system to make this reservation. This field is only present when octo/pickups capability is requested.
-	 */
-	pickupId?: string | null;
-	/**
 	 * A hotel name and address that will be included in the booking.
 	 * This field is only present when octo/pickups capability is requested.
 	 */
@@ -30,4 +26,8 @@ export type BookingPickups = {
 	 * A pickup point that will be included in the booking. This field is only present when octo/pickups capability is requested.
 	 */
 	pickupPoint?: PickupPoint | null;
+	pickupPointId?: string | null;
+	pickupHotelRoom?: string | null;
+	pickupDispatch?: string | null;
+	dropoffDispatch?: string | null;
 };

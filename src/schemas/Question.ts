@@ -6,7 +6,6 @@ import { selectOptionSchema } from './SelectOption';
 export const questionSchema = z.object({
 	id: z.string(),
 	label: z.string().nullable(),
-	hint: z.string().nullable(),
 	maxLength: z.number().nullable(),
 	inputType: questionInputTypeSchema,
 	required: z.boolean(),

@@ -5,6 +5,7 @@
 import type { Agent } from './Agent';
 import type { BookingCancellation } from './BookingCancellation';
 import type { BookingStatus } from './BookingStatus';
+import type { CardPayment } from './CardPayment';
 import type { ContactField } from './ContactField';
 import type { CustomerContact } from './CustomerContact';
 import type { DeliveryMethod } from './DeliveryMethod';
@@ -51,4 +52,6 @@ export type Gift = {
 	voucher: Ticket;
 	identity?: Identity;
 	identityId?: string;
+	cardPayment?: CardPayment | null;
+	returnUrl?: string | null;
 };

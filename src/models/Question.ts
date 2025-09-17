@@ -14,10 +14,6 @@ export type Question = {
 	 */
 	label: string | null;
 	/**
-	 * A hint to help the customer answer the question.
-	 */
-	hint: string | null;
-	/**
 	 * The maximum length of the answer to the question.
 	 */
 	maxLength: number | null;

@@ -3,6 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ExtraItem } from './ExtraItem';
+import type { ExtraPricing } from './ExtraPricing';
 export type BookingExtras = {
 	extraItems?: Array<ExtraItem>;
+	extraPricing?: Array<ExtraPricing>;
 };

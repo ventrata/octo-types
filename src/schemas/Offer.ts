@@ -2,12 +2,16 @@
 import { z } from 'zod';
 import { netDiscountSchema } from './NetDiscount';
 import { offerRestrictionsSchema } from './OfferRestrictions';
+import { membershipBenefitSchema } from './MembershipBenefit';
 
 export const offerSchema = z.object({
 	title: z.string(),
+	label: z.string(),
 	code: z.string(),
 	description: z.string().nullable(),
 	netDiscount: netDiscountSchema.nullable(),
 	restrictions: offerRestrictionsSchema,
 	usable: z.boolean(),
+	unusableReason: z.string().nullable(),
+	membershipBenefit: membershipBenefitSchema.optional().nullable(),
 });

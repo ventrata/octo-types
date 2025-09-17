@@ -5,7 +5,8 @@ import { bookingSchema } from './Booking';
 
 export const bookingPackagesSchema = z.object({
 	isPackage: z.boolean().optional(),
-	packageIncludeId: z.string().optional(),
+	packageIncludeId: z.string().optional().nullable(),
 	packageInclude: includeSchema.optional().nullable(),
 	packageBookings: z.array(bookingSchema).optional(),
+	packageUnitItemUuid: z.any().optional(),
 });

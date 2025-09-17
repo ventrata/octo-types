@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { ContactField } from './ContactField';
 import type { Extra } from './Extra';
+import type { MembershipBenefit } from './MembershipBenefit';
 import type { Pricing } from './Pricing';
 import type { Question } from './Question';
 import type { UnitRestrictions } from './UnitRestrictions';
@@ -75,4 +76,5 @@ export type Unit = {
 	 */
 	questions?: Array<Question>;
 	extras?: Array<Extra>;
+	membershipBenefit?: MembershipBenefit | null;
 };

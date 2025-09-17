@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { DeliveryFormat } from './DeliveryFormat';
+import type { Octo_DeliveryFormat } from './Octo_DeliveryFormat';
 export type DeliveryOption = {
 	/**
 	 * The format in which vouchers for this product are delivered. Each format specifies how the vouchers will be represented:
@@ -13,7 +13,7 @@ export type DeliveryOption = {
 	 * PKPASS_URL: A URL for adding the ticket to Apple Wallet (Passbook) for easy access on iOS devices.
 	 * This field ensures resellers can understand and integrate the appropriate ticket delivery formats specifically associated with this product."
 	 */
-	deliveryFormat: DeliveryFormat;
+	deliveryFormat: Octo_DeliveryFormat;
 	/**
 	 * The string with the value of the delivery option, e.g. value behind the QRCODE, CODE128, AZTECCODE, or URL hosting the file for PDF_URL or PKPASS_URL)
 	 */

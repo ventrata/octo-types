@@ -7,4 +7,5 @@ export enum DeliveryFormat {
 	QRCODE = 'QRCODE',
 	CODE128 = 'CODE128',
 	PKPASS_URL = 'PKPASS_URL',
+	GOOGLE_WALLET_URL = 'GOOGLE_WALLET_URL',
 }

@@ -2,6 +2,7 @@
 import { z } from 'zod';
 import { taxSchema } from './Tax';
 import { offerDiscountSchema } from './OfferDiscount';
+import { extraPricingSchema } from './ExtraPricing';
 
 export const pricingSchema = z.object({
 	original: z.number(),
@@ -11,5 +12,6 @@ export const pricingSchema = z.object({
 	currencyPrecision: z.number(),
 	includedTaxes: z.array(taxSchema),
 	offerDiscount: offerDiscountSchema.optional().nullable(),
-	extraId: z.array(z.string()).optional(),
+	extraPricing: z.array(extraPricingSchema).optional(),
+	extraPricingFrom: z.array(extraPricingSchema).optional(),
 });

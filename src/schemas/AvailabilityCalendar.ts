@@ -5,6 +5,7 @@ import { openingHoursSchema } from './OpeningHours';
 import { pricingUnitSchema } from './PricingUnit';
 import { pricingSchema } from './Pricing';
 import { offerSchema } from './Offer';
+import { extraPricingSchema } from './ExtraPricing';
 
 export const availabilityCalendarSchema = z.object({
 	localDate: z.string(),
@@ -26,4 +27,5 @@ export const availabilityCalendarSchema = z.object({
 	offerTitle: z.string().optional().nullable(),
 	offers: z.array(offerSchema).optional(),
 	offer: offerSchema.optional().nullable(),
+	extraPricingFrom: z.array(extraPricingSchema).optional(),
 });

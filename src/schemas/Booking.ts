@@ -27,9 +27,14 @@ import { questionAnswerSchema } from './QuestionAnswer';
 import { resourceAllocationSchema } from './ResourceAllocation';
 import { giftPaymentSchema } from './GiftPayment';
 import { extraItemSchema } from './ExtraItem';
+import { extraPricingSchema } from './ExtraPricing';
 import { includeSchema } from './Include';
 import { bookingAdjustmentSchema } from './BookingAdjustment';
 import { identitySchema } from './Identity';
+import { membershipBenefitSchema } from './MembershipBenefit';
+import { membershipSchema } from './Membership';
+import { rentalDurationSchema } from './RentalDuration';
+import { cardPaymentSchema } from './CardPayment';
 
 import { type Booking } from '../models/Booking';
 
@@ -49,7 +54,7 @@ export const bookingSchema: z.ZodSchema<Booking> = z.lazy(() =>
 		productId: z.string(),
 		product: productSchema.optional(),
 		optionId: z.string(),
-		option: optionSchema.optional(),
+		option: optionSchema,
 		cancellable: z.boolean(),
 		cancellation: bookingCancellationSchema.nullable(),
 		freesale: z.boolean(),
@@ -81,18 +86,28 @@ export const bookingSchema: z.ZodSchema<Booking> = z.lazy(() =>
 		localDateTimeEnd: z.string(),
 		emailReceipt: z.boolean(),
 		label: labelSchema.nullable(),
+		metadata: z.record(z.string()),
+		updatable: z.boolean(),
+		availabilityLocalDateStart: z.string().nullable(),
+		availabilityLocalDateEnd: z.string().nullable(),
+		guide: sellerSchema.nullable(),
+		driver: sellerSchema.nullable(),
 		pickupRequested: z.boolean().optional(),
-		pickupId: z.string().optional().nullable(),
 		pickupHotel: z.string().optional().nullable(),
 		pickupRoom: z.string().optional().nullable(),
 		pickupNotes: z.string().optional().nullable(),
 		pickupPoint: pickupPointSchema.optional().nullable(),
+		pickupPointId: z.string().optional().nullable(),
+		pickupHotelRoom: z.string().optional().nullable(),
+		pickupDispatch: z.string().optional().nullable(),
+		dropoffDispatch: z.string().optional().nullable(),
 		duration: z.string().optional(),
 		durationAmount: z.number().optional(),
 		durationUnit: durationUnitSchema.optional(),
 		meetingLocalDateTime: z.string().optional().nullable(),
 		meetingPoint: z.string().optional().nullable(),
 		meetingPointCoordinates: z.string().optional().nullable(),
+		meetingPointDirections: z.string().optional().nullable(),
 		notices: z.array(noticeSchema).optional(),
 		termsAccepted: z.boolean().optional(),
 		primary: z.boolean().optional(),
@@ -108,12 +123,24 @@ export const bookingSchema: z.ZodSchema<Booking> = z.lazy(() =>
 		resourceAllocations: z.array(resourceAllocationSchema).optional(),
 		giftPayment: giftPaymentSchema.optional().nullable(),
 		extraItems: z.array(extraItemSchema).optional(),
+		extraPricing: z.array(extraPricingSchema).optional(),
 		isPackage: z.boolean().optional(),
-		packageIncludeId: z.string().optional(),
+		packageIncludeId: z.string().optional().nullable(),
 		packageInclude: includeSchema.optional().nullable(),
 		packageBookings: z.array(bookingSchema).optional(),
+		packageUnitItemUuid: z.any().optional(),
 		adjustments: z.array(bookingAdjustmentSchema).optional(),
 		identity: identitySchema.optional(),
 		identityId: z.string().optional(),
+		checkedIn: z.boolean().optional(),
+		checkinAvailable: z.boolean().optional(),
+		checkinUrl: z.string().optional().nullable(),
+		membershipBenefit: membershipBenefitSchema.optional().nullable(),
+		membership: membershipSchema.optional().nullable(),
+		isRental: z.boolean().optional(),
+		rentalDurationId: z.string().optional().nullable(),
+		rentalDuration: rentalDurationSchema.optional().nullable(),
+		cardPayment: cardPaymentSchema.optional().nullable(),
+		returnUrl: z.string().optional().nullable(),
 	}),
 );

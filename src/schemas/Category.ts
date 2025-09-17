@@ -10,5 +10,4 @@ export const categorySchema = z.object({
 	shortDescription: z.string().nullable(),
 	coverImageUrl: z.string().nullable(),
 	bannerImageUrl: z.string().nullable(),
-	productIds: z.array(z.string()),
 });

@@ -2,7 +2,6 @@
 import { z } from 'zod';
 import { destinationContactSchema } from './DestinationContact';
 import { brandSchema } from './Brand';
-import { categorySchema } from './Category';
 import { noticeSchema } from './Notice';
 
 export const destinationSchema = z.object({
@@ -27,8 +26,9 @@ export const destinationSchema = z.object({
 	twitterUrl: z.string().nullable(),
 	youtubeUrl: z.string().nullable(),
 	instagramUrl: z.string().nullable(),
-	categories: z.array(categorySchema),
 	tags: z.array(z.string()),
 	address: z.string().nullable(),
 	notices: z.array(noticeSchema),
+	defaultCurrency: z.string().optional(),
+	availableCurrencies: z.array(z.string()).optional(),
 });

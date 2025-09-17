@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ExtraPricing } from './ExtraPricing';
 import type { OfferDiscount } from './OfferDiscount';
 import type { Tax } from './Tax';
 export type Pricing = {
@@ -30,5 +31,6 @@ export type Pricing = {
 	 */
 	includedTaxes: Array<Tax>;
 	offerDiscount?: OfferDiscount | null;
-	extraId?: Array<string>;
+	extraPricing?: Array<ExtraPricing>;
+	extraPricingFrom?: Array<ExtraPricing>;
 };

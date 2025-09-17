@@ -14,7 +14,7 @@ export type BookingPackages = {
 	 * The package ID that identifies the package in the booking system to make this reservation.
 	 * This field is only present when octo/packages capability is requested.
 	 */
-	packageIncludeId?: string;
+	packageIncludeId?: string | null;
 	/**
 	 * A package that will be included in the booking.
 	 * This field is only present when octo/packages capability is requested.
@@ -25,4 +25,5 @@ export type BookingPackages = {
 	 * This field is only present when octo/packages capability is requested.
 	 */
 	packageBookings?: Array<Booking>;
+	packageUnitItemUuid?: any;
 };

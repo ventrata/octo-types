@@ -120,7 +120,7 @@ export type Product = {
 	/**
 	 * Short description for this product. Only present when ventrata/content capability is requested.
 	 */
-	shortDescription?: string;
+	shortDescription?: string | null;
 	/**
 	 * Categories for this product. Only present when ventrata/content capability is requested.
 	 */
@@ -161,8 +161,8 @@ export type Product = {
 	 * FAQs for this product. Only present when ventrata/content capability is requested.
 	 */
 	faqs?: Array<FAQ>;
-	coverImageUrl?: string;
-	bannerImageUrl?: string;
+	coverImageUrl?: string | null;
+	bannerImageUrl?: string | null;
 	videoUrl?: string | null;
 	/**
 	 * Gallery image URLs for this product. Only present when ventrata/content capability is requested.
@@ -177,7 +177,7 @@ export type Product = {
 	longitude?: number;
 	address?: string;
 	keywords?: Array<string>;
-	tagline?: string;
+	tagline?: string | null;
 	brand?: Brand;
 	/**
 	 * Is on the object when Pricing capability is requested. Default currency for this product, if you omit the currency parameter on future endpoints this is the value the reservation system will fallback to.
@@ -195,4 +195,6 @@ export type Product = {
 	isPackage?: boolean;
 	packageBookingAvailabilityRequired?: boolean;
 	googleOptions?: GoogleOptions;
+	isMembership?: boolean;
+	isRental?: boolean;
 };

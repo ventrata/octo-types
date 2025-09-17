@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AvailabilityStatus } from './AvailabilityStatus';
+import type { ExtraPricing } from './ExtraPricing';
 import type { Notice } from './Notice';
 import type { Offer } from './Offer';
 import type { OpeningHours } from './OpeningHours';
@@ -60,6 +61,7 @@ export type Availability = {
 	 * Defines the opening hours for this availability, even for start time-based availability. Supports multiple periods for breaks in the day.
 	 */
 	openingHours: Array<OpeningHours>;
+	code: string | null;
 	totalCapacity: number | null;
 	limitCapacity: number | null;
 	limitPaxCount: number;
@@ -110,29 +112,39 @@ export type Availability = {
 	/**
 	 * Optional text for the meeting point location.
 	 */
-	meetingPoint?: string;
+	meetingPoint?: string | null;
 	/**
-	 * Optional meeting point coordinates as an array [longitude, latitude].
+	 * Optional meeting point coordinates as an string: longitude, latitude
 	 */
-	meetingPointCoordinates?: Array<number>;
+	meetingPointCoordinates?: string | null;
+	/**
+	 * Optional meeting point direstions
+	 */
+	meetingPointDirections?: string | null;
 	/**
 	 * Latitude component of the meeting point.
 	 */
-	meetingPointLatitude?: number;
+	meetingPointLatitude?: number | null;
 	/**
 	 * Longitude component of the meeting point.
 	 */
-	meetingPointLongitude?: number;
+	meetingPointLongitude?: number | null;
 	/**
 	 * Local datetime string (ISO 8601) for when to meet.
 	 */
-	meetingLocalDateTime?: string;
+	meetingLocalDateTime?: string | null;
 	/**
 	 * Optional reference to the tour group this availability belongs to.
 	 */
-	tourGroup?: TourGroup;
+	tourGroup?: TourGroup | null;
+	fare?: any;
 	/**
 	 * List of important notices related to the availability.
 	 */
 	notices?: Array<Notice>;
+	extraPricing?: Array<ExtraPricing>;
+	/**
+	 * Indicates whether the availability uses resources (e.g., guides, vehicles).
+	 */
+	hasResources?: boolean;
 };

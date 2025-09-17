@@ -4,9 +4,12 @@ import { pickupPointSchema } from './PickupPoint';
 
 export const bookingPickupsSchema = z.object({
 	pickupRequested: z.boolean().optional(),
-	pickupId: z.string().optional().nullable(),
 	pickupHotel: z.string().optional().nullable(),
 	pickupRoom: z.string().optional().nullable(),
 	pickupNotes: z.string().optional().nullable(),
 	pickupPoint: pickupPointSchema.optional().nullable(),
+	pickupPointId: z.string().optional().nullable(),
+	pickupHotelRoom: z.string().optional().nullable(),
+	pickupDispatch: z.string().optional().nullable(),
+	dropoffDispatch: z.string().optional().nullable(),
 });

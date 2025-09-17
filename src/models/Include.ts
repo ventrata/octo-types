@@ -21,7 +21,8 @@ export type Include = {
 	/**
 	 * The validity days of the include.
 	 */
-	validityDays?: number;
+	validityDays: number | null;
+	availabilityRequired: boolean;
 	/**
 	 * The product ID of the include.
 	 */

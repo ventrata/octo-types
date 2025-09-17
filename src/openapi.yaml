@@ -333,7 +333,7 @@ paths:
                             visibleContactFields: []
                         tags: []
                         settlementMethods:
-                          - direct
+                          - DIRECT
                         freesaleDurationAmount: 2
                         freesaleDurationUnit: hour
                       optionId: DEFAULT
@@ -402,6 +402,7 @@ paths:
                         openingHours:
                           - from: '08:00'
                             to: '16:00'
+                        code: null
                         paxCount: 0
                         maxPaxCount: null
                         totalCapacity: 0
@@ -427,6 +428,9 @@ paths:
                         city: ''
                         state: ''
                         allowMarketing: true
+                        company: null
+                        age: null
+                        birthdate: null
                       notes: Optional notes for the booking
                       deliveryMethods:
                         - TICKET
@@ -476,6 +480,9 @@ paths:
                             city: ''
                             state: ''
                             allowMarketing: true
+                            company: null
+                            age: null
+                            birthdate: null
                           ticket: null
                           id: ''
                           alias: ''
@@ -486,10 +493,12 @@ paths:
                           utcRebookedAt: '2021-10-27 23:28:43Z'
                           utcNoshowedAt: '2021-10-27 23:28:43Z'
                           unitType: ADULT
+                          localDateTimeStart: null
+                          localDateTimeEnd: null
                       rebookingUuid: ''
                       originalRebookingUuid: ''
                       alias: ''
-                      settlementMethod: direct
+                      settlementMethod: DIRECT
                       quote: false
                       confirmable: true
                       agent: null
@@ -507,6 +516,12 @@ paths:
                       localDateTimeEnd: '2022-05-23T00:00:00+01:00'
                       emailReceipt: false
                       label: null
+                      metadata: {}
+                      updatable: true
+                      availabilityLocalDateStart: null
+                      availabilityLocalDateEnd: null
+                      guide: null
+                      driver: null
         '400':
           description: The server could not understand the request due to invalid syntax.
           content:
@@ -666,7 +681,7 @@ paths:
                           visibleContactFields: []
                       tags: []
                       settlementMethods:
-                        - direct
+                        - DIRECT
                       freesaleDurationAmount: 2
                       freesaleDurationUnit: hour
                     optionId: DEFAULT
@@ -735,6 +750,7 @@ paths:
                       openingHours:
                         - from: '08:00'
                           to: '16:00'
+                      code: null
                       paxCount: 0
                       maxPaxCount: null
                       totalCapacity: 0
@@ -760,6 +776,9 @@ paths:
                       city: ''
                       state: ''
                       allowMarketing: true
+                      company: null
+                      age: null
+                      birthdate: null
                     notes: Optional notes for the booking
                     deliveryMethods:
                       - TICKET
@@ -809,6 +828,9 @@ paths:
                           city: ''
                           state: ''
                           allowMarketing: true
+                          company: null
+                          age: null
+                          birthdate: null
                         ticket: null
                         id: ''
                         alias: ''
@@ -819,10 +841,12 @@ paths:
                         utcRebookedAt: '2021-10-27 23:28:43Z'
                         utcNoshowedAt: '2021-10-27 23:28:43Z'
                         unitType: ADULT
+                        localDateTimeStart: null
+                        localDateTimeEnd: null
                     rebookingUuid: ''
                     originalRebookingUuid: ''
                     alias: ''
-                    settlementMethod: direct
+                    settlementMethod: DIRECT
                     quote: false
                     confirmable: true
                     agent: null
@@ -840,6 +864,12 @@ paths:
                     localDateTimeEnd: '2022-05-23T00:00:00+01:00'
                     emailReceipt: false
                     label: null
+                    metadata: {}
+                    updatable: true
+                    availabilityLocalDateStart: null
+                    availabilityLocalDateEnd: null
+                    guide: null
+                    driver: null
         '400':
           description: The server could not understand the request due to invalid syntax.
           content:
@@ -1717,7 +1747,7 @@ paths:
                           visibleContactFields: []
                       tags: []
                       settlementMethods:
-                        - direct
+                        - DIRECT
                       freesaleDurationAmount: 2
                       freesaleDurationUnit: hour
         '400':
@@ -1860,7 +1890,7 @@ paths:
                         visibleContactFields: []
                     tags: []
                     settlementMethods:
-                      - direct
+                      - DIRECT
                     freesaleDurationAmount: 2
                     freesaleDurationUnit: hour
         '400':
@@ -2627,6 +2657,139 @@ components:
         - PERCENTAGE
       description: The type of adjustment. Possible values are `BOOKING`, `UNIT` or `PERCENTAGE`
       example: UNIT
+    AdyenGateway:
+      type: object
+      properties:
+        environment:
+          type: string
+        clientKey:
+          type: string
+        session:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/AdyenGatewaySession'
+          nullable: true
+        countryCode:
+          type: string
+        paymentMethodsConfiguration:
+          $ref: '#/components/schemas/AdyenPaymentMethodsConfiguration'
+    AdyenGatewaySession:
+      type: object
+      required:
+        - id
+        - sessionData
+      properties:
+        id:
+          type: string
+        sessionData:
+          type: string
+    AdyenPaymentMethodsConfiguration:
+      type: object
+      required:
+        - card
+        - paypal
+        - applepay
+        - googlepay
+      properties:
+        card:
+          $ref: '#/components/schemas/AdyenPaymentMethodsConfigurationCard'
+        paypal:
+          $ref: '#/components/schemas/AdyenPaymentMethodsConfigurationPayPay'
+        applepay:
+          $ref: '#/components/schemas/AdyenPaymentMethodsConfigurationApplePay'
+        googlepay:
+          $ref: '#/components/schemas/AdyenPaymentMethodsConfigurationGooglePay'
+    AdyenPaymentMethodsConfigurationApplePay:
+      type: object
+      required:
+        - requiredBillingContactFields
+      properties:
+        requiredBillingContactFields:
+          type: array
+          items:
+            type: string
+    AdyenPaymentMethodsConfigurationCard:
+      type: object
+      required:
+        - hasHolderName
+        - billingAddressRequired
+        - billingAddressMode
+        - data
+        - clickToPayConfiguration
+      properties:
+        hasHolderName:
+          type: boolean
+        billingAddressRequired:
+          type: boolean
+        billingAddressMode:
+          type: string
+          enum:
+            - full
+            - min
+            - none
+        data:
+          type: object
+          properties:
+            holderName:
+              type: string
+            billingAddress:
+              type: object
+              properties:
+                street:
+                  type: string
+                postalCode:
+                  type: string
+                city:
+                  type: string
+                country:
+                  type: string
+                stateOrProvince:
+                  type: string
+              required:
+                - street
+                - postalCode
+                - city
+                - country
+                - stateOrProvince
+          required:
+            - holderName
+            - billingAddress
+        clickToPayConfiguration:
+          type: object
+          properties:
+            merchantDisplayName:
+              type: string
+            shopperEmail:
+              type: string
+          required:
+            - merchantDisplayName
+            - shopperEmail
+    AdyenPaymentMethodsConfigurationGooglePay:
+      type: object
+      required:
+        - billingAddressRequired
+        - billingAddressParameters
+      properties:
+        billingAddressRequired:
+          type: boolean
+        billingAddressParameters:
+          type: string
+          enum:
+            - FULL
+            - MIN
+    AdyenPaymentMethodsConfigurationPayPay:
+      type: object
+      required:
+        - blockPayPalCreditButton
+        - blockPayPalPayLaterButton
+        - blockPayPalVenmoButton
+      properties:
+        blockPayPalCreditButton:
+          type: boolean
+        blockPayPalPayLaterButton:
+          type: boolean
+        blockPayPalVenmoButton:
+          type: boolean
     Agent:
       type: object
       required:
@@ -2674,6 +2837,7 @@ components:
         - capacity
         - maxUnits
         - openingHours
+        - code
         - totalCapacity
         - limitCapacity
         - limitPaxCount
@@ -2751,6 +2915,9 @@ components:
           example:
             - from: '08:00'
               to: '16:00'
+        code:
+          type: string
+          nullable: true
         totalCapacity:
           type: integer
           nullable: true
@@ -2831,7 +2998,12 @@ components:
               net: 8000
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
               unitType: ADULT
             - unitId: child_797e3ce8-1860-4cbf-80ad-95857df1f640
               original: 500
@@ -2839,7 +3011,12 @@ components:
               net: 400
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
               unitType: CHILD
             - unitId: infant_897e3ce8-1860-4cbf-80ad-95857df1f640
               original: 0
@@ -2847,7 +3024,12 @@ components:
               net: 0
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
               unitType: INFANT
           x-oapi-codegen-extra-tags:
             capability: octo/pricing
@@ -2901,6 +3083,7 @@ components:
           description: List of available offers for the availability.
           example:
             - title: Summer Promo
+              label: ''
               code: SUMMER25
               description: Get 25% off selected tours!
               netDiscount: FULL
@@ -2914,6 +3097,7 @@ components:
                   - unit-2
                   - unit-3
               usable: true
+              unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
           x-oapi-codegen-extra-tags:
             capability: octo/offers
             required: true
@@ -2928,6 +3112,7 @@ components:
           description: Best or selected offer for this availability.
           example:
             title: Summer Promo
+            label: ''
             code: SUMMER25
             description: Get 25% off selected tours!
             netDiscount: FULL
@@ -2941,6 +3126,7 @@ components:
                 - unit-2
                 - unit-3
             usable: true
+            unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
           x-oapi-codegen-extra-tags:
             capability: octo/offers
             required: true
@@ -2949,6 +3135,7 @@ components:
             required: true
         meetingPoint:
           type: string
+          nullable: true
           description: Optional text for the meeting point location.
           example: In front of the main gate
           x-oapi-codegen-extra-tags:
@@ -2958,14 +3145,21 @@ components:
             capability: ventrata/content
             required: true
         meetingPointCoordinates:
-          type: array
-          items:
-            type: number
-            format: float
-          description: Optional meeting point coordinates as an array [longitude, latitude].
-          example:
-            - 13.7563
-            - 100.5018
+          type: string
+          nullable: true
+          description: 'Optional meeting point coordinates as an string: longitude, latitude'
+          example: 13.7563, 100.5018
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/content
+            required: true
+          x-capability-data:
+            capability: ventrata/content
+            required: true
+        meetingPointDirections:
+          type: string
+          nullable: true
+          description: Optional meeting point direstions
+          example: null
           x-oapi-codegen-extra-tags:
             capability: ventrata/content
             required: true
@@ -2975,6 +3169,7 @@ components:
         meetingPointLatitude:
           type: number
           format: float
+          nullable: true
           description: Latitude component of the meeting point.
           example: 13.7563
           x-oapi-codegen-extra-tags:
@@ -2986,6 +3181,7 @@ components:
         meetingPointLongitude:
           type: number
           format: float
+          nullable: true
           description: Longitude component of the meeting point.
           example: 100.5018
           x-oapi-codegen-extra-tags:
@@ -2996,6 +3192,7 @@ components:
             required: true
         meetingLocalDateTime:
           type: string
+          nullable: true
           format: date-time
           description: Local datetime string (ISO 8601) for when to meet.
           example: '2025-08-01T10:00:00+07:00'
@@ -3006,13 +3203,25 @@ components:
             capability: ventrata/content
             required: true
         tourGroup:
+          type: object
           allOf:
             - $ref: '#/components/schemas/TourGroup'
+          nullable: true
           description: Optional reference to the tour group this availability belongs to.
           example:
             id: c5a8d7a9-9279-4b2e-bd5d-21933cfd1234
             internalName: urban_adventures_bangkok
             title: Bangkok City Highlights
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/content
+            required: true
+          x-capability-data:
+            capability: ventrata/content
+            required: true
+        fare:
+          nullable: true
+          description: ''
+          example: null
           x-oapi-codegen-extra-tags:
             capability: ventrata/content
             required: true
@@ -3031,6 +3240,26 @@ components:
           x-capability-data:
             capability: ventrata/content
             required: true
+        extraPricing:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtraPricing'
+          x-oapi-codegen-extra-tags:
+            capability: octo/extras
+            required: true
+          x-capability-data:
+            capability: octo/extras
+            required: true
+        hasResources:
+          type: boolean
+          description: Indicates whether the availability uses resources (e.g., guides, vehicles).
+          example: false
+          x-oapi-codegen-extra-tags:
+            capability: octo/resources
+            required: true
+          x-capability-data:
+            capability: octo/resources
+            required: true
       example:
         id: '2022-05-23T00:00:00+01:00'
         localDateTimeStart: '2022-05-23T00:00:00+01:00'
@@ -3045,6 +3274,7 @@ components:
         openingHours:
           - from: '08:00'
             to: '16:00'
+        code: null
         paxCount: 0
         maxPaxCount: null
         totalCapacity: 0
@@ -3139,7 +3369,6 @@ components:
           type: array
           items:
             type: string
-          minItems: 1
           description: List of local start times for the availability.
           example:
             - '10:00'
@@ -3157,7 +3386,12 @@ components:
               net: 8000
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
               unitType: ADULT
             - unitId: child_797e3ce8-1860-4cbf-80ad-95857df1f640
               original: 500
@@ -3165,7 +3399,12 @@ components:
               net: 400
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
               unitType: CHILD
             - unitId: infant_897e3ce8-1860-4cbf-80ad-95857df1f640
               original: 0
@@ -3173,7 +3412,12 @@ components:
               net: 0
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
               unitType: INFANT
           x-oapi-codegen-extra-tags:
             capability: octo/pricing
@@ -3227,6 +3471,7 @@ components:
           description: List of available offers for the availability.
           example:
             - title: Summer Promo
+              label: ''
               code: SUMMER25
               description: Get 25% off selected tours!
               netDiscount: FULL
@@ -3240,6 +3485,7 @@ components:
                   - unit-2
                   - unit-3
               usable: true
+              unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
           x-oapi-codegen-extra-tags:
             capability: octo/offers
             required: true
@@ -3254,6 +3500,7 @@ components:
           description: Best or selected offer for this availability.
           example:
             title: Summer Promo
+            label: ''
             code: SUMMER25
             description: Get 25% off selected tours!
             netDiscount: FULL
@@ -3267,11 +3514,22 @@ components:
                 - unit-2
                 - unit-3
             usable: true
+            unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
           x-oapi-codegen-extra-tags:
             capability: octo/offers
             required: true
           x-capability-data:
             capability: octo/offers
+            required: true
+        extraPricingFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtraPricing'
+          x-oapi-codegen-extra-tags:
+            capability: octo/extras
+            required: true
+          x-capability-data:
+            capability: octo/extras
             required: true
       example:
         localDate: '2022-05-12'
@@ -3331,6 +3589,19 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/Octo.AvailabilityCalendarErrorResponse'
+    AvailabilityCalendarExtras:
+      type: object
+      properties:
+        extraPricingFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtraPricing'
+          x-oapi-codegen-extra-tags:
+            capability: octo/extras
+            required: true
+          x-capability-data:
+            capability: octo/extras
+            required: true
     AvailabilityCalendarOffers:
       type: object
       properties:
@@ -3363,6 +3634,7 @@ components:
           description: List of available offers for the availability.
           example:
             - title: Summer Promo
+              label: ''
               code: SUMMER25
               description: Get 25% off selected tours!
               netDiscount: FULL
@@ -3376,6 +3648,7 @@ components:
                   - unit-2
                   - unit-3
               usable: true
+              unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
           x-oapi-codegen-extra-tags:
             capability: octo/offers
             required: true
@@ -3390,6 +3663,7 @@ components:
           description: Best or selected offer for this availability.
           example:
             title: Summer Promo
+            label: ''
             code: SUMMER25
             description: Get 25% off selected tours!
             netDiscount: FULL
@@ -3403,6 +3677,7 @@ components:
                 - unit-2
                 - unit-3
             usable: true
+            unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
           x-oapi-codegen-extra-tags:
             capability: octo/offers
             required: true
@@ -3414,6 +3689,7 @@ components:
         offerTitle: Summer Promo
         offers:
           - title: Summer Promo
+            label: ''
             code: SUMMER25
             description: Get 25% off selected tours!
             netDiscount: FULL
@@ -3427,8 +3703,10 @@ components:
                 - unit-2
                 - unit-3
             usable: true
+            unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
         offer:
           title: Summer Promo
+          label: ''
           code: SUMMER25
           description: Get 25% off selected tours!
           netDiscount: FULL
@@ -3442,6 +3720,7 @@ components:
               - unit-2
               - unit-3
           usable: true
+          unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
     AvailabilityCalendarPricing:
       type: object
       properties:
@@ -3457,7 +3736,12 @@ components:
               net: 8000
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
               unitType: ADULT
             - unitId: child_797e3ce8-1860-4cbf-80ad-95857df1f640
               original: 500
@@ -3465,7 +3749,12 @@ components:
               net: 400
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
               unitType: CHILD
             - unitId: infant_897e3ce8-1860-4cbf-80ad-95857df1f640
               original: 0
@@ -3473,7 +3762,12 @@ components:
               net: 0
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
               unitType: INFANT
           x-oapi-codegen-extra-tags:
             capability: octo/pricing
@@ -3585,6 +3879,7 @@ components:
       properties:
         meetingPoint:
           type: string
+          nullable: true
           description: Optional text for the meeting point location.
           example: In front of the main gate
           x-oapi-codegen-extra-tags:
@@ -3594,14 +3889,21 @@ components:
             capability: ventrata/content
             required: true
         meetingPointCoordinates:
-          type: array
-          items:
-            type: number
-            format: float
-          description: Optional meeting point coordinates as an array [longitude, latitude].
-          example:
-            - 13.7563
-            - 100.5018
+          type: string
+          nullable: true
+          description: 'Optional meeting point coordinates as an string: longitude, latitude'
+          example: 13.7563, 100.5018
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/content
+            required: true
+          x-capability-data:
+            capability: ventrata/content
+            required: true
+        meetingPointDirections:
+          type: string
+          nullable: true
+          description: Optional meeting point direstions
+          example: null
           x-oapi-codegen-extra-tags:
             capability: ventrata/content
             required: true
@@ -3611,6 +3913,7 @@ components:
         meetingPointLatitude:
           type: number
           format: float
+          nullable: true
           description: Latitude component of the meeting point.
           example: 13.7563
           x-oapi-codegen-extra-tags:
@@ -3622,6 +3925,7 @@ components:
         meetingPointLongitude:
           type: number
           format: float
+          nullable: true
           description: Longitude component of the meeting point.
           example: 100.5018
           x-oapi-codegen-extra-tags:
@@ -3632,6 +3936,7 @@ components:
             required: true
         meetingLocalDateTime:
           type: string
+          nullable: true
           format: date-time
           description: Local datetime string (ISO 8601) for when to meet.
           example: '2025-08-01T10:00:00+07:00'
@@ -3642,13 +3947,25 @@ components:
             capability: ventrata/content
             required: true
         tourGroup:
+          type: object
           allOf:
             - $ref: '#/components/schemas/TourGroup'
+          nullable: true
           description: Optional reference to the tour group this availability belongs to.
           example:
             id: c5a8d7a9-9279-4b2e-bd5d-21933cfd1234
             internalName: urban_adventures_bangkok
             title: Bangkok City Highlights
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/content
+            required: true
+          x-capability-data:
+            capability: ventrata/content
+            required: true
+        fare:
+          nullable: true
+          description: ''
+          example: null
           x-oapi-codegen-extra-tags:
             capability: ventrata/content
             required: true
@@ -3669,9 +3986,8 @@ components:
             required: true
       example:
         meetingPoint: In front of the main gate
-        meetingPointCoordinates:
-          - 13.7563
-          - 100.5018
+        meetingPointCoordinates: 13.7563, 100.5018
+        meetingPointDirections: null
         meetingPointLatitude: 13.7563
         meetingPointLongitude: 100.5018
         meetingLocalDateTime: '2025-08-01T10:00:00+07:00'
@@ -3679,7 +3995,21 @@ components:
           id: c5a8d7a9-9279-4b2e-bd5d-21933cfd1234
           internalName: urban_adventures_bangkok
           title: Bangkok City Highlights
+        fare: null
         notices: []
+    AvailabilityExtras:
+      type: object
+      properties:
+        extraPricing:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtraPricing'
+          x-oapi-codegen-extra-tags:
+            capability: octo/extras
+            required: true
+          x-capability-data:
+            capability: octo/extras
+            required: true
     AvailabilityOffers:
       type: object
       properties:
@@ -3712,6 +4042,7 @@ components:
           description: List of available offers for the availability.
           example:
             - title: Summer Promo
+              label: ''
               code: SUMMER25
               description: Get 25% off selected tours!
               netDiscount: FULL
@@ -3725,6 +4056,7 @@ components:
                   - unit-2
                   - unit-3
               usable: true
+              unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
           x-oapi-codegen-extra-tags:
             capability: octo/offers
             required: true
@@ -3739,6 +4071,7 @@ components:
           description: Best or selected offer for this availability.
           example:
             title: Summer Promo
+            label: ''
             code: SUMMER25
             description: Get 25% off selected tours!
             netDiscount: FULL
@@ -3752,6 +4085,7 @@ components:
                 - unit-2
                 - unit-3
             usable: true
+            unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
           x-oapi-codegen-extra-tags:
             capability: octo/offers
             required: true
@@ -3763,6 +4097,7 @@ components:
         offerTitle: Summer Promo
         offers:
           - title: Summer Promo
+            label: ''
             code: SUMMER25
             description: Get 25% off selected tours!
             netDiscount: FULL
@@ -3776,8 +4111,10 @@ components:
                 - unit-2
                 - unit-3
             usable: true
+            unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
         offer:
           title: Summer Promo
+          label: ''
           code: SUMMER25
           description: Get 25% off selected tours!
           netDiscount: FULL
@@ -3791,6 +4128,7 @@ components:
               - unit-2
               - unit-3
           usable: true
+          unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
     AvailabilityPickups:
       type: object
       properties:
@@ -3854,7 +4192,12 @@ components:
               net: 8000
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
               unitType: ADULT
             - unitId: child_797e3ce8-1860-4cbf-80ad-95857df1f640
               original: 500
@@ -3862,7 +4205,12 @@ components:
               net: 400
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
               unitType: CHILD
             - unitId: infant_897e3ce8-1860-4cbf-80ad-95857df1f640
               original: 0
@@ -3870,7 +4218,12 @@ components:
               net: 0
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
               unitType: INFANT
           x-oapi-codegen-extra-tags:
             capability: octo/pricing
@@ -3895,6 +4248,21 @@ components:
           x-capability-data:
             capability: octo/pricing
             required: true
+    AvailabilityResources:
+      type: object
+      properties:
+        hasResources:
+          type: boolean
+          description: Indicates whether the availability uses resources (e.g., guides, vehicles).
+          example: false
+          x-oapi-codegen-extra-tags:
+            capability: octo/resources
+            required: true
+          x-capability-data:
+            capability: octo/resources
+            required: true
+      example:
+        hasResources: false
     AvailabilityStatus:
       type: string
       enum:
@@ -3983,6 +4351,7 @@ components:
           openingHours:
             - from: '08:00'
               to: '16:00'
+          code: null
           paxCount: 0
           maxPaxCount: null
           totalCapacity: 0
@@ -4019,6 +4388,7 @@ components:
         - utcConfirmedAt
         - productId
         - optionId
+        - option
         - cancellable
         - cancellation
         - freesale
@@ -4046,6 +4416,12 @@ components:
         - localDateTimeEnd
         - emailReceipt
         - label
+        - metadata
+        - updatable
+        - availabilityLocalDateStart
+        - availabilityLocalDateEnd
+        - guide
+        - driver
       properties:
         id:
           type: string
@@ -4198,7 +4574,7 @@ components:
                 visibleContactFields: []
             tags: []
             settlementMethods:
-              - direct
+              - DIRECT
             freesaleDurationAmount: 2
             freesaleDurationUnit: hour
         optionId:
@@ -4296,6 +4672,7 @@ components:
             openingHours:
               - from: '08:00'
                 to: '16:00'
+            code: null
             paxCount: 0
             maxPaxCount: null
             totalCapacity: 0
@@ -4325,6 +4702,9 @@ components:
             city: ''
             state: ''
             allowMarketing: true
+            company: null
+            age: null
+            birthdate: null
         notes:
           type: string
           nullable: true
@@ -4404,6 +4784,9 @@ components:
                 city: ''
                 state: ''
                 allowMarketing: true
+                company: null
+                age: null
+                birthdate: null
               ticket: null
               id: ''
               alias: ''
@@ -4414,6 +4797,8 @@ components:
               utcRebookedAt: '2021-10-27 23:28:43Z'
               utcNoshowedAt: '2021-10-27 23:28:43Z'
               unitType: ADULT
+              localDateTimeStart: null
+              localDateTimeEnd: null
           x-go-type-skip-optional-pointer: true
         pricing:
           allOf:
@@ -4452,7 +4837,7 @@ components:
         settlementMethod:
           allOf:
             - $ref: '#/components/schemas/SettlementMethod'
-          example: direct
+          example: DIRECT
         quote:
           type: boolean
           description: If `TRUE`, booking was created as a quote.
@@ -4554,22 +4939,32 @@ components:
           allOf:
             - $ref: '#/components/schemas/Label'
           nullable: true
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+        updatable:
+          type: boolean
+        availabilityLocalDateStart:
+          type: string
+          nullable: true
+        availabilityLocalDateEnd:
+          type: string
+          nullable: true
+        guide:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/Seller'
+          nullable: true
+        driver:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/Seller'
+          nullable: true
         pickupRequested:
           type: boolean
           description: Whether the booking requires a pickup. This field is only present when octo/pickups capability is requested.
           example: true
-          x-oapi-codegen-extra-tags:
-            capability: octo/pickups
-            required: true
-          x-capability-data:
-            capability: octo/pickups
-            required: true
-        pickupId:
-          type: string
-          nullable: true
-          format: uuid
-          description: The pickup ID that identifies the pickup in the booking system to make this reservation. This field is only present when octo/pickups capability is requested.
-          example: ''
           x-oapi-codegen-extra-tags:
             capability: octo/pickups
             required: true
@@ -4626,6 +5021,42 @@ components:
           x-capability-data:
             capability: octo/pickups
             required: true
+        pickupPointId:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupHotelRoom:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupDispatch:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        dropoffDispatch:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
         duration:
           type: string
           x-oapi-codegen-extra-tags:
@@ -4674,6 +5105,15 @@ components:
             capability: ventrata/content
             required: true
         meetingPointCoordinates:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/content
+            required: true
+          x-capability-data:
+            capability: ventrata/content
+            required: true
+        meetingPointDirections:
           type: string
           nullable: true
           x-oapi-codegen-extra-tags:
@@ -4772,6 +5212,7 @@ components:
           description: List of available offers for the availability.
           example:
             - title: Summer Promo
+              label: ''
               code: SUMMER25
               description: Get 25% off selected tours!
               netDiscount: FULL
@@ -4785,6 +5226,7 @@ components:
                   - unit-2
                   - unit-3
               usable: true
+              unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
           x-oapi-codegen-extra-tags:
             capability: octo/offers
             required: true
@@ -4799,6 +5241,7 @@ components:
           description: Best or selected offer for this availability.
           example:
             title: Summer Promo
+            label: ''
             code: SUMMER25
             description: Get 25% off selected tours!
             netDiscount: FULL
@@ -4812,6 +5255,7 @@ components:
                 - unit-2
                 - unit-3
             usable: true
+            unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
           x-oapi-codegen-extra-tags:
             capability: octo/offers
             required: true
@@ -4826,21 +5270,21 @@ components:
             An array of questions and andswers that will be included in the booking.
             This field is only present when octo/questions capability is requested.
           example:
-            - id: ''
-              label: ''
-              hint: ''
-              maxLength: 128
-              inputType: select
-              required: false
-              selectOptions:
-                - label: ''
-                  value: ''
-              coverImageUrl: ''
-              description: ''
-              shortDescription: ''
-              internalName: ''
-              title: ''
-              questionId: ''
+            - questionId: ''
+              question:
+                id: ''
+                label: ''
+                maxLength: 128
+                inputType: select
+                required: false
+                selectOptions:
+                  - label: ''
+                    value: ''
+                coverImageUrl: ''
+                description: ''
+                shortDescription: ''
+                internalName: ''
+                title: ''
               value: ''
           x-go-type-skip-optional-pointer: true
           x-oapi-codegen-extra-tags:
@@ -4906,6 +5350,16 @@ components:
           x-capability-data:
             capability: octo/extras
             required: true
+        extraPricing:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtraPricing'
+          x-oapi-codegen-extra-tags:
+            capability: octo/extras
+            required: true
+          x-capability-data:
+            capability: octo/extras
+            required: true
         isPackage:
           type: boolean
           description: |-
@@ -4916,6 +5370,7 @@ components:
             capability: octo/packages
         packageIncludeId:
           type: string
+          nullable: true
           format: uuid
           description: |-
             The package ID that identifies the package in the booking system to make this reservation.
@@ -4944,6 +5399,8 @@ components:
           example: []
           x-oapi-codegen-extra-tags:
             capability: octo/packages
+        packageUnitItemUuid:
+          nullable: true
         adjustments:
           type: array
           items:
@@ -4974,6 +5431,101 @@ components:
           example: bbbb6227-54fc-4c32-9ed7-dc3eb99966ea
           x-oapi-codegen-extra-tags:
             capability: octo/identities
+        checkedIn:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: octo/checkin
+            required: true
+          x-capability-data:
+            capability: octo/checkin
+            required: true
+        checkinAvailable:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: octo/checkin
+            required: true
+          x-capability-data:
+            capability: octo/checkin
+            required: true
+        checkinUrl:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/checkin
+            required: true
+          x-capability-data:
+            capability: octo/checkin
+            required: true
+        membershipBenefit:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/MembershipBenefit'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/memberships
+            required: true
+          x-capability-data:
+            capability: octo/memberships
+            required: true
+        membership:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/Membership'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/memberships
+            required: true
+          x-capability-data:
+            capability: octo/memberships
+            required: true
+        isRental:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: octo/rentals
+            required: true
+          x-capability-data:
+            capability: octo/rentals
+            required: true
+        rentalDurationId:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/rentals
+            required: true
+          x-capability-data:
+            capability: octo/rentals
+            required: true
+        rentalDuration:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/RentalDuration'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/rentals
+            required: true
+          x-capability-data:
+            capability: octo/rentals
+            required: true
+        cardPayment:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/CardPayment'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/cardPayments
+            required: true
+          x-capability-data:
+            capability: octo/cardPayments
+            required: true
+        returnUrl:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/cardPayments
+            required: true
+          x-capability-data:
+            capability: octo/cardPayments
+            required: true
       example:
         id: bbbb6227-54fc-4c32-9ed7-dc3eb99966ea
         uuid: 559aed3d-6d5b-4fe0-bfca-99f5e7218a56
@@ -5049,7 +5601,7 @@ components:
               visibleContactFields: []
           tags: []
           settlementMethods:
-            - direct
+            - DIRECT
           freesaleDurationAmount: 2
           freesaleDurationUnit: hour
         optionId: DEFAULT
@@ -5118,6 +5670,7 @@ components:
           openingHours:
             - from: '08:00'
               to: '16:00'
+          code: null
           paxCount: 0
           maxPaxCount: null
           totalCapacity: 0
@@ -5143,6 +5696,9 @@ components:
           city: ''
           state: ''
           allowMarketing: true
+          company: null
+          age: null
+          birthdate: null
         notes: Optional notes for the booking
         deliveryMethods:
           - TICKET
@@ -5192,6 +5748,9 @@ components:
               city: ''
               state: ''
               allowMarketing: true
+              company: null
+              age: null
+              birthdate: null
             ticket: null
             id: ''
             alias: ''
@@ -5202,10 +5761,12 @@ components:
             utcRebookedAt: '2021-10-27 23:28:43Z'
             utcNoshowedAt: '2021-10-27 23:28:43Z'
             unitType: ADULT
+            localDateTimeStart: null
+            localDateTimeEnd: null
         rebookingUuid: ''
         originalRebookingUuid: ''
         alias: ''
-        settlementMethod: direct
+        settlementMethod: DIRECT
         quote: false
         confirmable: true
         agent: null
@@ -5223,6 +5784,12 @@ components:
         localDateTimeEnd: '2022-05-23T00:00:00+01:00'
         emailReceipt: false
         label: null
+        metadata: {}
+        updatable: true
+        availabilityLocalDateStart: null
+        availabilityLocalDateEnd: null
+        guide: null
+        driver: null
     BookingAdjustment:
       type: object
       required:
@@ -5323,6 +5890,29 @@ components:
         uuid:
           type: string
           description: The booking uuid
+    BookingCardPayments:
+      type: object
+      properties:
+        cardPayment:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/CardPayment'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/cardPayments
+            required: true
+          x-capability-data:
+            capability: octo/cardPayments
+            required: true
+        returnUrl:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/cardPayments
+            required: true
+          x-capability-data:
+            capability: octo/cardPayments
+            required: true
     BookingCart:
       type: object
       properties:
@@ -5350,6 +5940,34 @@ components:
             required: true
           x-capability-data:
             capability: octo/cart
+            required: true
+    BookingCheckin:
+      type: object
+      properties:
+        checkedIn:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: octo/checkin
+            required: true
+          x-capability-data:
+            capability: octo/checkin
+            required: true
+        checkinAvailable:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: octo/checkin
+            required: true
+          x-capability-data:
+            capability: octo/checkin
+            required: true
+        checkinUrl:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/checkin
+            required: true
+          x-capability-data:
+            capability: octo/checkin
             required: true
     BookingConfirmationBody:
       type: object
@@ -5619,6 +6237,15 @@ components:
           x-capability-data:
             capability: ventrata/content
             required: true
+        meetingPointDirections:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/content
+            required: true
+          x-capability-data:
+            capability: ventrata/content
+            required: true
         notices:
           type: array
           items:
@@ -5644,6 +6271,7 @@ components:
         meetingLocalDateTime: null
         meetingPoint: null
         meetingPointCoordinates: null
+        meetingPointDirections: null
         notices: []
         termsAccepted: true
     BookingExtras:
@@ -5653,6 +6281,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ExtraItem'
+          x-oapi-codegen-extra-tags:
+            capability: octo/extras
+            required: true
+          x-capability-data:
+            capability: octo/extras
+            required: true
+        extraPricing:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtraPricing'
           x-oapi-codegen-extra-tags:
             capability: octo/extras
             required: true
@@ -5695,6 +6333,31 @@ components:
           id: bbbb6227-54fc-4c32-9ed7-dc3eb99966ea
           key: xyz
         identityId: bbbb6227-54fc-4c32-9ed7-dc3eb99966ea
+    BookingMemberships:
+      type: object
+      properties:
+        membershipBenefit:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/MembershipBenefit'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/memberships
+            required: true
+          x-capability-data:
+            capability: octo/memberships
+            required: true
+        membership:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/Membership'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/memberships
+            required: true
+          x-capability-data:
+            capability: octo/memberships
+            required: true
     BookingOffers:
       type: object
       properties:
@@ -5745,6 +6408,7 @@ components:
           description: List of available offers for the availability.
           example:
             - title: Summer Promo
+              label: ''
               code: SUMMER25
               description: Get 25% off selected tours!
               netDiscount: FULL
@@ -5758,6 +6422,7 @@ components:
                   - unit-2
                   - unit-3
               usable: true
+              unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
           x-oapi-codegen-extra-tags:
             capability: octo/offers
             required: true
@@ -5772,6 +6437,7 @@ components:
           description: Best or selected offer for this availability.
           example:
             title: Summer Promo
+            label: ''
             code: SUMMER25
             description: Get 25% off selected tours!
             netDiscount: FULL
@@ -5785,6 +6451,7 @@ components:
                 - unit-2
                 - unit-3
             usable: true
+            unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
           x-oapi-codegen-extra-tags:
             capability: octo/offers
             required: true
@@ -5803,7 +6470,12 @@ components:
               net: 8000
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
             product:
               id: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
               internalName: London Eye General Admission
@@ -5866,7 +6538,7 @@ components:
                   visibleContactFields: []
               tags: []
               settlementMethods:
-                - direct
+                - DIRECT
               freesaleDurationAmount: 2
               freesaleDurationUnit: hour
             shortDescription: Special summer combo
@@ -5893,6 +6565,7 @@ components:
         offerIsCombination: false
         offers:
           - title: Summer Promo
+            label: ''
             code: SUMMER25
             description: Get 25% off selected tours!
             netDiscount: FULL
@@ -5906,8 +6579,10 @@ components:
                 - unit-2
                 - unit-3
             usable: true
+            unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
         offer:
           title: Summer Promo
+          label: ''
           code: SUMMER25
           description: Get 25% off selected tours!
           netDiscount: FULL
@@ -5921,6 +6596,7 @@ components:
               - unit-2
               - unit-3
           usable: true
+          unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
     BookingPackages:
       type: object
       properties:
@@ -5934,6 +6610,7 @@ components:
             capability: octo/packages
         packageIncludeId:
           type: string
+          nullable: true
           format: uuid
           description: |-
             The package ID that identifies the package in the booking system to make this reservation.
@@ -5962,6 +6639,8 @@ components:
           example: []
           x-oapi-codegen-extra-tags:
             capability: octo/packages
+        packageUnitItemUuid:
+          nullable: true
       example:
         isPackage: true
         packageIncludeId: ''
@@ -6028,18 +6707,6 @@ components:
           x-capability-data:
             capability: octo/pickups
             required: true
-        pickupId:
-          type: string
-          nullable: true
-          format: uuid
-          description: The pickup ID that identifies the pickup in the booking system to make this reservation. This field is only present when octo/pickups capability is requested.
-          example: ''
-          x-oapi-codegen-extra-tags:
-            capability: octo/pickups
-            required: true
-          x-capability-data:
-            capability: octo/pickups
-            required: true
         pickupHotel:
           type: string
           nullable: true
@@ -6090,13 +6757,52 @@ components:
           x-capability-data:
             capability: octo/pickups
             required: true
+        pickupPointId:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupHotelRoom:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        pickupDispatch:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
+        dropoffDispatch:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pickups
+            required: true
+          x-capability-data:
+            capability: octo/pickups
+            required: true
       example:
         pickupRequested: true
-        pickupId: ''
         pickupHotel: ''
         pickupRoom: ''
         pickupNotes: ''
         pickupPoint: null
+        pickupPointId: null
+        pickupHotelRoom: null
+        pickupDispatch: null
+        dropoffDispatch: null
     BookingPricing:
       type: object
       properties:
@@ -6136,9 +6842,35 @@ components:
             An array of questions and andswers that will be included in the booking.
             This field is only present when octo/questions capability is requested.
           example:
-            - id: ''
+            - questionId: ''
+              question:
+                id: ''
+                label: ''
+                maxLength: 128
+                inputType: select
+                required: false
+                selectOptions:
+                  - label: ''
+                    value: ''
+                coverImageUrl: ''
+                description: ''
+                shortDescription: ''
+                internalName: ''
+                title: ''
+              value: ''
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/questions
+            required: true
+          x-capability-data:
+            capability: octo/questions
+            required: true
+      example:
+        questionAnswers:
+          - questionId: ''
+            question:
+              id: ''
               label: ''
-              hint: ''
               maxLength: 128
               inputType: select
               required: false
@@ -6150,32 +6882,6 @@ components:
               shortDescription: ''
               internalName: ''
               title: ''
-              questionId: ''
-              value: ''
-          x-go-type-skip-optional-pointer: true
-          x-oapi-codegen-extra-tags:
-            capability: octo/questions
-            required: true
-          x-capability-data:
-            capability: octo/questions
-            required: true
-      example:
-        questionAnswers:
-          - id: ''
-            label: ''
-            hint: ''
-            maxLength: 128
-            inputType: select
-            required: false
-            selectOptions:
-              - label: ''
-                value: ''
-            coverImageUrl: ''
-            description: ''
-            shortDescription: ''
-            internalName: ''
-            title: ''
-            questionId: ''
             value: ''
     BookingRejection:
       type: object
@@ -6200,6 +6906,37 @@ components:
       example:
         reason: null
         utcRejectedAt: '2022-06-29T22:00:00Z'
+    BookingRentals:
+      type: object
+      properties:
+        isRental:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: octo/rentals
+            required: true
+          x-capability-data:
+            capability: octo/rentals
+            required: true
+        rentalDurationId:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/rentals
+            required: true
+          x-capability-data:
+            capability: octo/rentals
+            required: true
+        rentalDuration:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/RentalDuration'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/rentals
+            required: true
+          x-capability-data:
+            capability: octo/rentals
+            required: true
     BookingReservationBody:
       type: object
       required:
@@ -6272,7 +7009,7 @@ components:
         settlementMethod:
           allOf:
             - $ref: '#/components/schemas/SettlementMethod'
-          example: direct
+          example: DIRECT
         quote:
           type: boolean
           description: Whether to quote the booking instead of confirming it.
@@ -6559,7 +7296,7 @@ components:
                 visibleContactFields: []
             tags: []
             settlementMethods:
-              - direct
+              - DIRECT
             freesaleDurationAmount: 2
             freesaleDurationUnit: hour
           optionId: DEFAULT
@@ -6628,6 +7365,7 @@ components:
             openingHours:
               - from: '08:00'
                 to: '16:00'
+            code: null
             paxCount: 0
             maxPaxCount: null
             totalCapacity: 0
@@ -6653,6 +7391,9 @@ components:
             city: ''
             state: ''
             allowMarketing: true
+            company: null
+            age: null
+            birthdate: null
           notes: Optional notes for the booking
           deliveryMethods:
             - TICKET
@@ -6702,6 +7443,9 @@ components:
                 city: ''
                 state: ''
                 allowMarketing: true
+                company: null
+                age: null
+                birthdate: null
               ticket: null
               id: ''
               alias: ''
@@ -6712,10 +7456,12 @@ components:
               utcRebookedAt: '2021-10-27 23:28:43Z'
               utcNoshowedAt: '2021-10-27 23:28:43Z'
               unitType: ADULT
+              localDateTimeStart: null
+              localDateTimeEnd: null
           rebookingUuid: ''
           originalRebookingUuid: ''
           alias: ''
-          settlementMethod: direct
+          settlementMethod: DIRECT
           quote: false
           confirmable: true
           agent: null
@@ -6733,6 +7479,12 @@ components:
           localDateTimeEnd: '2022-05-23T00:00:00+01:00'
           emailReceipt: false
           label: null
+          metadata: {}
+          updatable: true
+          availabilityLocalDateStart: null
+          availabilityLocalDateEnd: null
+          guide: null
+          driver: null
         diff:
           - op: replace
             path: /title
@@ -6813,7 +7565,7 @@ components:
         settlementMethod:
           allOf:
             - $ref: '#/components/schemas/SettlementMethod'
-          example: direct
+          example: DIRECT
         quote:
           type: boolean
           description: Whether to quote the booking instead of confirming it.
@@ -7037,6 +7789,13 @@ components:
         telephone: null
         address: null
         website: null
+    BridgepayGateway:
+      type: object
+      required:
+        - publicKey
+      properties:
+        publicKey:
+          type: string
     CancelOrderBody:
       type: object
       properties:
@@ -7113,6 +7872,89 @@ components:
       x-go-type-import:
         path: ventrata-octo-api/pkg/id
       x-go-type: id.CapabilityId
+    Card:
+      type: object
+      required:
+        - id
+        - brand
+        - bin
+        - last4
+        - expMonth
+        - expYear
+      properties:
+        id:
+          type: string
+          format: uuid
+        brand:
+          type: string
+        bin:
+          type: string
+        last4:
+          type: string
+        expMonth:
+          type: integer
+        expYear:
+          type: integer
+    CardPayment:
+      type: object
+      required:
+        - id
+        - gateway
+        - source
+        - paid
+        - paidSurcharge
+        - balance
+        - surcharge
+        - outstandingBalance
+        - currency
+        - currencyPrecision
+        - reusableCards
+      properties:
+        id:
+          type: string
+          format: uuid
+        gateway:
+          type: string
+        source:
+          type: string
+        paid:
+          type: integer
+        paidSurcharge:
+          type: integer
+        balance:
+          type: integer
+        surcharge:
+          type: integer
+        outstandingBalance:
+          type: integer
+        currency:
+          type: string
+        currencyPrecision:
+          type: integer
+        reusableCards:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+        adyen:
+          $ref: '#/components/schemas/AdyenGateway'
+        vivawallet:
+          $ref: '#/components/schemas/VivawalletGateway'
+        stripe:
+          $ref: '#/components/schemas/StripeGateway'
+        bridgepay:
+          $ref: '#/components/schemas/BridgepayGateway'
+        realax:
+          $ref: '#/components/schemas/RealaxGateway'
+        paypal:
+          $ref: '#/components/schemas/PaypalGateway'
+        external:
+          $ref: '#/components/schemas/ExternalGateway'
+        paytr:
+          $ref: '#/components/schemas/PaytrGateway'
+        spreedly:
+          $ref: '#/components/schemas/SpreedlyGateway'
+        peach:
+          $ref: '#/components/schemas/PeachGateway'
     Category:
       type: object
       required:
@@ -7124,7 +7966,6 @@ components:
         - shortDescription
         - coverImageUrl
         - bannerImageUrl
-        - productIds
       properties:
         id:
           type: string
@@ -7169,16 +8010,6 @@ components:
           nullable: true
           description: The URL of the image that represents the category.
           example: The URL of the image that represents the category.
-        productIds:
-          type: array
-          items:
-            type: string
-          description: An array of product IDs that the category falls under. This field is not visible if this Category is a product category.
-          example:
-            - 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
-          x-go-type-import:
-            path: github.com/google/uuid
-          x-go-type: '*[]uuid.UUID'
       example:
         id: 697e3ce8-1860-4cbf-80ad-95857df1f640
         default: true
@@ -7188,8 +8019,6 @@ components:
         shortDescription: ''
         coverImageUrl: The URL of the image that represents the category.
         bannerImageUrl: The URL of the image that represents the category.
-        productIds:
-          - 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
     ConfirmOrderBody:
       type: object
       properties:
@@ -7462,6 +8291,9 @@ components:
         - city
         - state
         - allowMarketing
+        - company
+        - age
+        - birthdate
       properties:
         fullName:
           type: string
@@ -7541,6 +8373,16 @@ components:
           type: boolean
           description: Whether the booking holder or the ticket holder allows marketing.
           example: true
+        company:
+          type: string
+          nullable: true
+        age:
+          type: integer
+          format: int32
+          nullable: true
+        birthdate:
+          type: string
+          nullable: true
       example:
         fullName: John Doe
         firstName: John
@@ -7558,6 +8400,9 @@ components:
         city: ''
         state: ''
         allowMarketing: true
+        company: null
+        age: null
+        birthdate: null
     DefaultableID:
       type: string
       description: |-
@@ -7579,6 +8424,7 @@ components:
         - QRCODE
         - CODE128
         - PKPASS_URL
+        - GOOGLE_WALLET_URL
       example: QRCODE
     DeliveryMethod:
       type: string
@@ -7594,7 +8440,7 @@ components:
       properties:
         deliveryFormat:
           allOf:
-            - $ref: '#/components/schemas/DeliveryFormat'
+            - $ref: '#/components/schemas/Octo.DeliveryFormat'
           description: |-
             The format in which vouchers for this product are delivered. Each format specifies how the vouchers will be represented:
             QRCODE: A code presented as a QR Code, commonly used for scanning at entry points.
@@ -7635,7 +8481,6 @@ components:
         - twitterUrl
         - youtubeUrl
         - instagramUrl
-        - categories
         - tags
         - address
         - notices
@@ -7754,22 +8599,6 @@ components:
           nullable: true
           description: The Instagram URL for the destination.
           example: ''
-        categories:
-          type: array
-          items:
-            $ref: '#/components/schemas/Category'
-          description: An array of categories that the destination falls under.
-          example:
-            - id: 697e3ce8-1860-4cbf-80ad-95857df1f640
-              default: true
-              name: ''
-              title: ''
-              tags: []
-              shortDescription: ''
-              coverImageUrl: The URL of the image that represents the category.
-              bannerImageUrl: The URL of the image that represents the category.
-              productIds:
-                - 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
         tags:
           type: array
           items:
@@ -7785,6 +8614,31 @@ components:
           items:
             $ref: '#/components/schemas/Notice'
           example: []
+        defaultCurrency:
+          type: string
+          description: Is on the object when Pricing capability is requested. Default currency for this product, if you omit the currency parameter on future endpoints this is the value the reservation system will fallback to.
+          example: USD
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+        availableCurrencies:
+          type: array
+          items:
+            type: string
+          description: Is on the object when Pricing capability is requested. All the possible currencies that we accept for this product.
+          example:
+            - USD
+            - EUR
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
       example:
         id: 697e3ce8-1860-4cbf-80ad-95857df1f640
         default: true
@@ -7836,17 +8690,6 @@ components:
         twitterUrl: ''
         youtubeUrl: ''
         instagramUrl: ''
-        categories:
-          - id: 697e3ce8-1860-4cbf-80ad-95857df1f640
-            default: true
-            name: ''
-            title: ''
-            tags: []
-            shortDescription: ''
-            coverImageUrl: The URL of the image that represents the category.
-            bannerImageUrl: The URL of the image that represents the category.
-            productIds:
-              - 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
         tags: []
         address: null
         notices: []
@@ -7891,6 +8734,39 @@ components:
         telephone: null
         address: Marble Arch, London, W1H 7EJ, United Kingdom
         website: null
+    DestinationPricing:
+      type: object
+      properties:
+        defaultCurrency:
+          type: string
+          description: Is on the object when Pricing capability is requested. Default currency for this product, if you omit the currency parameter on future endpoints this is the value the reservation system will fallback to.
+          example: USD
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+        availableCurrencies:
+          type: array
+          items:
+            type: string
+          description: Is on the object when Pricing capability is requested. All the possible currencies that we accept for this product.
+          example:
+            - USD
+            - EUR
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+      example:
+        defaultCurrency: USD
+        availableCurrencies:
+          - USD
+          - EUR
     Diff:
       type: object
       required:
@@ -7952,6 +8828,8 @@ components:
         uuid:
           type: string
           description: The booking uuid
+    ExternalGateway:
+      type: object
     Extra:
       type: object
       required:
@@ -8007,7 +8885,12 @@ components:
               net: 8000
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
         pricing:
           type: array
           items:
@@ -8019,7 +8902,12 @@ components:
               net: 8000
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
         shortDescription:
           type: string
           nullable: true
@@ -8042,14 +8930,24 @@ components:
             net: 8000
             currency: EUR
             currencyPrecision: 2
-            includedTaxes: []
+            includedTaxes:
+              - name: VAT 10
+                retail: 700
+                original: 700
+                net: 400
+                shortDescription: null
         pricing:
           - original: 1000
             retail: 1000
             net: 8000
             currency: EUR
             currencyPrecision: 2
-            includedTaxes: []
+            includedTaxes:
+              - name: VAT 10
+                retail: 700
+                original: 700
+                net: 400
+                shortDescription: null
         shortDescription: Skip the line!
     ExtraItem:
       type: object
@@ -8088,14 +8986,24 @@ components:
                 net: 8000
                 currency: EUR
                 currencyPrecision: 2
-                includedTaxes: []
+                includedTaxes:
+                  - name: VAT 10
+                    retail: 700
+                    original: 700
+                    net: 400
+                    shortDescription: null
             pricing:
               - original: 1000
                 retail: 1000
                 net: 8000
                 currency: EUR
                 currencyPrecision: 2
-                includedTaxes: []
+                includedTaxes:
+                  - name: VAT 10
+                    retail: 700
+                    original: 700
+                    net: 400
+                    shortDescription: null
             shortDescription: Skip the line!
         pricing:
           allOf:
@@ -8107,7 +9015,12 @@ components:
             net: 8000
             currency: EUR
             currencyPrecision: 2
-            includedTaxes: []
+            includedTaxes:
+              - name: VAT 10
+                retail: 700
+                original: 700
+                net: 400
+                shortDescription: null
       example:
         id: extra-item-001
         extraId: extra-001
@@ -8128,14 +9041,24 @@ components:
               net: 8000
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
           pricing:
             - original: 1000
               retail: 1000
               net: 8000
               currency: EUR
               currencyPrecision: 2
-              includedTaxes: []
+              includedTaxes:
+                - name: VAT 10
+                  retail: 700
+                  original: 700
+                  net: 400
+                  shortDescription: null
           shortDescription: Skip the line!
         pricing:
           original: 1000
@@ -8143,7 +9066,60 @@ components:
           net: 8000
           currency: EUR
           currencyPrecision: 2
-          includedTaxes: []
+          includedTaxes:
+            - name: VAT 10
+              retail: 700
+              original: 700
+              net: 400
+              shortDescription: null
+    ExtraPricing:
+      type: object
+      required:
+        - extraId
+        - original
+        - retail
+        - net
+        - currency
+        - currencyPrecision
+        - includedTaxes
+      properties:
+        extraId:
+          type: string
+        original:
+          type: integer
+          description: Represents the advertised marketing price, which must be equal to or higher than pricingFrom.retail. Typically used for strike-through pricing, it highlights the original or component-based value of the product when the retail price reflects a discount or bundled offer. For example, a package product combining multiple components (e.g., hotel + tour + meals) may have a total component value of $500 (original), while the bundled retail price is $400. In such cases, the original price is displayed to show savings.This field should only be shown when it is higher than pricingFrom.retail and must accurately reflect a valid reference price, ensuring transparency and trust.
+          example: 3995
+          x-go-type: int64
+        retail:
+          type: integer
+          description: The supplier’s recommended sale price, including all taxes and fees. This is the price charged to end customers and represents the total cost.
+          example: 3995
+          x-go-type: int64
+        net:
+          type: integer
+          nullable: true
+          description: The wholesale price charged to the reseller, including all taxes and fees. This price reflects the amount the reseller pays to the supplier.
+          example: 2996
+          x-go-type: int64
+        currency:
+          type: string
+          description: Specifies the currency used for the prices provided in the pricingFrom object. The value must adhere to ISO 4217 currency codes (e.g., USD, EUR, JPY) to ensure consistency across systems.
+          example: USD
+        currencyPrecision:
+          type: integer
+          description: 'All pricing is given in integers to avoid floating point rounding issues. e.g. USD = 2 and JPY = 0. To convert a price to decimal you should do: price / (10 ** currencyPrecision) where ** is to the power of e.g. Math.pow(10, currencyPrecision).'
+          example: 2
+        includedTaxes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tax'
+          description: This field defines the number of decimal places used for the currency in the pricingFrom object, ensuring precise representation and preventing rounding errors during calculations. For example, in currencies like USD, which have a precision of 2, prices are expressed in cents (e.g., $45.00 is represented as 4500). In currencies like JPY, which have a precision of 0, prices are expressed as whole yen amounts (e.g., ¥4500 is represented as 4500). By aligning with the specific decimal requirements of different currencies, this field guarantees accurate pricing calculations and consistent handling across various currency formats.
+          example:
+            - name: VAT 10
+              retail: 700
+              original: 700
+              net: 400
+              shortDescription: null
     ExtraRestrictions:
       type: object
       required:
@@ -8535,6 +9511,49 @@ components:
           example: bbbb6227-54fc-4c32-9ed7-dc3eb99966ea
           x-oapi-codegen-extra-tags:
             capability: octo/identities
+        cardPayment:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/CardPayment'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/cardPayments
+            required: true
+          x-capability-data:
+            capability: octo/cardPayments
+            required: true
+        returnUrl:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/cardPayments
+            required: true
+          x-capability-data:
+            capability: octo/cardPayments
+            required: true
+    GiftCardPayments:
+      type: object
+      properties:
+        cardPayment:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/CardPayment'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/cardPayments
+            required: true
+          x-capability-data:
+            capability: octo/cardPayments
+            required: true
+        returnUrl:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/cardPayments
+            required: true
+          x-capability-data:
+            capability: octo/cardPayments
+            required: true
     GiftIdentities:
       type: object
       properties:
@@ -8855,6 +9874,8 @@ components:
         - id
         - required
         - limit
+        - validityDays
+        - availabilityRequired
         - productId
         - product
         - optionId
@@ -8875,8 +9896,11 @@ components:
           example: 2
         validityDays:
           type: integer
+          nullable: true
           description: The validity days of the include.
           example: 3
+        availabilityRequired:
+          type: boolean
         productId:
           type: string
           format: uuid
@@ -8903,6 +9927,7 @@ components:
         required: false
         limit: 2
         validityDays: 3
+        availabilityRequired: true
         productId: ''
         product: null
         optionId: ''
@@ -9247,6 +10272,50 @@ components:
         - external/youtube
         - external/vimeo
       example: image/jpeg
+    Membership:
+      type: object
+      required:
+        - id
+        - title
+        - contact
+        - reference
+        - resellerReference
+        - supplierReference
+        - availabilityLocalDateStart
+        - availabilityLocalDateEnd
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        contact:
+          $ref: '#/components/schemas/CustomerContact'
+        reference:
+          type: string
+          nullable: true
+        resellerReference:
+          type: string
+        supplierReference:
+          type: string
+        availabilityLocalDateStart:
+          type: string
+          nullable: true
+        availabilityLocalDateEnd:
+          type: string
+          nullable: true
+    MembershipBenefit:
+      type: object
+      required:
+        - id
+        - title
+        - description
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
     NetDiscount:
       type: string
       enum:
@@ -9378,6 +10447,14 @@ components:
         - octo/pickups
         - octo/pricing
         - octo/questions
+    Octo.DeliveryFormat:
+      type: string
+      enum:
+        - PDF_URL
+        - QRCODE
+        - CODE128
+        - PKPASS_URL
+      example: QRCODE
     Octo.ErrorBadRequest:
       type: object
       allOf:
@@ -9602,125 +10679,30 @@ components:
         title: ''
         caption: ''
         copyright: ''
-    Octo.Pricing:
-      type: object
-      required:
-        - original
-        - retail
-        - net
-        - currency
-        - currencyPrecision
-        - includedTaxes
-      properties:
-        original:
-          type: integer
-          description: Represents the advertised marketing price, which must be equal to or higher than pricingFrom.retail. Typically used for strike-through pricing, it highlights the original or component-based value of the product when the retail price reflects a discount or bundled offer. For example, a package product combining multiple components (e.g., hotel + tour + meals) may have a total component value of $500 (original), while the bundled retail price is $400. In such cases, the original price is displayed to show savings.This field should only be shown when it is higher than pricingFrom.retail and must accurately reflect a valid reference price, ensuring transparency and trust.
-          example: 3995
-        retail:
-          type: integer
-          description: The supplier’s recommended sale price, including all taxes and fees. This is the price charged to end customers and represents the total cost.
-          example: 3995
-        net:
-          type: integer
-          nullable: true
-          description: The wholesale price charged to the reseller, including all taxes and fees. This price reflects the amount the reseller pays to the supplier.
-          example: 2996
-        currency:
-          type: string
-          description: Specifies the currency used for the prices provided in the pricingFrom object. The value must adhere to ISO 4217 currency codes (e.g., USD, EUR, JPY) to ensure consistency across systems.
-          example: USD
-        currencyPrecision:
-          type: integer
-          description: 'All pricing is given in integers to avoid floating point rounding issues. e.g. USD = 2 and JPY = 0. To convert a price to decimal you should do: price / (10 ** currencyPrecision) where ** is to the power of e.g. Math.pow(10, currencyPrecision).'
-          example: 2
-        includedTaxes:
-          type: array
-          items:
-            $ref: '#/components/schemas/Octo.Tax'
-          description: This field defines the number of decimal places used for the currency in the pricingFrom object, ensuring precise representation and preventing rounding errors during calculations. For example, in currencies like USD, which have a precision of 2, prices are expressed in cents (e.g., $45.00 is represented as 4500). In currencies like JPY, which have a precision of 0, prices are expressed as whole yen amounts (e.g., ¥4500 is represented as 4500). By aligning with the specific decimal requirements of different currencies, this field guarantees accurate pricing calculations and consistent handling across various currency formats.
-          example:
-            - name: VAT 10
-              retail: 700
-              original: 700
-              net: 400
-      example:
-        original: 3995
-        retail: 3995
-        net: 2996
-        currency: USD
-        currencyPrecision: 2
-        includedTaxes:
-          - name: VAT 10
-            retail: 700
-            original: 700
-            net: 400
-    Octo.PricingUnit:
-      type: object
-      required:
-        - unitId
-      properties:
-        unitId:
-          type: string
-          description: ID of the unit this pricing is related to
-          example: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
-      allOf:
-        - $ref: '#/components/schemas/Octo.Pricing'
-      example:
-        unitId: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
-        original: 1000
-        retail: 1000
-        net: 8000
-        currency: EUR
-        currencyPrecision: 2
-        includedTaxes: []
     Octo.RequestHeaders:
       type: object
     Octo.ResponseHeaders:
       type: object
-    Octo.Tax:
-      type: object
-      required:
-        - name
-        - retail
-        - original
-        - net
-      properties:
-        name:
-          type: string
-          description: The name of the tax or fee, such as "VAT", "City Tax", or "Service Charge". This field provides clear labeling of the tax or fee being applied, making the pricing structure easier to interpret.
-          example: VAT 10
-        retail:
-          type: integer
-          description: The value of the tax or fee included in the retail price, expressed in the same currency as the pricingFrom.currency. This value indicates the portion of the end-customer price attributable to the specific tax or fee.
-          example: 700
-        original:
-          type: integer
-          description: ''
-          example: 700
-        net:
-          type: integer
-          nullable: true
-          description: The value of the tax or fee included in the net price, expressed in the same currency as the pricingFrom.currency. This value indicates the portion of the reseller’s cost attributable to the specific tax or fee.
-          example: 400
-      example:
-        name: VAT 10
-        retail: 700
-        original: 700
-        net: 400
     Offer:
       type: object
       required:
         - title
+        - label
         - code
         - description
         - netDiscount
         - restrictions
         - usable
+        - unusableReason
       properties:
         title:
           type: string
           description: The title or name of the offer.
           example: Summer Promo
+        label:
+          type: string
+          description: The label of the offer.
+          example: 25% OFF
         code:
           type: string
           description: The unique code used to apply the offer.
@@ -9753,8 +10735,24 @@ components:
           type: boolean
           description: Indicates whether the offer can currently be applied.
           example: true
+        unusableReason:
+          type: string
+          nullable: true
+          example: only available on Mon, Tue, Wed, Thu, and Fri
+        membershipBenefit:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/MembershipBenefit'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/memberships
+            required: true
+          x-capability-data:
+            capability: octo/memberships
+            required: true
       example:
         title: Summer Promo
+        label: ''
         code: SUMMER25
         description: Get 25% off selected tours!
         netDiscount: FULL
@@ -9768,6 +10766,7 @@ components:
             - unit-2
             - unit-3
         usable: true
+        unusableReason: only available on Mon, Tue, Wed, Thu, and Fri
     OfferCombination:
       type: object
       required:
@@ -9825,7 +10824,12 @@ components:
           net: 8000
           currency: EUR
           currencyPrecision: 2
-          includedTaxes: []
+          includedTaxes:
+            - name: VAT 10
+              retail: 700
+              original: 700
+              net: 400
+              shortDescription: null
         shortDescription: Includes free gift
         units:
           - id: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
@@ -9875,7 +10879,12 @@ components:
             net: 8000
             currency: EUR
             currencyPrecision: 2
-            includedTaxes: []
+            includedTaxes:
+              - name: VAT 10
+                retail: 700
+                original: 700
+                net: 400
+                shortDescription: null
         product:
           allOf:
             - $ref: '#/components/schemas/Product'
@@ -9898,7 +10907,12 @@ components:
           net: 8000
           currency: EUR
           currencyPrecision: 2
-          includedTaxes: []
+          includedTaxes:
+            - name: VAT 10
+              retail: 700
+              original: 700
+              net: 400
+              shortDescription: null
         product:
           id: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
           internalName: London Eye General Admission
@@ -9961,7 +10975,7 @@ components:
               visibleContactFields: []
           tags: []
           settlementMethods:
-            - direct
+            - DIRECT
           freesaleDurationAmount: 2
           freesaleDurationUnit: hour
         shortDescription: Special summer combo
@@ -10005,13 +11019,35 @@ components:
         includedTaxes:
           type: array
           items:
-            $ref: '#/components/schemas/Tax'
+            $ref: '#/components/schemas/OfferTax'
           description: List of taxes included in the discounted price.
-          example: []
+          example:
+            - name: VAT 10
+              retail: 700
+              net: 400
+              shortDescription: null
       example:
         net: 150
         retail: 120
-        includedTaxes: []
+        includedTaxes:
+          - name: VAT 10
+            retail: 700
+            net: 400
+            shortDescription: null
+    OfferMemberships:
+      type: object
+      properties:
+        membershipBenefit:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/MembershipBenefit'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/memberships
+            required: true
+          x-capability-data:
+            capability: octo/memberships
+            required: true
     OfferRestrictions:
       type: object
       required:
@@ -10063,6 +11099,39 @@ components:
           - unit-1
           - unit-2
           - unit-3
+    OfferTax:
+      type: object
+      required:
+        - name
+        - retail
+        - net
+        - shortDescription
+      properties:
+        name:
+          type: string
+          description: The name of the tax or fee, such as "VAT", "City Tax", or "Service Charge". This field provides clear labeling of the tax or fee being applied, making the pricing structure easier to interpret.
+          example: VAT 10
+        retail:
+          type: integer
+          description: The value of the tax or fee included in the retail price, expressed in the same currency as the pricingFrom.currency. This value indicates the portion of the end-customer price attributable to the specific tax or fee.
+          example: 700
+          x-go-type: int64
+        net:
+          type: integer
+          nullable: true
+          description: The value of the tax or fee included in the net price, expressed in the same currency as the pricingFrom.currency. This value indicates the portion of the reseller’s cost attributable to the specific tax or fee.
+          example: 400
+          x-go-type: int64
+        shortDescription:
+          type: string
+          nullable: true
+          description: ''
+          example: null
+      example:
+        name: VAT 10
+        retail: 700
+        net: 400
+        shortDescription: null
     OpeningHours:
       type: object
       required:
@@ -10079,6 +11148,7 @@ components:
           example: '16:00'
         frequency:
           type: string
+          nullable: true
           description: Optional label for how frequently the event occurs (e.g., daily, weekly).
           example: 1 hour
           x-oapi-codegen-extra-tags:
@@ -10090,6 +11160,7 @@ components:
         frequencyAmount:
           type: integer
           format: int32
+          nullable: true
           description: Optional numeric amount representing the interval frequency.
           example: 1
           x-oapi-codegen-extra-tags:
@@ -10099,7 +11170,8 @@ components:
             capability: ventrata/content
             required: true
         frequencyUnit:
-          type: string
+          allOf:
+            - $ref: '#/components/schemas/DurationUnit'
           description: Optional unit for frequency (e.g., day, week, month).
           example: hour
           x-oapi-codegen-extra-tags:
@@ -10117,6 +11189,7 @@ components:
       properties:
         frequency:
           type: string
+          nullable: true
           description: Optional label for how frequently the event occurs (e.g., daily, weekly).
           example: 1 hour
           x-oapi-codegen-extra-tags:
@@ -10128,6 +11201,7 @@ components:
         frequencyAmount:
           type: integer
           format: int32
+          nullable: true
           description: Optional numeric amount representing the interval frequency.
           example: 1
           x-oapi-codegen-extra-tags:
@@ -10137,7 +11211,8 @@ components:
             capability: ventrata/content
             required: true
         frequencyUnit:
-          type: string
+          allOf:
+            - $ref: '#/components/schemas/DurationUnit'
           description: Optional unit for frequency (e.g., day, week, month).
           example: hour
           x-oapi-codegen-extra-tags:
@@ -10197,7 +11272,6 @@ components:
           type: array
           items:
             type: string
-          minItems: 1
           description: An array containing all possible start times for the option that can be returned during availability. For example a tour with multiple departure times may have multiple:["09:00", "14:00", "17:00"].
           example:
             - '00:00'
@@ -10448,7 +11522,7 @@ components:
         pricingFrom:
           type: array
           items:
-            $ref: '#/components/schemas/Octo.Pricing'
+            $ref: '#/components/schemas/Pricing'
           description: 'Is on the object when Pricing capability is requested. '
           example:
             - original: 2000
@@ -10457,13 +11531,17 @@ components:
               currency: EUR
               currencyPrecision: 2
               includedTaxes: []
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
           x-capability-data:
             capability: octo/pricing
             required: true
         pricing:
           type: array
           items:
-            $ref: '#/components/schemas/Octo.Pricing'
+            $ref: '#/components/schemas/Pricing'
           description: 'Is on the object when Pricing capability is requested. '
           example:
             - original: 2000
@@ -10472,6 +11550,9 @@ components:
               currency: EUR
               currencyPrecision: 2
               includedTaxes: []
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
           x-capability-data:
             capability: octo/pricing
             required: true
@@ -10483,7 +11564,6 @@ components:
           example:
             - id: ''
               label: ''
-              hint: ''
               maxLength: 128
               inputType: select
               required: false
@@ -10526,6 +11606,16 @@ components:
             required: true
           x-capability-data:
             capability: octo/packages
+            required: true
+        rentalDurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalDuration'
+          x-oapi-codegen-extra-tags:
+            capability: octo/rentals
+            required: true
+          x-capability-data:
+            capability: octo/rentals
             required: true
       example:
         id: DEFAULT
@@ -10804,6 +11894,54 @@ components:
         pickupAvailable: true
         pickupRequired: true
         pickupPoints: []
+    OptionPricing:
+      type: object
+      properties:
+        pricingFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pricing'
+          description: 'Is on the object when Pricing capability is requested. '
+          example:
+            - original: 2000
+              retail: 2000
+              net: 1600
+              currency: EUR
+              currencyPrecision: 2
+              includedTaxes: []
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+        pricing:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pricing'
+          description: 'Is on the object when Pricing capability is requested. '
+          example:
+            - original: 2000
+              retail: 2000
+              net: 1600
+              currency: EUR
+              currencyPrecision: 2
+              includedTaxes: []
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+      example:
+        pricingFrom:
+          - original: 2000
+            retail: 2000
+            net: 1600
+            currency: EUR
+            currencyPrecision: 2
+            includedTaxes: []
     OptionQuestions:
       type: object
       properties:
@@ -10815,7 +11953,6 @@ components:
           example:
             - id: ''
               label: ''
-              hint: ''
               maxLength: 128
               inputType: select
               required: false
@@ -10838,7 +11975,6 @@ components:
         questions:
           - id: ''
             label: ''
-            hint: ''
             maxLength: 128
             inputType: select
             required: false
@@ -10850,6 +11986,19 @@ components:
             shortDescription: ''
             internalName: ''
             title: ''
+    OptionRentals:
+      type: object
+      properties:
+        rentalDurations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RentalDuration'
+          x-oapi-codegen-extra-tags:
+            capability: octo/rentals
+            required: true
+          x-capability-data:
+            capability: octo/rentals
+            required: true
     OptionRestrictions:
       type: object
       required:
@@ -10888,18 +12037,21 @@ components:
         - id
         - testMode
         - settlementMethod
+        - settlementMethods
         - supplierReference
         - quote
         - status
+        - utcCreatedAt
         - utcExpiresAt
         - utcConfirmedAt
+        - utcUpdatedAt
         - cancellable
         - confirmable
+        - updatable
         - bookings
         - visibleContactFields
         - requiredContactFields
-        - user
-        - seller
+        - voucher
       properties:
         id:
           type: string
@@ -10909,12 +12061,21 @@ components:
           type: boolean
         settlementMethod:
           $ref: '#/components/schemas/SettlementMethod'
+        settlementMethods:
+          type: array
+          items:
+            $ref: '#/components/schemas/SettlementMethod'
         supplierReference:
           type: string
         quote:
           type: boolean
         status:
           type: string
+        utcCreatedAt:
+          type: string
+          x-fap:
+            path: ventrata-octo-api/pkg/types
+          x-go-type: types.TimeRFC3339
         utcExpiresAt:
           type: string
           nullable: true
@@ -10927,14 +12088,18 @@ components:
           x-go-type-import:
             path: ventrata-octo-api/pkg/types
           x-go-type: types.TimeRFC3339
+        utcUpdatedAt:
+          type: string
+          nullable: true
+          x-go-type-import:
+            path: ventrata-octo-api/pkg/types
+          x-go-type: types.TimeRFC3339
         cancellable:
           type: boolean
         confirmable:
           type: boolean
-        reseller:
-          $ref: '#/components/schemas/Reseller'
-        agent:
-          $ref: '#/components/schemas/Agent'
+        updatable:
+          type: boolean
         contact:
           $ref: '#/components/schemas/CustomerContact'
         emailReceipt:
@@ -10951,16 +12116,60 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ContactField'
-        user:
+        voucher:
           type: object
           allOf:
-            - $ref: '#/components/schemas/User'
+            - $ref: '#/components/schemas/Ticket'
           nullable: true
-        seller:
-          type: object
+        termsAccepted:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/content
+            required: true
+          x-capability-data:
+            capability: ventrata/content
+            required: true
+        destination:
           allOf:
-            - $ref: '#/components/schemas/Seller'
-          nullable: true
+            - $ref: '#/components/schemas/Destination'
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/content
+            required: true
+          x-capability-data:
+            capability: ventrata/content
+            required: true
+        brand:
+          allOf:
+            - $ref: '#/components/schemas/Brand'
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/content
+            required: true
+          x-capability-data:
+            capability: ventrata/content
+            required: true
+        pricing:
+          allOf:
+            - $ref: '#/components/schemas/Pricing'
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+        questionAnswers:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionAnswer'
+          description: |-
+            An array of questions and andswers that will be included in the order.
+            This field is only present when octo/questions capability is requested.
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/questions
+            required: true
+          x-capability-data:
+            capability: octo/questions
+            required: true
         identity:
           allOf:
             - $ref: '#/components/schemas/Identity'
@@ -10996,6 +12205,136 @@ components:
           x-capability-data:
             capability: octo/gifts
             required: true
+        gifts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gift'
+          x-oapi-codegen-extra-tags:
+            capability: octo/gifts
+            required: true
+          x-capability-data:
+            capability: octo/gifts
+            required: true
+        checkinAvailable:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: octo/checkin
+            required: true
+          x-capability-data:
+            capability: octo/checkin
+            required: true
+        checkinUrl:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/checkin
+            required: true
+          x-capability-data:
+            capability: octo/checkin
+            required: true
+        membership:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/Membership'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/memberships
+            required: true
+          x-capability-data:
+            capability: octo/memberships
+            required: true
+        cardPayment:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/CardPayment'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/cardPayments
+            required: true
+          x-capability-data:
+            capability: octo/cardPayments
+            required: true
+        returnUrl:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/cardPayments
+            required: true
+          x-capability-data:
+            capability: octo/cardPayments
+            required: true
+    OrderCardPayments:
+      type: object
+      properties:
+        cardPayment:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/CardPayment'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/cardPayments
+            required: true
+          x-capability-data:
+            capability: octo/cardPayments
+            required: true
+        returnUrl:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/cardPayments
+            required: true
+          x-capability-data:
+            capability: octo/cardPayments
+            required: true
+    OrderCheckin:
+      type: object
+      properties:
+        checkinAvailable:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: octo/checkin
+            required: true
+          x-capability-data:
+            capability: octo/checkin
+            required: true
+        checkinUrl:
+          type: string
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/checkin
+            required: true
+          x-capability-data:
+            capability: octo/checkin
+            required: true
+    OrderContent:
+      type: object
+      properties:
+        termsAccepted:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/content
+            required: true
+          x-capability-data:
+            capability: ventrata/content
+            required: true
+        destination:
+          allOf:
+            - $ref: '#/components/schemas/Destination'
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/content
+            required: true
+          x-capability-data:
+            capability: ventrata/content
+            required: true
+        brand:
+          allOf:
+            - $ref: '#/components/schemas/Brand'
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/content
+            required: true
+          x-capability-data:
+            capability: ventrata/content
+            required: true
     OrderGifts:
       type: object
       properties:
@@ -11004,6 +12343,16 @@ components:
           allOf:
             - $ref: '#/components/schemas/GiftPayment'
           nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/gifts
+            required: true
+          x-capability-data:
+            capability: octo/gifts
+            required: true
+        gifts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gift'
           x-oapi-codegen-extra-tags:
             capability: octo/gifts
             required: true
@@ -11032,6 +12381,20 @@ components:
           id: bbbb6227-54fc-4c32-9ed7-dc3eb99966ea
           key: xyz
         identityId: bbbb6227-54fc-4c32-9ed7-dc3eb99966ea
+    OrderMemberships:
+      type: object
+      properties:
+        membership:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/Membership'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/memberships
+            required: true
+          x-capability-data:
+            capability: octo/memberships
+            required: true
     OrderOffers:
       type: object
       properties:
@@ -11054,6 +12417,35 @@ components:
           type: string
           description: The order ID
           example: 0effd05e-d61e-47f2-8fc9-512f3144c69d
+    OrderPricing:
+      type: object
+      properties:
+        pricing:
+          allOf:
+            - $ref: '#/components/schemas/Pricing'
+          x-oapi-codegen-extra-tags:
+            capability: octo/pricing
+            required: true
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+    OrderQuestions:
+      type: object
+      properties:
+        questionAnswers:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionAnswer'
+          description: |-
+            An array of questions and andswers that will be included in the order.
+            This field is only present when octo/questions capability is requested.
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/questions
+            required: true
+          x-capability-data:
+            capability: octo/questions
+            required: true
     PackageInclude:
       type: object
       required:
@@ -11182,6 +12574,36 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/RequestHeaders'
+    PaypalGateway:
+      type: object
+      properties:
+        clientId:
+          type: string
+        orderId:
+          type: string
+          nullable: true
+    PaytrGateway:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        iframeUrl:
+          type: string
+          nullable: true
+        error:
+          type: string
+          nullable: true
+    PeachGateway:
+      type: object
+      properties:
+        key:
+          nullable: true
+        entityId:
+          type: string
+        checkoutId:
+          type: string
+          nullable: true
     PickupPoint:
       type: object
       required:
@@ -11432,10 +12854,20 @@ components:
           x-capability-data:
             capability: octo/offers
             required: true
-        extraId:
+        extraPricing:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/ExtraPricing'
+          x-oapi-codegen-extra-tags:
+            capability: octo/extras
+            required: true
+          x-capability-data:
+            capability: octo/extras
+            required: true
+        extraPricingFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtraPricing'
           x-oapi-codegen-extra-tags:
             capability: octo/extras
             required: true
@@ -11448,14 +12880,29 @@ components:
         net: 8000
         currency: EUR
         currencyPrecision: 2
-        includedTaxes: []
+        includedTaxes:
+          - name: VAT 10
+            retail: 700
+            original: 700
+            net: 400
+            shortDescription: null
     PricingExtras:
       type: object
       properties:
-        extraId:
+        extraPricing:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/ExtraPricing'
+          x-oapi-codegen-extra-tags:
+            capability: octo/extras
+            required: true
+          x-capability-data:
+            capability: octo/extras
+            required: true
+        extraPricingFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtraPricing'
           x-oapi-codegen-extra-tags:
             capability: octo/extras
             required: true
@@ -11549,7 +12996,17 @@ components:
         extraPricing:
           type: array
           items:
-            $ref: '#/components/schemas/Pricing'
+            $ref: '#/components/schemas/ExtraPricing'
+          x-oapi-codegen-extra-tags:
+            capability: octo/extras
+            required: true
+          x-capability-data:
+            capability: octo/extras
+            required: true
+        extraPricingFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtraPricing'
           x-oapi-codegen-extra-tags:
             capability: octo/extras
             required: true
@@ -11562,7 +13019,17 @@ components:
         extraPricing:
           type: array
           items:
-            $ref: '#/components/schemas/Pricing'
+            $ref: '#/components/schemas/ExtraPricing'
+          x-oapi-codegen-extra-tags:
+            capability: octo/extras
+            required: true
+          x-capability-data:
+            capability: octo/extras
+            required: true
+        extraPricingFrom:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtraPricing'
           x-oapi-codegen-extra-tags:
             capability: octo/extras
             required: true
@@ -11685,7 +13152,7 @@ components:
             $ref: '#/components/schemas/SettlementMethod'
           description: ''
           example:
-            - direct
+            - DIRECT
         freesaleDurationAmount:
           type: integer
           description: ''
@@ -11775,17 +13242,6 @@ components:
             twitterUrl: ''
             youtubeUrl: ''
             instagramUrl: ''
-            categories:
-              - id: 697e3ce8-1860-4cbf-80ad-95857df1f640
-                default: true
-                name: ''
-                title: ''
-                tags: []
-                shortDescription: ''
-                coverImageUrl: The URL of the image that represents the category.
-                bannerImageUrl: The URL of the image that represents the category.
-                productIds:
-                  - 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
             tags: []
             address: null
             notices: []
@@ -11840,6 +13296,7 @@ components:
             required: true
         shortDescription:
           type: string
+          nullable: true
           description: Short description for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -11971,6 +13428,7 @@ components:
         coverImageUrl:
           type: string
           format: uri
+          nullable: true
           description: ''
           example: ''
           x-oapi-codegen-extra-tags:
@@ -11982,6 +13440,7 @@ components:
         bannerImageUrl:
           type: string
           format: uri
+          nullable: true
           description: ''
           example: ''
           x-oapi-codegen-extra-tags:
@@ -12067,6 +13526,7 @@ components:
             required: true
         tagline:
           type: string
+          nullable: true
           description: ''
           example: ''
           x-oapi-codegen-extra-tags:
@@ -12156,6 +13616,22 @@ components:
           x-capability-data:
             capability: octo/google
             required: true
+        isMembership:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: octo/memberships
+            required: true
+          x-capability-data:
+            capability: octo/memberships
+            required: true
+        isRental:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: octo/rentals
+            required: true
+          x-capability-data:
+            capability: octo/rentals
+            required: true
       example:
         id: 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
         internalName: London Eye General Admission
@@ -12218,7 +13694,7 @@ components:
             visibleContactFields: []
         tags: []
         settlementMethods:
-          - direct
+          - DIRECT
         freesaleDurationAmount: 2
         freesaleDurationUnit: hour
     ProductContent:
@@ -12300,17 +13776,6 @@ components:
             twitterUrl: ''
             youtubeUrl: ''
             instagramUrl: ''
-            categories:
-              - id: 697e3ce8-1860-4cbf-80ad-95857df1f640
-                default: true
-                name: ''
-                title: ''
-                tags: []
-                shortDescription: ''
-                coverImageUrl: The URL of the image that represents the category.
-                bannerImageUrl: The URL of the image that represents the category.
-                productIds:
-                  - 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
             tags: []
             address: null
             notices: []
@@ -12365,6 +13830,7 @@ components:
             required: true
         shortDescription:
           type: string
+          nullable: true
           description: Short description for this product. Only present when ventrata/content capability is requested.
           example: ''
           x-oapi-codegen-extra-tags:
@@ -12496,6 +13962,7 @@ components:
         coverImageUrl:
           type: string
           format: uri
+          nullable: true
           description: ''
           example: ''
           x-oapi-codegen-extra-tags:
@@ -12507,6 +13974,7 @@ components:
         bannerImageUrl:
           type: string
           format: uri
+          nullable: true
           description: ''
           example: ''
           x-oapi-codegen-extra-tags:
@@ -12592,6 +14060,7 @@ components:
             required: true
         tagline:
           type: string
+          nullable: true
           description: ''
           example: ''
           x-oapi-codegen-extra-tags:
@@ -12663,17 +14132,6 @@ components:
           twitterUrl: ''
           youtubeUrl: ''
           instagramUrl: ''
-          categories:
-            - id: 697e3ce8-1860-4cbf-80ad-95857df1f640
-              default: true
-              name: ''
-              title: ''
-              tags: []
-              shortDescription: ''
-              coverImageUrl: The URL of the image that represents the category.
-              bannerImageUrl: The URL of the image that represents the category.
-              productIds:
-                - 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
           tags: []
           address: null
           notices: []
@@ -12735,6 +14193,17 @@ components:
             required: true
           x-capability-data:
             capability: octo/google
+            required: true
+    ProductMemberships:
+      type: object
+      properties:
+        isMembership:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: octo/memberships
+            required: true
+          x-capability-data:
+            capability: octo/memberships
             required: true
     ProductPackages:
       type: object
@@ -12815,12 +14284,22 @@ components:
           - EUR
         pricingPer: BOOKING
         includeTax: true
+    ProductRentals:
+      type: object
+      properties:
+        isRental:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: octo/rentals
+            required: true
+          x-capability-data:
+            capability: octo/rentals
+            required: true
     Question:
       type: object
       required:
         - id
         - label
-        - hint
         - maxLength
         - inputType
         - required
@@ -12841,11 +14320,6 @@ components:
           type: string
           nullable: true
           description: The question that should be asked to the customer.
-          example: ''
-        hint:
-          type: string
-          nullable: true
-          description: A hint to help the customer answer the question.
           example: ''
         maxLength:
           type: integer
@@ -12889,100 +14363,37 @@ components:
     QuestionAnswer:
       type: object
       required:
-        - id
-        - label
-        - hint
-        - maxLength
-        - inputType
-        - required
-        - selectOptions
-        - coverImageUrl
-        - description
-        - shortDescription
-        - internalName
-        - title
         - questionId
+        - question
+        - value
       properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier used in the platform to represent the question.
-          example: ''
-          x-order: 1
-        label:
-          type: string
-          nullable: true
-          description: The question that should be asked to the customer.
-          example: ''
-        hint:
-          type: string
-          nullable: true
-          description: A hint to help the customer answer the question.
-          example: ''
-        maxLength:
-          type: integer
-          nullable: true
-          description: The maximum length of the answer to the question.
-          example: 128
-        inputType:
-          allOf:
-            - $ref: '#/components/schemas/QuestionInputType'
-          description: The type of input that should be used to answer the question. Possible values are `radio`, `select`, `textarea`.
-          example: select
-        required:
-          type: boolean
-          description: '`TRUE` identifies the question as required, and should therefore be answered by the customer'
-          example: false
-        selectOptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SelectOption'
-          description: The options that the customer can select from. Only present when `inputType` is `radio` or `select`.
-          example:
-            - label: ''
-              value: ''
-        coverImageUrl:
-          type: string
-          nullable: true
-        description:
-          type: string
-          nullable: true
-          description: Description A hint to help the customer answer the question.
-        shortDescription:
-          type: string
-          nullable: true
-        internalName:
-          type: string
-          nullable: true
-        title:
-          type: string
-          nullable: true
-          description: Title The question that should be asked to the customer.
         questionId:
           type: string
           format: uuid
           description: Unique identifier used in the platform to represent the question.
           example: ''
+          x-order: 1
+        question:
+          $ref: '#/components/schemas/Question'
         value:
           type: string
-          description: The answer to the question.
-          example: ''
+          nullable: true
       example:
-        id: ''
-        label: ''
-        hint: ''
-        maxLength: 128
-        inputType: select
-        required: false
-        selectOptions:
-          - label: ''
-            value: ''
-        coverImageUrl: ''
-        description: ''
-        shortDescription: ''
-        internalName: ''
-        title: ''
         questionId: ''
+        question:
+          id: ''
+          label: ''
+          maxLength: 128
+          inputType: select
+          required: false
+          selectOptions:
+            - label: ''
+              value: ''
+          coverImageUrl: ''
+          description: ''
+          shortDescription: ''
+          internalName: ''
+          title: ''
         value: ''
     QuestionInputType:
       type: string
@@ -12991,6 +14402,8 @@ components:
         - select
         - textArea
       example: radio
+    RealaxGateway:
+      type: object
     RedemptionMethod:
       type: string
       enum:
@@ -13005,6 +14418,29 @@ components:
         - PARTIAL
         - NONE
       example: PARTIAL
+    RentalDuration:
+      type: object
+      required:
+        - id
+        - title
+        - shortDescription
+        - durationAmount
+        - durationUnit
+        - pricingMultiplier
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        shortDescription:
+          type: string
+          nullable: true
+        durationAmount:
+          type: number
+        durationUnit:
+          $ref: '#/components/schemas/DurationUnit'
+        pricingMultiplier:
+          type: number
     RequestHeaders:
       type: object
       allOf:
@@ -13207,6 +14643,23 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/Octo.ResponseHeaders'
+    Scan:
+      type: object
+      required:
+        - id
+        - action
+        - utcCreatedAt
+      properties:
+        id:
+          type: string
+        action:
+          type: string
+        utcCreatedAt:
+          type: string
+          format: date-time
+          x-go-type-import:
+            path: ventrata-octo-api/pkg/types
+          x-go-type: types.TimeRFC3339
     Seat:
       type: object
       required:
@@ -13286,12 +14739,63 @@ components:
     SettlementMethod:
       type: string
       enum:
-        - deferred
-        - deposit
-        - direct
-        - voucher
-        - wholesale
-      example: direct
+        - DEFERRED
+        - DEPOSIT
+        - DIRECT
+        - VOUCHER
+        - WHOLESALE
+      example: DIRECT
+    SpreedlyGateway:
+      type: object
+      properties:
+        env:
+          type: string
+        nonce:
+          type: string
+        timestamp:
+          type: string
+        certificateToken:
+          type: string
+        signature:
+          type: string
+    StripeGateway:
+      type: object
+      properties:
+        version:
+          type: string
+        paymentIntent:
+          type: object
+          properties:
+            id:
+              type: string
+            publishableKey:
+              type: string
+            clientSecret:
+              type: string
+            amount:
+              type: integer
+            currency:
+              type: string
+          required:
+            - id
+            - publishableKey
+            - clientSecret
+            - amount
+            - currency
+          nullable: true
+        setupIntent:
+          type: object
+          properties:
+            id:
+              type: string
+            publishableKey:
+              type: string
+            clientSecret:
+              type: string
+          required:
+            - id
+            - publishableKey
+            - clientSecret
     Supplier:
       type: object
       required:
@@ -13413,17 +14917,6 @@ components:
               twitterUrl: ''
               youtubeUrl: ''
               instagramUrl: ''
-              categories:
-                - id: 697e3ce8-1860-4cbf-80ad-95857df1f640
-                  default: true
-                  name: ''
-                  title: ''
-                  tags: []
-                  shortDescription: ''
-                  coverImageUrl: The URL of the image that represents the category.
-                  bannerImageUrl: The URL of the image that represents the category.
-                  productIds:
-                    - 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
               tags: []
               address: null
               notices: []
@@ -13547,17 +15040,6 @@ components:
               twitterUrl: ''
               youtubeUrl: ''
               instagramUrl: ''
-              categories:
-                - id: 697e3ce8-1860-4cbf-80ad-95857df1f640
-                  default: true
-                  name: ''
-                  title: ''
-                  tags: []
-                  shortDescription: ''
-                  coverImageUrl: The URL of the image that represents the category.
-                  bannerImageUrl: The URL of the image that represents the category.
-                  productIds:
-                    - 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
               tags: []
               address: null
               notices: []
@@ -13620,17 +15102,6 @@ components:
             twitterUrl: ''
             youtubeUrl: ''
             instagramUrl: ''
-            categories:
-              - id: 697e3ce8-1860-4cbf-80ad-95857df1f640
-                default: true
-                name: ''
-                title: ''
-                tags: []
-                shortDescription: ''
-                coverImageUrl: The URL of the image that represents the category.
-                bannerImageUrl: The URL of the image that represents the category.
-                productIds:
-                  - 6b903d44-dc24-4ca4-ae71-6bde6c4f4854
             tags: []
             address: null
             notices: []
@@ -13680,7 +15151,6 @@ components:
         - redemptionMethod
         - utcRedeemedAt
         - deliveryOptions
-        - utcNoshowedAt
       properties:
         redemptionMethod:
           allOf:
@@ -13910,7 +15380,6 @@ components:
           example:
             - id: ''
               label: ''
-              hint: ''
               maxLength: 128
               inputType: select
               required: false
@@ -13938,6 +15407,17 @@ components:
             required: true
           x-capability-data:
             capability: octo/extras
+            required: true
+        membershipBenefit:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/MembershipBenefit'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/memberships
+            required: true
+          x-capability-data:
+            capability: octo/memberships
             required: true
       example:
         id: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
@@ -14023,6 +15503,9 @@ components:
         - originalRebookingUnitItemUuid
         - utcRebookedAt
         - utcNoshowedAt
+        - unitType
+        - localDateTimeStart
+        - localDateTimeEnd
       properties:
         uuid:
           type: string
@@ -14109,6 +15592,9 @@ components:
             city: ''
             state: ''
             allowMarketing: true
+            company: null
+            age: null
+            birthdate: null
         ticket:
           type: object
           allOf:
@@ -14188,6 +15674,12 @@ components:
             type: string
         unitType:
           $ref: '#/components/schemas/UnitType'
+        localDateTimeStart:
+          type: string
+          nullable: true
+        localDateTimeEnd:
+          type: string
+          nullable: true
         pricing:
           allOf:
             - $ref: '#/components/schemas/Pricing'
@@ -14211,21 +15703,21 @@ components:
             $ref: '#/components/schemas/QuestionAnswer'
           description: Questions for this unit item. Only present when octo/questions capability is requested.
           example:
-            - id: ''
-              label: ''
-              hint: ''
-              maxLength: 128
-              inputType: select
-              required: false
-              selectOptions:
-                - label: ''
-                  value: ''
-              coverImageUrl: ''
-              description: ''
-              shortDescription: ''
-              internalName: ''
-              title: ''
-              questionId: ''
+            - questionId: ''
+              question:
+                id: ''
+                label: ''
+                maxLength: 128
+                inputType: select
+                required: false
+                selectOptions:
+                  - label: ''
+                    value: ''
+                coverImageUrl: ''
+                description: ''
+                shortDescription: ''
+                internalName: ''
+                title: ''
               value: ''
           x-go-type-skip-optional-pointer: true
           x-oapi-codegen-extra-tags:
@@ -14233,6 +15725,26 @@ components:
             required: true
           x-capability-data:
             capability: octo/questions
+            required: true
+        extraItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtraItem'
+          x-oapi-codegen-extra-tags:
+            capability: octo/extras
+            required: true
+          x-capability-data:
+            capability: octo/extras
+            required: true
+        scans:
+          type: array
+          items:
+            $ref: '#/components/schemas/Scan'
+          x-oapi-codegen-extra-tags:
+            capability: octo/redemption
+            required: true
+          x-capability-data:
+            capability: octo/redemption
             required: true
       example:
         uuid: 3b1bc2ee-3155-4738-9471-f49842a07327
@@ -14278,6 +15790,9 @@ components:
           city: ''
           state: ''
           allowMarketing: true
+          company: null
+          age: null
+          birthdate: null
         ticket: null
         id: ''
         alias: ''
@@ -14288,6 +15803,21 @@ components:
         utcRebookedAt: '2021-10-27 23:28:43Z'
         utcNoshowedAt: '2021-10-27 23:28:43Z'
         unitType: ADULT
+        localDateTimeStart: null
+        localDateTimeEnd: null
+    UnitItemExtras:
+      type: object
+      properties:
+        extraItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtraItem'
+          x-oapi-codegen-extra-tags:
+            capability: octo/extras
+            required: true
+          x-capability-data:
+            capability: octo/extras
+            required: true
     UnitItemIdentifier:
       type: object
       properties:
@@ -14352,9 +15882,35 @@ components:
             $ref: '#/components/schemas/QuestionAnswer'
           description: Questions for this unit item. Only present when octo/questions capability is requested.
           example:
-            - id: ''
+            - questionId: ''
+              question:
+                id: ''
+                label: ''
+                maxLength: 128
+                inputType: select
+                required: false
+                selectOptions:
+                  - label: ''
+                    value: ''
+                coverImageUrl: ''
+                description: ''
+                shortDescription: ''
+                internalName: ''
+                title: ''
+              value: ''
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/questions
+            required: true
+          x-capability-data:
+            capability: octo/questions
+            required: true
+      example:
+        questionAnswers:
+          - questionId: ''
+            question:
+              id: ''
               label: ''
-              hint: ''
               maxLength: 128
               inputType: select
               required: false
@@ -14366,33 +15922,34 @@ components:
               shortDescription: ''
               internalName: ''
               title: ''
-              questionId: ''
-              value: ''
-          x-go-type-skip-optional-pointer: true
+            value: ''
+    UnitItemRedemption:
+      type: object
+      properties:
+        scans:
+          type: array
+          items:
+            $ref: '#/components/schemas/Scan'
           x-oapi-codegen-extra-tags:
-            capability: octo/questions
+            capability: octo/redemption
             required: true
           x-capability-data:
-            capability: octo/questions
+            capability: octo/redemption
             required: true
-      example:
-        questionAnswers:
-          - id: ''
-            label: ''
-            hint: ''
-            maxLength: 128
-            inputType: select
-            required: false
-            selectOptions:
-              - label: ''
-                value: ''
-            coverImageUrl: ''
-            description: ''
-            shortDescription: ''
-            internalName: ''
-            title: ''
-            questionId: ''
-            value: ''
+    UnitMemberships:
+      type: object
+      properties:
+        membershipBenefit:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/MembershipBenefit'
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: octo/memberships
+            required: true
+          x-capability-data:
+            capability: octo/memberships
+            required: true
     UnitPricing:
       type: object
       properties:
@@ -14469,7 +16026,6 @@ components:
           example:
             - id: ''
               label: ''
-              hint: ''
               maxLength: 128
               inputType: select
               required: false
@@ -14492,7 +16048,6 @@ components:
         questions:
           - id: ''
             label: ''
-            hint: ''
             maxLength: 128
             inputType: select
             required: false
@@ -14736,6 +16291,13 @@ components:
         phoneNumber:
           type: string
           nullable: true
+    VivawalletGateway:
+      type: object
+      properties:
+        orderCode:
+          type: string
+        error:
+          type: string
     Waitlist:
       type: object
       required:

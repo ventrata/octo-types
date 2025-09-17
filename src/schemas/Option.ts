@@ -8,10 +8,11 @@ import { unitSchema } from './Unit';
 import { itineraryItemSchema } from './ItineraryItem';
 import { pointSchema } from './Point';
 import { pickupPointSchema } from './PickupPoint';
-import { octo_PricingSchema } from './Octo_Pricing';
+import { pricingSchema } from './Pricing';
 import { questionSchema } from './Question';
 import { extraSchema } from './Extra';
 import { packageIncludeSchema } from './PackageInclude';
+import { rentalDurationSchema } from './RentalDuration';
 
 export const optionSchema: z.ZodSchema<Option> = z.lazy(() =>
 	z.object({
@@ -47,10 +48,11 @@ export const optionSchema: z.ZodSchema<Option> = z.lazy(() =>
 		pickupAvailable: z.boolean().optional(),
 		pickupRequired: z.boolean().optional(),
 		pickupPoints: z.array(pickupPointSchema).optional(),
-		pricingFrom: z.array(octo_PricingSchema).optional(),
-		pricing: z.array(octo_PricingSchema).optional(),
+		pricingFrom: z.array(pricingSchema).optional(),
+		pricing: z.array(pricingSchema).optional(),
 		questions: z.array(questionSchema).optional(),
 		extras: z.array(extraSchema).optional(),
 		packageIncludes: z.array(packageIncludeSchema).optional(),
+		rentalDurations: z.array(rentalDurationSchema).optional(),
 	}),
 );

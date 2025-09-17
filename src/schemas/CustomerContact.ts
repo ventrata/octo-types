@@ -17,4 +17,7 @@ export const customerContactSchema = z.object({
 	city: z.string().nullable(),
 	state: z.string().nullable(),
 	allowMarketing: z.boolean(),
+	company: z.string().nullable(),
+	age: z.number().nullable(),
+	birthdate: z.string().nullable(),
 });

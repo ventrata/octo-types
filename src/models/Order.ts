@@ -2,39 +2,59 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Agent } from './Agent';
 import type { Booking } from './Booking';
+import type { Brand } from './Brand';
+import type { CardPayment } from './CardPayment';
 import type { ContactField } from './ContactField';
 import type { CustomerContact } from './CustomerContact';
+import type { Destination } from './Destination';
+import type { Gift } from './Gift';
 import type { GiftPayment } from './GiftPayment';
 import type { Identity } from './Identity';
+import type { Membership } from './Membership';
 import type { OfferCombination } from './OfferCombination';
-import type { Reseller } from './Reseller';
-import type { Seller } from './Seller';
+import type { Pricing } from './Pricing';
+import type { QuestionAnswer } from './QuestionAnswer';
 import type { SettlementMethod } from './SettlementMethod';
-import type { User } from './User';
+import type { Ticket } from './Ticket';
 export type Order = {
 	id: string;
 	testMode: boolean;
 	settlementMethod: SettlementMethod;
+	settlementMethods: Array<SettlementMethod>;
 	supplierReference: string;
 	quote: boolean;
 	status: string;
+	utcCreatedAt: string;
 	utcExpiresAt: string | null;
 	utcConfirmedAt: string | null;
+	utcUpdatedAt: string | null;
 	cancellable: boolean;
 	confirmable: boolean;
-	reseller?: Reseller;
-	agent?: Agent;
+	updatable: boolean;
 	contact?: CustomerContact;
 	emailReceipt?: boolean;
 	bookings: Array<Booking>;
 	visibleContactFields: Array<ContactField>;
 	requiredContactFields: Array<ContactField>;
-	user: User | null;
-	seller: Seller | null;
+	voucher: Ticket | null;
+	termsAccepted?: boolean;
+	destination?: Destination;
+	brand?: Brand;
+	pricing?: Pricing;
+	/**
+	 * An array of questions and andswers that will be included in the order.
+	 * This field is only present when octo/questions capability is requested.
+	 */
+	questionAnswers?: Array<QuestionAnswer>;
 	identity?: Identity;
 	identityId?: string;
 	offerCombinations?: Array<OfferCombination>;
 	giftPayment?: GiftPayment | null;
+	gifts?: Array<Gift>;
+	checkinAvailable?: boolean;
+	checkinUrl?: string | null;
+	membership?: Membership | null;
+	cardPayment?: CardPayment | null;
+	returnUrl?: string | null;
 };

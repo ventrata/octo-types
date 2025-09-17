@@ -6,12 +6,13 @@ import type { ContactField } from './ContactField';
 import type { DurationUnit } from './DurationUnit';
 import type { Extra } from './Extra';
 import type { ItineraryItem } from './ItineraryItem';
-import type { Octo_Pricing } from './Octo_Pricing';
 import type { OptionRestrictions } from './OptionRestrictions';
 import type { PackageInclude } from './PackageInclude';
 import type { PickupPoint } from './PickupPoint';
 import type { Point } from './Point';
+import type { Pricing } from './Pricing';
 import type { Question } from './Question';
+import type { RentalDuration } from './RentalDuration';
 import type { Unit } from './Unit';
 export type Option = {
 	/**
@@ -147,15 +148,16 @@ export type Option = {
 	/**
 	 * Is on the object when Pricing capability is requested.
 	 */
-	pricingFrom?: Array<Octo_Pricing>;
+	pricingFrom?: Array<Pricing>;
 	/**
 	 * Is on the object when Pricing capability is requested.
 	 */
-	pricing?: Array<Octo_Pricing>;
+	pricing?: Array<Pricing>;
 	/**
 	 * Questions for this option. Only present when octo/questions capability is requested.
 	 */
 	questions?: Array<Question>;
 	extras?: Array<Extra>;
 	packageIncludes?: Array<PackageInclude>;
+	rentalDurations?: Array<RentalDuration>;
 };

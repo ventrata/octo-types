@@ -2,7 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Pricing } from './Pricing';
+import type { ExtraPricing } from './ExtraPricing';
 export type PricingUnitExtras = {
-	extraPricing?: Array<Pricing>;
+	extraPricing?: Array<ExtraPricing>;
+	extraPricingFrom?: Array<ExtraPricing>;
 };

@@ -8,27 +8,32 @@ export type AvailabilityContent = {
 	/**
 	 * Optional text for the meeting point location.
 	 */
-	meetingPoint?: string;
+	meetingPoint?: string | null;
 	/**
-	 * Optional meeting point coordinates as an array [longitude, latitude].
+	 * Optional meeting point coordinates as an string: longitude, latitude
 	 */
-	meetingPointCoordinates?: Array<number>;
+	meetingPointCoordinates?: string | null;
+	/**
+	 * Optional meeting point direstions
+	 */
+	meetingPointDirections?: string | null;
 	/**
 	 * Latitude component of the meeting point.
 	 */
-	meetingPointLatitude?: number;
+	meetingPointLatitude?: number | null;
 	/**
 	 * Longitude component of the meeting point.
 	 */
-	meetingPointLongitude?: number;
+	meetingPointLongitude?: number | null;
 	/**
 	 * Local datetime string (ISO 8601) for when to meet.
 	 */
-	meetingLocalDateTime?: string;
+	meetingLocalDateTime?: string | null;
 	/**
 	 * Optional reference to the tour group this availability belongs to.
 	 */
-	tourGroup?: TourGroup;
+	tourGroup?: TourGroup | null;
+	fare?: any;
 	/**
 	 * List of important notices related to the availability.
 	 */

@@ -7,6 +7,8 @@ import { ticketSchema } from './Ticket';
 import { unitTypeSchema } from './UnitType';
 import { pricingSchema } from './Pricing';
 import { questionAnswerSchema } from './QuestionAnswer';
+import { extraItemSchema } from './ExtraItem';
+import { scanSchema } from './Scan';
 
 export const unitItemSchema = z.object({
 	uuid: z.string().optional(),
@@ -28,7 +30,11 @@ export const unitItemSchema = z.object({
 	utcNoshowedAt: z.string().nullable(),
 	requiredContactFields: z.array(z.string()).optional(),
 	visibleContactFields: z.array(z.string()).optional(),
-	unitType: unitTypeSchema.optional(),
+	unitType: unitTypeSchema,
+	localDateTimeStart: z.string().nullable(),
+	localDateTimeEnd: z.string().nullable(),
 	pricing: pricingSchema.optional(),
 	questionAnswers: z.array(questionAnswerSchema).optional(),
+	extraItems: z.array(extraItemSchema).optional(),
+	scans: z.array(scanSchema).optional(),
 });
