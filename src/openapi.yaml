@@ -2722,11 +2722,7 @@ components:
         billingAddressRequired:
           type: boolean
         billingAddressMode:
-          type: string
-          enum:
-            - full
-            - min
-            - none
+          $ref: '#/components/schemas/AdyenPaymentMethodsConfigurationCardBillingAddressMode'
         data:
           type: object
           properties:
@@ -2764,6 +2760,12 @@ components:
           required:
             - merchantDisplayName
             - shopperEmail
+    AdyenPaymentMethodsConfigurationCardBillingAddressMode:
+      type: string
+      enum:
+        - full
+        - min
+        - none
     AdyenPaymentMethodsConfigurationGooglePay:
       type: object
       required:
@@ -2773,10 +2775,12 @@ components:
         billingAddressRequired:
           type: boolean
         billingAddressParameters:
-          type: string
-          enum:
-            - FULL
-            - MIN
+          $ref: '#/components/schemas/AdyenPaymentMethodsConfigurationGooglePayBillingAddressParameters'
+    AdyenPaymentMethodsConfigurationGooglePayBillingAddressParameters:
+      type: string
+      enum:
+        - FULL
+        - MIN
     AdyenPaymentMethodsConfigurationPayPay:
       type: object
       required:

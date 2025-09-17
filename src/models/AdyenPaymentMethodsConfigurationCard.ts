@@ -2,10 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { AdyenPaymentMethodsConfigurationCardBillingAddressMode } from './AdyenPaymentMethodsConfigurationCardBillingAddressMode';
 export type AdyenPaymentMethodsConfigurationCard = {
 	hasHolderName: boolean;
 	billingAddressRequired: boolean;
-	billingAddressMode: AdyenPaymentMethodsConfigurationCard.billingAddressMode;
+	billingAddressMode: AdyenPaymentMethodsConfigurationCardBillingAddressMode;
 	data: {
 		holderName: string;
 		billingAddress: {
@@ -21,10 +22,3 @@ export type AdyenPaymentMethodsConfigurationCard = {
 		shopperEmail: string;
 	};
 };
-export namespace AdyenPaymentMethodsConfigurationCard {
-	export enum billingAddressMode {
-		FULL = 'full',
-		MIN = 'min',
-		NONE = 'none',
-	}
-}
