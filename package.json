@@ -1,13 +1,8 @@
 {
 	"name": "@ventrata/octo-types",
-	"version": "0.0.12",
+	"version": "0.0.13",
 	"private": false,
 	"license": "ISC",
-	"files": [
-		"dist/index.d.ts",
-		"dist/models/**/*.d.ts",
-		"dist/schemas/**/*.d.ts"
-	],
 	"types": "dist/index.d.ts",
 	"repository": {
 		"url": "https://github.com/ventrata/octo-types"
