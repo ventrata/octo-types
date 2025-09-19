@@ -467,7 +467,6 @@ export { octo_ErrorInvalidAvailabilityIDSchema } from './schemas/Octo_ErrorInval
 export { octo_ErrorInternalServerErrorSchema } from './schemas/Octo_ErrorInternalServerError';
 export { octo_ErrorForbiddenSchema } from './schemas/Octo_ErrorForbidden';
 export { octo_ErrorBadRequestSchema } from './schemas/Octo_ErrorBadRequest';
-export { octo_DeliveryFormatSchema } from './schemas/Octo_DeliveryFormat';
 export { octo_CapabilityIdSchema } from './schemas/Octo_CapabilityId';
 export { octo_CapabilitySchema } from './schemas/Octo_Capability';
 export { octo_BookingUnitItemSchema } from './schemas/Octo_BookingUnitItem';
