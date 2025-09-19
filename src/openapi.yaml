@@ -8444,7 +8444,7 @@ components:
       properties:
         deliveryFormat:
           allOf:
-            - $ref: '#/components/schemas/Octo.DeliveryFormat'
+            - $ref: '#/components/schemas/DeliveryFormat'
           description: |-
             The format in which vouchers for this product are delivered. Each format specifies how the vouchers will be represented:
             QRCODE: A code presented as a QR Code, commonly used for scanning at entry points.
@@ -10451,14 +10451,6 @@ components:
         - octo/pickups
         - octo/pricing
         - octo/questions
-    Octo.DeliveryFormat:
-      type: string
-      enum:
-        - PDF_URL
-        - QRCODE
-        - CODE128
-        - PKPASS_URL
-      example: QRCODE
     Octo.ErrorBadRequest:
       type: object
       allOf:

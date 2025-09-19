@@ -175,7 +175,6 @@ export type { Octo_BookingCancellationErrorResponse } from './models/Octo_Bookin
 export type { Octo_BookingConfirmationErrorResponse } from './models/Octo_BookingConfirmationErrorResponse';
 export type { Octo_BookingReservationErrorResponse } from './models/Octo_BookingReservationErrorResponse';
 export { Octo_CapabilityId } from './models/Octo_CapabilityId';
-export { Octo_DeliveryFormat } from './models/Octo_DeliveryFormat';
 export type { Octo_ErrorBadRequest } from './models/Octo_ErrorBadRequest';
 export type { Octo_ErrorForbidden } from './models/Octo_ErrorForbidden';
 export type { Octo_ErrorInternalServerError } from './models/Octo_ErrorInternalServerError';
