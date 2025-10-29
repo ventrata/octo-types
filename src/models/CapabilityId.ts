@@ -23,5 +23,6 @@ export enum CapabilityId {
 	OCTO_IDENTITIES = 'octo/identities',
 	VENTRATA_CONTENT = 'ventrata/content',
 	VENTRATA_GETYOURGUIDE = 'ventrata/getyourguide',
+	VENTRATA_VIATOR = 'ventrata/viator',
 	VENTRATA_PARTNERS = 'ventrata/partners',
 }

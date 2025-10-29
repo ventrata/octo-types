@@ -7872,6 +7872,7 @@ components:
         - octo/identities
         - ventrata/content
         - ventrata/getyourguide
+        - ventrata/viator
         - ventrata/partners
       x-go-type-import:
         path: ventrata-octo-api/pkg/id
