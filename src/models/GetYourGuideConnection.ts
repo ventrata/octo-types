@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PartnersConnection } from './PartnersConnection';
-export type GetYourGuideConnection = PartnersConnection & {
+import type { Connection } from './Connection';
+export type GetYourGuideConnection = Connection & {
 	/**
 	 * The GetYourGuide Connect ID.
 	 */

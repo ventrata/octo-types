@@ -5,6 +5,7 @@ import { offerRestrictionsSchema } from './OfferRestrictions';
 import { membershipBenefitSchema } from './MembershipBenefit';
 
 export const offerSchema = z.object({
+	id: z.string(),
 	title: z.string(),
 	label: z.string(),
 	code: z.string(),

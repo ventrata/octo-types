@@ -2,7 +2,12 @@
 import { z } from 'zod';
 import { destinationContactSchema } from './DestinationContact';
 import { brandSchema } from './Brand';
+import { categorySchema } from './Category';
 import { noticeSchema } from './Notice';
+import { pageSchema } from './Page';
+import { articleSchema } from './Article';
+import { navSchema } from './Nav';
+import { claimSchema } from './Claim';
 
 export const destinationSchema = z.object({
 	id: z.string(),
@@ -26,9 +31,18 @@ export const destinationSchema = z.object({
 	twitterUrl: z.string().nullable(),
 	youtubeUrl: z.string().nullable(),
 	instagramUrl: z.string().nullable(),
+	categories: z.array(categorySchema).optional(),
 	tags: z.array(z.string()),
 	address: z.string().nullable(),
 	notices: z.array(noticeSchema),
 	defaultCurrency: z.string().optional(),
 	availableCurrencies: z.array(z.string()).optional(),
+	href: z.string().optional().nullable(),
+	availableLanguages: z.array(z.string()).optional(),
+	meta: z.record(z.any()).optional(),
+	pages: z.array(pageSchema).optional(),
+	articles: z.array(articleSchema).optional(),
+	navs: z.array(navSchema).optional(),
+	claims: z.array(claimSchema).optional(),
+	featuredCategories: z.array(categorySchema).optional(),
 });

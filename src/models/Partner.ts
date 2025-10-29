@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PartnerEnum } from './PartnerEnum';
 export type Partner = {
 	/**
 	 * Unique identifier for the partner.
@@ -11,5 +10,5 @@ export type Partner = {
 	/**
 	 * The display name of the partner.
 	 */
-	name: PartnerEnum;
+	name: string | null;
 };

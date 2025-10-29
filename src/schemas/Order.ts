@@ -14,7 +14,7 @@ import { offerCombinationSchema } from './OfferCombination';
 import { giftPaymentSchema } from './GiftPayment';
 import { giftSchema } from './Gift';
 import { membershipSchema } from './Membership';
-import { cardPaymentSchema } from './CardPayment';
+import { cardPaymentGatewaySchema } from './CardPaymentGateway';
 
 export const orderSchema = z.object({
 	id: z.string(),
@@ -37,6 +37,7 @@ export const orderSchema = z.object({
 	visibleContactFields: z.array(contactFieldSchema),
 	requiredContactFields: z.array(contactFieldSchema),
 	voucher: ticketSchema.nullable(),
+	active: z.boolean(),
 	termsAccepted: z.boolean().optional(),
 	destination: destinationSchema.optional(),
 	brand: brandSchema.optional(),
@@ -50,6 +51,6 @@ export const orderSchema = z.object({
 	checkinAvailable: z.boolean().optional(),
 	checkinUrl: z.string().optional().nullable(),
 	membership: membershipSchema.optional().nullable(),
-	cardPayment: cardPaymentSchema.optional().nullable(),
+	cardPayment: cardPaymentGatewaySchema.optional().nullable(),
 	returnUrl: z.string().optional().nullable(),
 });

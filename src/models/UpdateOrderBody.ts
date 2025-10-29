@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { BookingContact } from './BookingContact';
+import type { SettlementMethod } from './SettlementMethod';
 export type UpdateOrderBody = {
 	/**
 	 * Optional expiration duration for the order, in minutes.
@@ -16,6 +17,8 @@ export type UpdateOrderBody = {
 	 * Contact information for the order.
 	 */
 	contact?: BookingContact;
+	quote?: boolean;
+	settlementMethod?: SettlementMethod;
 	/**
 	 * Optional ISO 4217 currency code for the order.
 	 */

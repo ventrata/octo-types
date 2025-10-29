@@ -4,4 +4,5 @@ import { z } from 'zod';
 export const productPackagesSchema = z.object({
 	isPackage: z.boolean().optional(),
 	packageBookingAvailabilityRequired: z.boolean().optional(),
+	packageProduct: z.boolean().optional(),
 });

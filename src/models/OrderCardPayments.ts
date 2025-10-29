@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CardPayment } from './CardPayment';
+import type { CardPaymentGateway } from './CardPaymentGateway';
 export type OrderCardPayments = {
-	cardPayment?: CardPayment | null;
+	cardPayment?: CardPaymentGateway | null;
 	returnUrl?: string | null;
 };

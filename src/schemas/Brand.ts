@@ -6,7 +6,7 @@ import { fontSchema } from './Font';
 export const brandSchema = z.object({
 	id: z.string().nullable(),
 	name: z.string().nullable(),
-	contact: brandContactSchema.nullable(),
+	contact: brandContactSchema,
 	color: z.string().nullable(),
 	secondaryColor: z.string().nullable(),
 	backgroundColor: z.string().nullable(),
@@ -17,4 +17,6 @@ export const brandSchema = z.object({
 	logoUrl: z.string().nullable(),
 	logoWhiteUrl: z.string().nullable(),
 	faviconUrl: z.string().nullable(),
+	headerBackgroundColor: z.string().optional(),
+	footerBackgroundColor: z.string().optional(),
 });

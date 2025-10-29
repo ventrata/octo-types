@@ -6,6 +6,7 @@ import type { MembershipBenefit } from './MembershipBenefit';
 import type { NetDiscount } from './NetDiscount';
 import type { OfferRestrictions } from './OfferRestrictions';
 export type Offer = {
+	id: string;
 	/**
 	 * The title or name of the offer.
 	 */

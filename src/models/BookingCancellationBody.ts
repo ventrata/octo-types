@@ -2,7 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Octo_BookingCancellationBody } from './Octo_BookingCancellationBody';
-export type BookingCancellationBody = Octo_BookingCancellationBody & {
+export type BookingCancellationBody = {
+	/**
+	 * A text value describing why the cancellation happened.
+	 */
+	reason?: string;
+	/**
+	 * Whether you want OCTO Cloud to email the guest a copy of their receipt and tickets. (defaults to false)
+	 */
+	force?: boolean;
 	emailReceipt?: boolean;
 };

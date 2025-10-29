@@ -43,7 +43,11 @@ export type AvailabilityCalendar = {
 	limitCapacity: number | null;
 	totalCapacity: number | null;
 	limitPaxCount: number;
+	noShows: number;
+	totalNoShows: number;
 	totalPaxCount: number;
+	maxUnits: number | null;
+	maxPaxCount: number | null;
 	paxCount: number;
 	/**
 	 * The time by which the booking must be confirmed at

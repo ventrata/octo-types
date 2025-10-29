@@ -28,5 +28,5 @@ export type AvailabilityCheckBody = {
 	/**
 	 * Can be used only when pricing capability is used.
 	 */
-	currency?: string;
+	currency?: string | null;
 };

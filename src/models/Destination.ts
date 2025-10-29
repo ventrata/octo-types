@@ -2,9 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Article } from './Article';
 import type { Brand } from './Brand';
+import type { Category } from './Category';
+import type { Claim } from './Claim';
 import type { DestinationContact } from './DestinationContact';
+import type { Nav } from './Nav';
 import type { Notice } from './Notice';
+import type { Page } from './Page';
 export type Destination = {
 	/**
 	 * Unique identifier used in the platform to represent the destination.
@@ -81,6 +86,10 @@ export type Destination = {
 	 * The Instagram URL for the destination.
 	 */
 	instagramUrl: string | null;
+	/**
+	 * An array of categories that the destination falls under.
+	 */
+	categories?: Array<Category>;
 	tags: Array<string>;
 	address: string | null;
 	notices: Array<Notice>;
@@ -92,4 +101,12 @@ export type Destination = {
 	 * Is on the object when Pricing capability is requested. All the possible currencies that we accept for this product.
 	 */
 	availableCurrencies?: Array<string>;
+	href?: string | null;
+	availableLanguages?: Array<string>;
+	meta?: Record<string, any>;
+	pages?: Array<Page>;
+	articles?: Array<Article>;
+	navs?: Array<Nav>;
+	claims?: Array<Claim>;
+	featuredCategories?: Array<Category>;
 };

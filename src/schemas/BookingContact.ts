@@ -16,4 +16,8 @@ export const bookingContactSchema = z.object({
 	city: z.string().optional().nullable(),
 	state: z.string().optional().nullable(),
 	allowMarketing: z.boolean().optional(),
+	company: z.string().optional().nullable(),
+	title: z.string().optional().nullable(),
+	age: z.number().optional().nullable(),
+	birthdate: z.string().optional().nullable(),
 });

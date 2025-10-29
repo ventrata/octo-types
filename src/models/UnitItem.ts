@@ -77,8 +77,8 @@ export type UnitItem = {
 	 */
 	utcRebookedAt: string | null;
 	utcNoshowedAt: string | null;
-	requiredContactFields?: Array<string>;
-	visibleContactFields?: Array<string>;
+	requiredContactFields: Array<string>;
+	visibleContactFields: Array<string>;
 	unitType: UnitType;
 	localDateTimeStart: string | null;
 	localDateTimeEnd: string | null;

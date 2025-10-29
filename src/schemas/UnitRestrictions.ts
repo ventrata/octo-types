@@ -17,4 +17,5 @@ export const unitRestrictionsSchema = z.object({
 	weightUnit: z.string().optional(),
 	required: z.boolean(),
 	accompaniedByRatio: z.number().nullable(),
+	accompaniedByRatioDenominator: z.number(),
 });

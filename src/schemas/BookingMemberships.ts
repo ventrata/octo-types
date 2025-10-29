@@ -6,4 +6,6 @@ import { membershipSchema } from './Membership';
 export const bookingMembershipsSchema = z.object({
 	membershipBenefit: membershipBenefitSchema.optional().nullable(),
 	membership: membershipSchema.optional().nullable(),
+	isMembership: z.boolean().optional(),
+	appendMembershipValidity: z.boolean().optional(),
 });
