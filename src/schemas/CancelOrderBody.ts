@@ -3,4 +3,5 @@ import { z } from 'zod';
 
 export const cancelOrderBodySchema = z.object({
 	reason: z.string().optional(),
+	force: z.boolean().optional(),
 });

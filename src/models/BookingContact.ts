@@ -59,4 +59,8 @@ export type BookingContact = {
 	 * Whether the booking holder or the ticket holder allows marketing.
 	 */
 	allowMarketing?: boolean;
+	company?: string | null;
+	title?: string | null;
+	age?: number | null;
+	birthdate?: string | null;
 };

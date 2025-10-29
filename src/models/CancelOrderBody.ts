@@ -7,4 +7,5 @@ export type CancelOrderBody = {
 	 * A text description reason for cancelling
 	 */
 	reason?: string;
+	force?: boolean;
 };

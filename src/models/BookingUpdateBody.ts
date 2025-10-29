@@ -81,4 +81,5 @@ export type BookingUpdateBody = {
 	 * The hotel room number (optional).
 	 */
 	pickupHotelRoom?: string;
+	termsAccepted?: boolean;
 };

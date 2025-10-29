@@ -6,7 +6,7 @@ export type OptionRestrictions = {
 	/**
 	 * The minimum number of units (tickets) that can be purchased in a single booking. A null value indicates no minimum.
 	 */
-	minUnits: number;
+	minUnits: number | null;
 	/**
 	 * The maximum number of units (tickets) that can be purchased in a single booking. A null value indicates no maximum.
 	 */

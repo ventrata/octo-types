@@ -15,6 +15,7 @@ import { imageSchema } from './Image';
 import { brandSchema } from './Brand';
 import { pricingPerSchema } from './PricingPer';
 import { googleOptionsSchema } from './GoogleOptions';
+import { linkSchema } from './Link';
 
 export const productSchema: z.ZodSchema<Product> = z.lazy(() =>
 	z.object({
@@ -72,8 +73,15 @@ export const productSchema: z.ZodSchema<Product> = z.lazy(() =>
 		includeTax: z.boolean().optional(),
 		isPackage: z.boolean().optional(),
 		packageBookingAvailabilityRequired: z.boolean().optional(),
+		packageProduct: z.boolean().optional(),
 		googleOptions: googleOptionsSchema.optional(),
 		isMembership: z.boolean().optional(),
 		isRental: z.boolean().optional(),
+		href: z.string().optional().nullable(),
+		availableLanguages: z.array(z.string()).optional(),
+		meta: z.record(z.string()).optional(),
+		links: z.array(linkSchema).optional(),
+		giftCardAllowed: z.boolean().optional(),
+		relatedProductIds: z.array(z.string()).optional(),
 	}),
 );

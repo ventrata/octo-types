@@ -14,7 +14,7 @@ export const bookingReservationBodySchema = z.object({
 	emailReceipt: z.boolean().optional(),
 	unitItems: z.array(unitItemIdentifierSchema),
 	contact: bookingContactSchema.optional(),
-	currency: z.string().optional(),
+	currency: z.string().optional().nullable(),
 	alias: z.string().optional(),
 	settlementMethod: settlementMethodSchema.optional(),
 	quote: z.boolean().optional(),
@@ -28,4 +28,6 @@ export const bookingReservationBodySchema = z.object({
 	pickupPointId: z.string().optional(),
 	pickupHotel: z.string().optional(),
 	pickupHotelRoom: z.string().optional(),
+	termsAccepted: z.boolean().optional(),
+	identityId: z.string().optional(),
 });

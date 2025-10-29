@@ -24,5 +24,5 @@ export type AvailabilityCalendarBody = {
 	/**
 	 * Can be used only when pricing capability is used.
 	 */
-	currency?: string;
+	currency?: string | null;
 };

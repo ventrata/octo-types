@@ -37,7 +37,7 @@ export type Option = {
 	 * An array containing all possible start times for the option that can be returned during availability. For example a tour with multiple departure times may have multiple:["09:00", "14:00", "17:00"].
 	 */
 	availabilityLocalStartTimes: Array<string>;
-	availabilityLocalDateStart: string;
+	availabilityLocalDateStart: string | null;
 	availabilityLocalDateEnd: string | null;
 	/**
 	 * A text description of the option's cancellation policy, providing clear guidelines to customers.

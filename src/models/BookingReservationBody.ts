@@ -45,7 +45,7 @@ export type BookingReservationBody = {
 	/**
 	 * Can be used only when pricing capability is used.
 	 */
-	currency?: string;
+	currency?: string | null;
 	/**
 	 * The alias of the unit item.
 	 */
@@ -86,4 +86,6 @@ export type BookingReservationBody = {
 	 * The hotel room number (optional).
 	 */
 	pickupHotelRoom?: string;
+	termsAccepted?: boolean;
+	identityId?: string;
 };

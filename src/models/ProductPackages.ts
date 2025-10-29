@@ -5,4 +5,5 @@
 export type ProductPackages = {
 	isPackage?: boolean;
 	packageBookingAvailabilityRequired?: boolean;
+	packageProduct?: boolean;
 };

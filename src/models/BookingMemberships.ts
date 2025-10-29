@@ -7,4 +7,6 @@ import type { MembershipBenefit } from './MembershipBenefit';
 export type BookingMemberships = {
 	membershipBenefit?: MembershipBenefit | null;
 	membership?: Membership | null;
+	isMembership?: boolean;
+	appendMembershipValidity?: boolean;
 };

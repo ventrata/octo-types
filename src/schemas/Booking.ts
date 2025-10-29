@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { bookingStatusSchema } from './BookingStatus';
 import { productSchema } from './Product';
 import { optionSchema } from './Option';
-import { bookingCancellationSchema } from './BookingCancellation';
+import { cancellationSchema } from './Cancellation';
 import { availabilitySchema } from './Availability';
 import { customerContactSchema } from './CustomerContact';
 import { deliveryMethodSchema } from './DeliveryMethod';
@@ -34,7 +34,7 @@ import { identitySchema } from './Identity';
 import { membershipBenefitSchema } from './MembershipBenefit';
 import { membershipSchema } from './Membership';
 import { rentalDurationSchema } from './RentalDuration';
-import { cardPaymentSchema } from './CardPayment';
+import { cardPaymentGatewaySchema } from './CardPaymentGateway';
 
 import { type Booking } from '../models/Booking';
 
@@ -56,7 +56,7 @@ export const bookingSchema: z.ZodSchema<Booking> = z.lazy(() =>
 		optionId: z.string(),
 		option: optionSchema,
 		cancellable: z.boolean(),
-		cancellation: bookingCancellationSchema.nullable(),
+		cancellation: cancellationSchema.nullable(),
 		freesale: z.boolean(),
 		availabilityId: z.string().nullable(),
 		availability: availabilitySchema.optional().nullable(),
@@ -86,12 +86,13 @@ export const bookingSchema: z.ZodSchema<Booking> = z.lazy(() =>
 		localDateTimeEnd: z.string(),
 		emailReceipt: z.boolean(),
 		label: labelSchema.nullable(),
-		metadata: z.record(z.string()),
+		metadata: z.record(z.any()),
 		updatable: z.boolean(),
 		availabilityLocalDateStart: z.string().nullable(),
 		availabilityLocalDateEnd: z.string().nullable(),
 		guide: sellerSchema.nullable(),
 		driver: sellerSchema.nullable(),
+		active: z.boolean(),
 		pickupRequested: z.boolean().optional(),
 		pickupHotel: z.string().optional().nullable(),
 		pickupRoom: z.string().optional().nullable(),
@@ -137,10 +138,12 @@ export const bookingSchema: z.ZodSchema<Booking> = z.lazy(() =>
 		checkinUrl: z.string().optional().nullable(),
 		membershipBenefit: membershipBenefitSchema.optional().nullable(),
 		membership: membershipSchema.optional().nullable(),
+		isMembership: z.boolean().optional(),
+		appendMembershipValidity: z.boolean().optional(),
 		isRental: z.boolean().optional(),
 		rentalDurationId: z.string().optional().nullable(),
 		rentalDuration: rentalDurationSchema.optional().nullable(),
-		cardPayment: cardPaymentSchema.optional().nullable(),
+		cardPayment: cardPaymentGatewaySchema.optional().nullable(),
 		returnUrl: z.string().optional().nullable(),
 	}),
 );

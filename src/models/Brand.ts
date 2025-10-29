@@ -7,7 +7,7 @@ import type { Font } from './Font';
 export type Brand = {
 	id: string | null;
 	name: string | null;
-	contact: BrandContact | null;
+	contact: BrandContact;
 	color: string | null;
 	secondaryColor: string | null;
 	backgroundColor: string | null;
@@ -18,4 +18,6 @@ export type Brand = {
 	logoUrl: string | null;
 	logoWhiteUrl: string | null;
 	faviconUrl: string | null;
+	headerBackgroundColor?: string;
+	footerBackgroundColor?: string;
 };

@@ -5,10 +5,10 @@
 import type { Agent } from './Agent';
 import type { Availability } from './Availability';
 import type { BookingAdjustment } from './BookingAdjustment';
-import type { BookingCancellation } from './BookingCancellation';
 import type { BookingRejection } from './BookingRejection';
 import type { BookingStatus } from './BookingStatus';
-import type { CardPayment } from './CardPayment';
+import type { Cancellation } from './Cancellation';
+import type { CardPaymentGateway } from './CardPaymentGateway';
 import type { ContactField } from './ContactField';
 import type { CustomerContact } from './CustomerContact';
 import type { DeliveryMethod } from './DeliveryMethod';
@@ -111,7 +111,7 @@ export type Booking = {
 	/**
 	 * A boolean field indicating whether this booking can be cancelled.
 	 */
-	cancellation: BookingCancellation | null;
+	cancellation: Cancellation | null;
 	/**
 	 * Indicates if the booking was made without checking availability.
 	 */
@@ -195,12 +195,13 @@ export type Booking = {
 	localDateTimeEnd: string;
 	emailReceipt: boolean;
 	label: Label | null;
-	metadata: Record<string, string>;
+	metadata: Record<string, any>;
 	updatable: boolean;
 	availabilityLocalDateStart: string | null;
 	availabilityLocalDateEnd: string | null;
 	guide: Seller | null;
 	driver: Seller | null;
+	active: boolean;
 	/**
 	 * Whether the booking requires a pickup. This field is only present when octo/pickups capability is requested.
 	 */
@@ -301,9 +302,11 @@ export type Booking = {
 	checkinUrl?: string | null;
 	membershipBenefit?: MembershipBenefit | null;
 	membership?: Membership | null;
+	isMembership?: boolean;
+	appendMembershipValidity?: boolean;
 	isRental?: boolean;
 	rentalDurationId?: string | null;
 	rentalDuration?: RentalDuration | null;
-	cardPayment?: CardPayment | null;
+	cardPayment?: CardPaymentGateway | null;
 	returnUrl?: string | null;
 };

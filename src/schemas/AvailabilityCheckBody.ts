@@ -9,5 +9,5 @@ export const availabilityCheckBodySchema = z.object({
 	localDateEnd: z.string().optional(),
 	availabilityIds: z.array(z.string()).optional(),
 	units: z.array(availabilityUnitSchema).optional(),
-	currency: z.string().optional(),
+	currency: z.string().optional().nullable(),
 });

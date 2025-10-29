@@ -10,5 +10,7 @@ export enum Octo_CapabilityId {
 	OCTO_PACKAGES = 'octo/packages',
 	OCTO_PICKUPS = 'octo/pickups',
 	OCTO_PRICING = 'octo/pricing',
+	OCTO_OFFERS = 'octo/offers',
 	OCTO_QUESTIONS = 'octo/questions',
+	OCTO_WEBHOOKS = 'octo/webhooks',
 }

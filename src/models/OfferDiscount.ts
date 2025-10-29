@@ -2,7 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { OfferTax } from './OfferTax';
+import type { DiscountTax } from './DiscountTax';
 export type OfferDiscount = {
 	/**
 	 * Net price before discount.
@@ -15,5 +15,5 @@ export type OfferDiscount = {
 	/**
 	 * List of taxes included in the discounted price.
 	 */
-	includedTaxes: Array<OfferTax>;
+	includedTaxes: Array<DiscountTax>;
 };

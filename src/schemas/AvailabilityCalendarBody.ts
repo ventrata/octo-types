@@ -8,5 +8,5 @@ export const availabilityCalendarBodySchema = z.object({
 	localDateStart: z.string().optional(),
 	localDateEnd: z.string().optional(),
 	units: z.array(availabilityUnitSchema).optional(),
-	currency: z.string().optional(),
+	currency: z.string().optional().nullable(),
 });

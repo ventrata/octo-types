@@ -60,4 +60,5 @@ export type UnitRestrictions = {
 	 */
 	required: boolean;
 	accompaniedByRatio: number | null;
+	accompaniedByRatioDenominator: number;
 };

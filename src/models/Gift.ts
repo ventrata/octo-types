@@ -3,14 +3,16 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Agent } from './Agent';
-import type { BookingCancellation } from './BookingCancellation';
 import type { BookingStatus } from './BookingStatus';
-import type { CardPayment } from './CardPayment';
+import type { Cancellation } from './Cancellation';
+import type { CardPaymentGateway } from './CardPaymentGateway';
 import type { ContactField } from './ContactField';
 import type { CustomerContact } from './CustomerContact';
 import type { DeliveryMethod } from './DeliveryMethod';
 import type { GiftPayment } from './GiftPayment';
 import type { Identity } from './Identity';
+import type { Offer } from './Offer';
+import type { OfferComparison } from './OfferComparison';
 import type { Pricing } from './Pricing';
 import type { Reseller } from './Reseller';
 import type { Seller } from './Seller';
@@ -22,7 +24,8 @@ export type Gift = {
 	alias: string | null;
 	amount: number;
 	cancellable: boolean;
-	cancellation: BookingCancellation | null;
+	updatable: boolean;
+	cancellation: Cancellation | null;
 	confirmable: boolean;
 	contact: CustomerContact | null;
 	currency: string;
@@ -52,6 +55,27 @@ export type Gift = {
 	voucher: Ticket;
 	identity?: Identity;
 	identityId?: string;
-	cardPayment?: CardPayment | null;
+	cardPayment?: CardPaymentGateway | null;
 	returnUrl?: string | null;
+	primary?: boolean;
+	orderId?: string;
+	orderReference?: string;
+	/**
+	 * Optional code used to apply a specific offer.
+	 */
+	offerCode?: string | null;
+	/**
+	 * Optional display title of the offer.
+	 */
+	offerTitle?: string | null;
+	offerComparisons?: Array<OfferComparison>;
+	offerIsCombination?: boolean;
+	/**
+	 * List of available offers for the availability.
+	 */
+	offers?: Array<Offer>;
+	/**
+	 * Best or selected offer for this availability.
+	 */
+	offer?: Offer | null;
 };

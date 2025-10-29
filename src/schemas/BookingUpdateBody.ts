@@ -26,4 +26,5 @@ export const bookingUpdateBodySchema = z.object({
 	pickupPointId: z.string().optional(),
 	pickupHotel: z.string().optional(),
 	pickupHotelRoom: z.string().optional(),
+	termsAccepted: z.boolean().optional(),
 });

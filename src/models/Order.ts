@@ -4,7 +4,7 @@
 /* eslint-disable */
 import type { Booking } from './Booking';
 import type { Brand } from './Brand';
-import type { CardPayment } from './CardPayment';
+import type { CardPaymentGateway } from './CardPaymentGateway';
 import type { ContactField } from './ContactField';
 import type { CustomerContact } from './CustomerContact';
 import type { Destination } from './Destination';
@@ -38,6 +38,7 @@ export type Order = {
 	visibleContactFields: Array<ContactField>;
 	requiredContactFields: Array<ContactField>;
 	voucher: Ticket | null;
+	active: boolean;
 	termsAccepted?: boolean;
 	destination?: Destination;
 	brand?: Brand;
@@ -55,6 +56,6 @@ export type Order = {
 	checkinAvailable?: boolean;
 	checkinUrl?: string | null;
 	membership?: Membership | null;
-	cardPayment?: CardPayment | null;
+	cardPayment?: CardPaymentGateway | null;
 	returnUrl?: string | null;
 };
