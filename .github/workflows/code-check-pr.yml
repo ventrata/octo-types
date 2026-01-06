@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         name: Setup node modules cache
         id: cache-node-modules
         with:
@@ -59,7 +59,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - uses: actions/cache/restore@v4
+      - uses: actions/cache/restore@v5
         name: Restore node modules cache
         id: cache-node-modules
         with:
@@ -71,7 +71,7 @@ jobs:
         run: npm install --no-lockfile --ignore-scripts --prefer-offline --unsafe-perm
 
       - name: Setup tsc cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ./.cache/tsc
           key: ${{ runner.os }}-node-tsc-${{ hashFiles('./package-lock.json', './tsconfig.json') }}
@@ -98,7 +98,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - uses: actions/cache/restore@v4
+      - uses: actions/cache/restore@v5
         name: Restore node modules cache
         id: cache-node-modules
         with:
@@ -110,7 +110,7 @@ jobs:
         run: npm install --no-lockfile --ignore-scripts --prefer-offline --unsafe-perm
 
       - name: Setup tsc cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ./.cache/tsc
           key: ${{ runner.os }}-node-tsc-${{ hashFiles('./package-lock.json', './tsconfig.json') }}
@@ -157,7 +157,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - uses: actions/cache/restore@v4
+      - uses: actions/cache/restore@v5
         name: Restore node modules cache
         id: cache-node-modules
         with:
