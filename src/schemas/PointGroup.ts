@@ -5,5 +5,5 @@ export const pointGroupSchema = z.object({
 	id: z.string(),
 	internalName: z.string(),
 	title: z.string(),
-	shortDescription: z.string().nullable(),
+	shortDescription: z.string(),
 });

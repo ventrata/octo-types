@@ -12,14 +12,6 @@ export type ResourceGroup = {
 	 */
 	title: string;
 	/**
-	 * Internal name
-	 */
-	internalName: string;
-	/**
-	 * Resource group tags
-	 */
-	tags: Array<string>;
-	/**
 	 * Indicates whether the group allows resource splitting.
 	 */
 	split: boolean;

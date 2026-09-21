@@ -23,8 +23,6 @@ export type Offer = {
 	 * Optional description of the offer.
 	 */
 	description: string | null;
-	availabilityLocalDateStart: string | null;
-	availabilityLocalDateEnd: string | null;
 	/**
 	 * Net discount strategy applied to the offer.
 	 */
@@ -38,6 +36,5 @@ export type Offer = {
 	 */
 	usable: boolean;
 	unusableReason: string | null;
-	tags: Array<string>;
 	membershipBenefit?: MembershipBenefit | null;
 };

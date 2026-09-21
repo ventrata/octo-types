@@ -13,10 +13,6 @@ export type Cancellation = {
 	 */
 	reason: string | null;
 	/**
-	 * Cancellation notes
-	 */
-	notes: string | null;
-	/**
 	 * An RFC 3339 date time in UTC indicating when the booking was cancelled.
 	 */
 	utcCancelledAt: string;

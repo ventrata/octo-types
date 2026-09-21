@@ -8,6 +8,7 @@ export type AdyenPaymentMethodsConfigurationCard = {
 	billingAddressRequired: boolean;
 	billingAddressMode: AdyenPaymentMethodsConfigurationCardBillingAddressMode;
 	data: {
+		holderName: string;
 		billingAddress: {
 			street: string;
 			postalCode: string;

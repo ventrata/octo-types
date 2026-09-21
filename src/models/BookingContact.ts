@@ -36,10 +36,6 @@ export type BookingContact = {
 	 */
 	country?: string;
 	/**
-	 * The nationality of the booking holder or the ticket holder.
-	 */
-	nationality?: string | null;
-	/**
 	 * Optional notes for the booking.
 	 */
 	notes?: string;
@@ -47,10 +43,6 @@ export type BookingContact = {
 	 * The tax ID of the booking holder or the ticket holder.
 	 */
 	taxId?: string | null;
-	/**
-	 * The ID number of the booking holder or the ticket holder.
-	 */
-	idNumber?: string | null;
 	/**
 	 * The street address of the booking holder or the ticket holder.
 	 */
@@ -71,5 +63,4 @@ export type BookingContact = {
 	title?: string | null;
 	age?: number | null;
 	birthdate?: string | null;
-	photoUrl?: string | null;
 };

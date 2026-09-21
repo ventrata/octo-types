@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Destination } from './Destination';
+import type { Octo_Media } from './Octo_Media';
 import type { SupplierContact } from './SupplierContact';
 export type Supplier = {
 	/**
@@ -21,6 +22,14 @@ export type Supplier = {
 	 * A structured object containing defined contact fields related to the supplier. This includes various communication methods (e.g., website, email, phone) and address information. It ensures standardized contact details that facilitate seamless communication with the supplier for both customers and partners.
 	 */
 	contact: SupplierContact;
+	/**
+	 * A brief, customer-facing description of the supplier. This field provides a concise overview of the supplier's business and may be null if no description is available.
+	 */
+	shortDescription?: string | null;
+	/**
+	 * A list of supplier media files hosted at stable URLs. Media enhances the visual and informational representation of the supplier, such as logos and supporting images. This array can be null if no media is available. Note: Media details are intentionally repeated at various levels.
+	 */
+	media?: Array<Octo_Media>;
 	country?: string | null;
 	destinations?: Array<Destination>;
 };

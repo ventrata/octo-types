@@ -10,10 +10,9 @@ export type BookingAdjustment = {
 	 */
 	per: AdjustmentPer;
 	/**
-	 * The amount of the adjustment. A number for a booking/unit adjustment;
-	 * a string preserving its original decimal scale for a percentage adjustment.
+	 * The amount of the adjustment.
 	 */
-	amount: any;
+	amount: number;
 	/**
 	 * Optional notes for the adjustment.
 	 */

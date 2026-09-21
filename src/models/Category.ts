@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AvailableLanguagesItem } from './AvailableLanguagesItem';
 export type Category = {
 	/**
 	 * Unique identifier used in the platform to represent the category.
@@ -41,6 +40,6 @@ export type Category = {
 	 */
 	productIds?: Array<string>;
 	href?: string | null;
-	availableLanguages?: AvailableLanguagesItem | null;
-	meta?: Record<string, string>;
+	availableLanguages?: Array<string>;
+	meta?: Record<string, any>;
 };

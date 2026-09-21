@@ -24,5 +24,5 @@ export type Ticket = {
 	/**
 	 * An ISO8601 date time in UTC at when the voucher was redeemed, if applicable.
 	 */
-	utcNoshowedAt: string | null;
+	utcNoshowedAt?: string | null;
 };

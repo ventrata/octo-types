@@ -3,18 +3,13 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AvailabilityStatus } from './AvailabilityStatus';
-import type { DropoffPoint } from './DropoffPoint';
 import type { ExtraPricing } from './ExtraPricing';
-import type { Fare } from './Fare';
-import type { Mapping } from './Mapping';
 import type { Notice } from './Notice';
 import type { Offer } from './Offer';
 import type { OpeningHours } from './OpeningHours';
-import type { PackageAvailability } from './PackageAvailability';
 import type { PickupPoint } from './PickupPoint';
 import type { Pricing } from './Pricing';
 import type { PricingUnit } from './PricingUnit';
-import type { Seller } from './Seller';
 import type { TourGroup } from './TourGroup';
 export type Availability = {
 	/**
@@ -33,7 +28,6 @@ export type Availability = {
 	 * The time by which the booking must be confirmed at
 	 */
 	utcCutoffAt: string;
-	utcOnsaleAt: string | null;
 	/**
 	 * Indicates if this availability spans the entire day. If set to true, there will be no specific start or end times for this availability.
 	 */
@@ -52,14 +46,6 @@ export type Availability = {
 	 */
 	status: AvailabilityStatus;
 	/**
-	 * Availability status code
-	 */
-	statusCode: string;
-	/**
-	 * Availability status message
-	 */
-	statusMessage: string;
-	/**
 	 * Specifies the number of available slots remaining. Should be nulled or omitted when status is FREESALE. If availability is tracked per unit, this represents the maximum remaining quantity across all units.
 	 */
 	vacancies: number | null;
@@ -75,17 +61,8 @@ export type Availability = {
 	 * Defines the opening hours for this availability, even for start time-based availability. Supports multiple periods for breaks in the day.
 	 */
 	openingHours: Array<OpeningHours>;
-	driver: Seller | null;
-	guide: Seller | null;
-	internalName?: string;
-	tags?: Array<string>;
-	reference: string | null;
+	code: string | null;
 	totalCapacity: number | null;
-	totalMaxWeight?: number | null;
-	paxWeight?: number;
-	maxWeight?: number | null;
-	weightUnit?: string | null;
-	availableWeight?: number | null;
 	limitCapacity: number | null;
 	limitPaxCount: number;
 	noShows: number;
@@ -108,9 +85,6 @@ export type Availability = {
 	 * This field is only present when the capability `octo/pickups` is requested.
 	 */
 	pickupPoints?: Array<PickupPoint>;
-	dropoffAvailable?: boolean;
-	dropoffRequired?: boolean;
-	dropoffPoints?: Array<DropoffPoint>;
 	/**
 	 * Is on the object when Pricing capability is requested.
 	 */
@@ -163,7 +137,7 @@ export type Availability = {
 	 * Optional reference to the tour group this availability belongs to.
 	 */
 	tourGroup?: TourGroup | null;
-	fare?: Fare | null;
+	fare?: any;
 	/**
 	 * List of important notices related to the availability.
 	 */
@@ -173,6 +147,4 @@ export type Availability = {
 	 * Indicates whether the availability uses resources (e.g., guides, vehicles).
 	 */
 	hasResources?: boolean;
-	mappings?: Array<Mapping>;
-	packageAvailabilities?: Array<PackageAvailability>;
 };

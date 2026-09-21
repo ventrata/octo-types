@@ -10,10 +10,8 @@ export const bookingContactSchema = z.object({
 	locales: z.array(z.string()).optional(),
 	postalCode: z.string().optional(),
 	country: z.string().optional(),
-	nationality: z.string().optional().nullable(),
 	notes: z.string().optional(),
 	taxId: z.string().optional().nullable(),
-	idNumber: z.string().optional().nullable(),
 	streetAddress: z.string().optional().nullable(),
 	city: z.string().optional().nullable(),
 	state: z.string().optional().nullable(),
@@ -22,5 +20,4 @@ export const bookingContactSchema = z.object({
 	title: z.string().optional().nullable(),
 	age: z.number().optional().nullable(),
 	birthdate: z.string().optional().nullable(),
-	photoUrl: z.string().optional().nullable(),
 });
