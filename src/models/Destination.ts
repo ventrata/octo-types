@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Article } from './Article';
-import type { AvailableLanguagesItem } from './AvailableLanguagesItem';
 import type { Brand } from './Brand';
 import type { Category } from './Category';
 import type { Claim } from './Claim';
@@ -103,8 +102,8 @@ export type Destination = {
 	 */
 	availableCurrencies?: Array<string>;
 	href?: string | null;
-	availableLanguages?: AvailableLanguagesItem | null;
-	meta?: Record<string, string>;
+	availableLanguages?: Array<string>;
+	meta?: Record<string, any>;
 	pages?: Array<Page>;
 	articles?: Array<Article>;
 	navs?: Array<Nav>;

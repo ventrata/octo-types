@@ -71,21 +71,6 @@ export type Option = {
 	availabilityCutoffAmount: number;
 	availabilityCutoffUnit: DurationUnit;
 	/**
-	 * A text description of the option's advance booking notice requirement, providing clear guidelines to customers.
-	 */
-	availabilityNotice: string | null;
-	/**
-	 * The numeric value of the advance notice period required before availability, relative to start time or closing hour (of opening hours product)
-	 */
-	availabilityNoticeAmount: number | null;
-	/**
-	 * The time unit associated with the advance notice period. Possible values are:
-	 * hour: Notice is measured in hours.
-	 * minute: Notice is measured in minutes.
-	 * day: Notice is measured in days.
-	 */
-	availabilityNoticeUnit: DurationUnit | null;
-	/**
 	 * An array of tags that can be used to filter products.
 	 */
 	tags: Array<string>;
@@ -96,60 +81,55 @@ export type Option = {
 	restrictions: OptionRestrictions;
 	units: Array<Unit>;
 	/**
-	 * The title of the option. Only present when octo/content capability is requested.
+	 * The title of the option. Only present when ventrata/content capability is requested.
 	 */
 	title?: string;
 	/**
-	 * The subtitle of the option. Only present when octo/content capability is requested.
+	 * The subtitle of the option. Only present when ventrata/content capability is requested.
 	 */
 	subtitle?: string | null;
 	/**
-	 * The language of the option. Only present when octo/content capability is requested.
+	 * The language of the option. Only present when ventrata/content capability is requested.
 	 */
 	language?: string;
 	/**
-	 * The description of the option. Only present when octo/content capability is requested.
+	 * The description of the option. Only present when ventrata/content capability is requested.
 	 */
 	shortDescription?: string | null;
 	/**
 	 * Human readable duration of the option. Duration starts to count on redemption.
 	 * This field can be hidden by `hide_duration`.
-	 * Only present when octo/content capability is requested.
+	 * Only present when ventrata/content capability is requested.
 	 */
-	duration?: string | null;
+	duration?: string;
 	/**
 	 * The duration amount of the option.
 	 * This field can be hidden by `hide_duration`.
-	 * Only present when octo/content capability is requested.
+	 * Only present when ventrata/content capability is requested.
 	 */
-	durationAmount?: number | null;
+	durationAmount?: number;
 	/**
 	 * The duration unit. Possible values are `hour`, `minute`, `day`.
 	 * This field can be hidden by `hide_duration`.
-	 * Only present when octo/content capability is requested.
+	 * Only present when ventrata/content capability is requested.
 	 */
-	durationUnit?: DurationUnit | null;
+	durationUnit?: DurationUnit;
 	/**
-	 * The cover image URL of the option. Only present when octo/content capability is requested.
+	 * The cover image URL of the option. Only present when ventrata/content capability is requested.
 	 */
 	coverImageUrl?: string | null;
 	/**
-	 * The itinerary of the option. Only present when octo/content capability is requested.
+	 * The itinerary of the option. Only present when ventrata/content capability is requested.
 	 */
 	itinerary?: Array<ItineraryItem> | null;
 	/**
-	 * The origin point of the option. Only present when octo/content capability is requested.
+	 * The origin point of the option. Only present when ventrata/content capability is requested.
 	 */
 	fromPoint?: Point | null;
 	/**
-	 * The destination point of the option. Only present when octo/content capability is requested.
+	 * The destination point of the option. Only present when ventrata/content capability is requested.
 	 */
 	toPoint?: Point | null;
-	meetingPoint?: string | null;
-	meetingPointCoordinates?: string | null;
-	meetingPointDirections?: string | null;
-	meetingPointLatitude?: number | null;
-	meetingPointLongitude?: number | null;
 	/**
 	 * Whether this option has pickup available.
 	 * This field is only present when the capability `octo/pickups` is requested.

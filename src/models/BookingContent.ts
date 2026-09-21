@@ -12,8 +12,6 @@ export type BookingContent = {
 	meetingPoint?: string | null;
 	meetingPointCoordinates?: string | null;
 	meetingPointDirections?: string | null;
-	meetingPointLatitude?: number | null;
-	meetingPointLongitude?: number | null;
 	notices?: Array<Notice>;
 	termsAccepted?: boolean;
 };

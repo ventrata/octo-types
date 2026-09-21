@@ -7,6 +7,4 @@ export const unitItemIdentifierSchema = z.object({
 	unitType: z.string().optional(),
 	resellerReference: z.string().optional(),
 	alias: z.string().optional(),
-	weightValue: z.number().optional(),
-	weightUnit: z.string().optional(),
 });

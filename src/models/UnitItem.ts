@@ -15,7 +15,7 @@ export type UnitItem = {
 	/**
 	 * The id of the unit, this will be unique to the option.
 	 */
-	uuid: string | null;
+	uuid?: string;
 	/**
 	 * A reference the reseller uses to identify the unit within all bookings.
 	 */
@@ -28,15 +28,7 @@ export type UnitItem = {
 	 * This MUST be a unique identifier within the scope of the option.
 	 */
 	unitId: string;
-	unit: Unit;
-	/**
-	 * The weight value of the unit item, as specified by the customer.
-	 */
-	weightValue: number;
-	/**
-	 * The unit of the weight value (e.g. "kg" or "lb").
-	 */
-	weightUnit: string;
+	unit?: Unit;
 	/**
 	 * The status of the booking, possible values are:
 	 * `ON_HOLD` The booking is pending confirmation, this is the default value when you first create the booking.
@@ -47,10 +39,6 @@ export type UnitItem = {
 	 * `REDEEMED` If the booking is already redeemed.
 	 */
 	status: BookingStatus;
-	/**
-	 * The supplier-facing status, finer grained than `status`. Not part of the OCTO state machine, so new values may appear at any time.
-	 */
-	internalStatus: string;
 	/**
 	 * The ISO8601 date in UTC indicating when the ticket was used at the attraction.
 	 */
@@ -63,7 +51,7 @@ export type UnitItem = {
 	/**
 	 * The id of the unit, this will be unique to the option.
 	 */
-	id: string;
+	id?: string;
 	/**
 	 * An alias for the unit.
 	 */
@@ -92,8 +80,8 @@ export type UnitItem = {
 	requiredContactFields: Array<string>;
 	visibleContactFields: Array<string>;
 	unitType: UnitType;
-	localDateTimeStart?: string;
-	localDateTimeEnd?: string;
+	localDateTimeStart: string | null;
+	localDateTimeEnd: string | null;
 	/**
 	 * Is on the object when Pricing capability is requested.
 	 */

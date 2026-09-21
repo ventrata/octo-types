@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { UnitType } from './UnitType';
 export type UnitRestrictions = {
 	/**
 	 * Minimum age to purchase the unit.
@@ -31,7 +30,7 @@ export type UnitRestrictions = {
 	/**
 	 * Specifies if this unit must be accompanied by another unit (e.g., an infant ticket must be purchased with an adult ticket). Array of unit IDs which must be booked together.
 	 */
-	accompaniedBy: Array<UnitType>;
+	accompaniedBy: Array<string>;
 	/**
 	 * Minimum height required for this unit (e.g., for amusement park rides).
 	 */
@@ -61,9 +60,5 @@ export type UnitRestrictions = {
 	 */
 	required: boolean;
 	accompaniedByRatio: number | null;
-	accompaniedByRatioDenominator?: number;
-	/**
-	 * Specifies units that must not be booked alongside this unit. Array of unit IDs.
-	 */
-	notAccompaniedBy: Array<UnitType>;
+	accompaniedByRatioDenominator: number;
 };

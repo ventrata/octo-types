@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { DropoffPoint } from './DropoffPoint';
 import type { PickupPoint } from './PickupPoint';
 export type AvailabilityPickups = {
 	/**
@@ -20,7 +19,4 @@ export type AvailabilityPickups = {
 	 * This field is only present when the capability `octo/pickups` is requested.
 	 */
 	pickupPoints?: Array<PickupPoint>;
-	dropoffAvailable?: boolean;
-	dropoffRequired?: boolean;
-	dropoffPoints?: Array<DropoffPoint>;
 };

@@ -17,5 +17,4 @@ export type ProductPricing = {
 	 */
 	pricingPer?: PricingPer;
 	includeTax?: boolean;
-	hidePricingFrom?: boolean;
 };

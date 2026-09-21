@@ -36,22 +36,13 @@ export type CustomerContact = {
 	 */
 	country: string | null;
 	/**
-	 * The nationality of the booking holder or the ticket holder.
-	 */
-	nationality: string | null;
-	/**
 	 * Customer-facing public notes for the booking.
 	 */
 	notes: string | null;
-	id: string | null;
 	/**
 	 * The tax ID of the booking holder or the ticket holder.
 	 */
 	taxId: string | null;
-	/**
-	 * The ID number of the booking holder or the ticket holder.
-	 */
-	idNumber: string | null;
 	/**
 	 * The tax ID of the booking holder or the ticket holder.
 	 */
@@ -60,10 +51,6 @@ export type CustomerContact = {
 	 * The street address of the booking holder or the ticket holder.
 	 */
 	streetAddress: string | null;
-	/**
-	 * Whether the street address of the booking holder or the ticket holder has been verified.
-	 */
-	addressVerified: boolean | null;
 	/**
 	 * The city of the booking holder or the ticket holder.
 	 */
@@ -79,7 +66,4 @@ export type CustomerContact = {
 	company: string | null;
 	age: number | null;
 	birthdate: string | null;
-	photoUrl: string | null;
-	tags: Array<string>;
-	reference: string | null;
 };

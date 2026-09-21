@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { GoogleLocalizedName } from './GoogleLocalizedName';
 import type { GoogleOperator } from './GoogleOperator';
 import type { GoogleOptionCategory } from './GoogleOptionCategory';
 import type { GoogleRating } from './GoogleRating';
@@ -28,7 +27,7 @@ export type GoogleOptions = {
 	/**
 	 * Google list view landing page URL.
 	 */
-	landing_page_list_view: GoogleUrl | null;
+	landing_page_list_view: GoogleUrl;
 	/**
 	 * Categories associated with the option.
 	 */
@@ -37,8 +36,4 @@ export type GoogleOptions = {
 	 * Related Google locations (e.g., nearby or alternatives).
 	 */
 	related_locations: Array<GoogleRelatedLocation>;
-	/**
-	 * Supplier brand name localized for every available language.
-	 */
-	brand_name: GoogleLocalizedName;
 };

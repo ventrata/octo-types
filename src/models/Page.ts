@@ -2,15 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AvailableLanguagesItem } from './AvailableLanguagesItem';
 export type Page = {
 	id: string;
-	body?: string;
+	body?: string | null;
 	fullscreen: boolean;
-	href?: string;
-	availableLanguages: AvailableLanguagesItem | null;
-	meta?: Record<string, string>;
-	shortDescription: string | null;
+	href: string | null;
+	availableLanguages: Array<string>;
+	meta: Record<string, any>;
+	shortDescription?: string | null;
 	showFooter: boolean;
 	showHeader: boolean;
 	title: string | null;

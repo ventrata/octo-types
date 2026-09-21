@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CustomRetailOption } from './CustomRetailOption';
 import type { ExtraRestrictions } from './ExtraRestrictions';
 import type { Pricing } from './Pricing';
 export type Extra = {
@@ -13,7 +12,15 @@ export type Extra = {
 	/**
 	 * Optional internal name for backend usage.
 	 */
-	internalName: string;
+	internalName: string | null;
+	/**
+	 * Optional public-facing title of the extra.
+	 */
+	title: string | null;
+	/**
+	 * Optional detailed description of the extra.
+	 */
+	description: string | null;
 	/**
 	 * Optional reference code for the extra.
 	 */
@@ -22,15 +29,6 @@ export type Extra = {
 	 * Restrictions applicable to the extra.
 	 */
 	restrictions: ExtraRestrictions;
-	tags: Array<string>;
-	/**
-	 * Whether the extra supports a custom, customer-specified retail price.
-	 */
-	customRetail: boolean;
-	/**
-	 * Preset custom retail price options, expressed in the same currency as the product's base currency.
-	 */
-	customRetailOptions: Array<CustomRetailOption>;
 	/**
 	 * Optional array of starting prices.
 	 */
@@ -40,7 +38,7 @@ export type Extra = {
 	 */
 	pricing?: Array<Pricing>;
 	/**
-	 * Title of the extra. Only present when octo/content capability is requested.
+	 * Optional short summary of the extra.
 	 */
-	title?: string | null;
+	shortDescription: string | null;
 };

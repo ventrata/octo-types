@@ -5,6 +5,10 @@
 import type { ResellerStatus } from './ResellerStatus';
 export type Mapping = {
 	/**
+	 * Unique identifier for the mapping.
+	 */
+	id: string;
+	/**
 	 * Reference string provided by the reseller.
 	 */
 	resellerReference: string;

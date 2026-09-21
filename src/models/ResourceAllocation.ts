@@ -5,7 +5,6 @@
 import type { Resource } from './Resource';
 import type { ResourceGroup } from './ResourceGroup';
 import type { Seat } from './Seat';
-import type { Seller } from './Seller';
 export type ResourceAllocation = {
 	/**
 	 * Unique identifier for the resource allocation.
@@ -39,6 +38,4 @@ export type ResourceAllocation = {
 	 * Full seat objects allocated to the resource.
 	 */
 	seats: Array<Seat>;
-	guide: Seller | null;
-	driver: Seller | null;
 };
