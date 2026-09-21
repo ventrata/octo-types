@@ -13,6 +13,14 @@ export type Resource = {
 	 */
 	title: string;
 	/**
+	 * Internal name
+	 */
+	internalName: string;
+	/**
+	 * Resource tags
+	 */
+	tags: Array<string>;
+	/**
 	 * Indicates whether the resource has seating.
 	 */
 	seating: boolean;

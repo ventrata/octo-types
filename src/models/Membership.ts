@@ -7,8 +7,8 @@ export type Membership = {
 	id: string;
 	title: string;
 	contact: CustomerContact;
-	reference: string | null;
-	resellerReference: string;
+	reference: string;
+	resellerReference: string | null;
 	supplierReference: string;
 	availabilityLocalDateStart: string | null;
 	availabilityLocalDateEnd: string | null;

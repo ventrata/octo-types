@@ -16,7 +16,8 @@ export type PointGroup = {
 	 */
 	title: string;
 	/**
-	 * The short description of the point group.
+	 * The short description of the point group. Always `null`. Retained for
+	 * backward compatibility with older integrations.
 	 */
-	shortDescription: string;
+	shortDescription: string | null;
 };

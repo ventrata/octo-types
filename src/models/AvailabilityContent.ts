@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Fare } from './Fare';
 import type { Notice } from './Notice';
 import type { TourGroup } from './TourGroup';
 export type AvailabilityContent = {
@@ -33,7 +34,7 @@ export type AvailabilityContent = {
 	 * Optional reference to the tour group this availability belongs to.
 	 */
 	tourGroup?: TourGroup | null;
-	fare?: any;
+	fare?: Fare | null;
 	/**
 	 * List of important notices related to the availability.
 	 */

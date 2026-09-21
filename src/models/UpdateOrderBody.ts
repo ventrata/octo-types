@@ -19,6 +19,7 @@ export type UpdateOrderBody = {
 	contact?: BookingContact;
 	quote?: boolean;
 	settlementMethod?: SettlementMethod;
+	notes?: string | null;
 	/**
 	 * Optional ISO 4217 currency code for the order.
 	 */
