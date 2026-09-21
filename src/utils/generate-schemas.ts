@@ -33,7 +33,7 @@ async function generateSchemas() {
 		console.log(`Found ${files.length} TypeScript files to process`);
 
 		await Promise.all(files.map((file) => processFile(file, { modelsDir, schemasDir })));
-		await replaceMissingSchemaImports(schemasDir);
+		await assertGeneratedSchemasAreComplete(schemasDir);
 
 		console.log('Analyzing and fixing circular dependencies...');
 		await fixCircularDependencies(schemasDir);
@@ -47,38 +47,41 @@ async function generateSchemas() {
 	}
 }
 
-async function replaceMissingSchemaImports(schemasDir: string): Promise<void> {
+async function assertGeneratedSchemasAreComplete(schemasDir: string): Promise<void> {
 	const schemaFiles = glob.sync('**/*.ts', { cwd: schemasDir });
-	const emptySchemaFiles = new Set(
+	const incompleteSchemas = (
 		await Promise.all(
 			schemaFiles.map(async (schemaFile) => {
-				const schemaText = await promises.readFile(path.join(schemasDir, schemaFile), 'utf-8');
-				return schemaText.includes('export const ') ? undefined : path.basename(schemaFile, '.ts');
+				const schemaPath = path.join(schemasDir, schemaFile);
+				const schemaText = await promises.readFile(schemaPath, 'utf-8');
+				if (!schemaText.includes('export const ')) {
+					return `${schemaFile}: no exported schema`;
+				}
+
+				const importedSchemaFiles = Array.from(
+					schemaText.matchAll(/import \{ \w+Schema \} from ['"]\.\/(\w+)['"];\n/g),
+					(match) => match[1],
+				);
+				const missingImports = (
+					await Promise.all(
+						importedSchemaFiles.map(async (importedFile) => {
+							const importedSchemaPath = path.join(path.dirname(schemaPath), `${importedFile}.ts`);
+							if (!existsSync(importedSchemaPath)) return importedFile;
+
+							const importedSchemaText = await promises.readFile(importedSchemaPath, 'utf-8');
+							return importedSchemaText.includes('export const ') ? undefined : importedFile;
+						}),
+					)
+				).filter((importedFile): importedFile is string => importedFile !== undefined);
+
+				return missingImports.length === 0 ? undefined : `${schemaFile}: missing schemas ${missingImports.join(', ')}`;
 			}),
-		).then((files) => files.filter((file): file is string => file !== undefined)),
-	);
+		)
+	).filter((schema): schema is string => schema !== undefined);
 
-	await Promise.all(
-		schemaFiles.map(async (schemaFile) => {
-			const schemaPath = path.join(schemasDir, schemaFile);
-			const schemaText = await promises.readFile(schemaPath, 'utf-8');
-			const normalizedText = schemaText.replace(
-				/import \{ (\w+Schema) \} from ['"]\.\/(\w+)['"];\n/g,
-				(importStatement, schemaName: string, importedFile: string) => {
-					const importedSchemaPath = path.join(path.dirname(schemaPath), `${importedFile}.ts`);
-					if (!existsSync(importedSchemaPath) || emptySchemaFiles.has(importedFile)) {
-						return `const ${schemaName} = z.any();\n`;
-					}
-
-					return importStatement;
-				},
-			);
-
-			if (normalizedText !== schemaText) {
-				await promises.writeFile(schemaPath, normalizedText);
-			}
-		}),
-	);
+	if (incompleteSchemas.length > 0) {
+		throw new Error(`Generated schemas are incomplete:\n${incompleteSchemas.join('\n')}`);
+	}
 }
 
 async function normalizeUuid(modelsDir: string): Promise<void> {
