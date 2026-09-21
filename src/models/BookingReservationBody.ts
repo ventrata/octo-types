@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { BookingContact } from './BookingContact';
+import type { ResourceAllocationRequest } from './ResourceAllocationRequest';
 import type { SettlementMethod } from './SettlementMethod';
 import type { UnitItemIdentifier } from './UnitItemIdentifier';
 export type BookingReservationBody = {
@@ -88,4 +89,12 @@ export type BookingReservationBody = {
 	pickupHotelRoom?: string;
 	termsAccepted?: boolean;
 	identityId?: string;
+	/**
+	 * The promotion code
+	 */
+	offerCode?: string;
+	/**
+	 * Requested resource allocations (manual resource selection). Only honored when octo/resources is requested.
+	 */
+	resourceAllocations?: Array<ResourceAllocationRequest>;
 };

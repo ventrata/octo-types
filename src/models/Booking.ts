@@ -19,6 +19,7 @@ import type { GiftPayment } from './GiftPayment';
 import type { Identity } from './Identity';
 import type { Include } from './Include';
 import type { Label } from './Label';
+import type { Mapping } from './Mapping';
 import type { Membership } from './Membership';
 import type { MembershipBenefit } from './MembershipBenefit';
 import type { Notice } from './Notice';
@@ -69,6 +70,10 @@ export type Booking = {
 	 */
 	status: BookingStatus;
 	/**
+	 * The supplier-facing status, finer grained than `status`. Not part of the OCTO state machine, so new values may appear at any time.
+	 */
+	internalStatus: string;
+	/**
 	 * An ISO8601 date time in UTC when the booking was created.
 	 */
 	utcCreatedAt: string;
@@ -103,7 +108,7 @@ export type Booking = {
 	/**
 	 * The ID of option booked.
 	 */
-	option: Option;
+	option: Option | null;
 	/**
 	 * The object of booked option.
 	 */
@@ -123,7 +128,7 @@ export type Booking = {
 	/**
 	 * The availability object that was booked.
 	 */
-	availability?: Availability | null;
+	availability: Availability | null;
 	/**
 	 * Customer contact details for the booking (see unit object for per ticket / unit details).
 	 */
@@ -164,6 +169,7 @@ export type Booking = {
 	 */
 	alias: string | null;
 	settlementMethod: SettlementMethod;
+	settlementMethods: Array<SettlementMethod>;
 	/**
 	 * If `TRUE`, booking was created as a quote.
 	 */
@@ -194,6 +200,7 @@ export type Booking = {
 	localDateTimeStart: string;
 	localDateTimeEnd: string;
 	emailReceipt: boolean;
+	orderNotes: string | null;
 	label: Label | null;
 	metadata: Record<string, any>;
 	updatable: boolean;
@@ -235,6 +242,8 @@ export type Booking = {
 	meetingPoint?: string | null;
 	meetingPointCoordinates?: string | null;
 	meetingPointDirections?: string | null;
+	meetingPointLatitude?: number | null;
+	meetingPointLongitude?: number | null;
 	notices?: Array<Notice>;
 	termsAccepted?: boolean;
 	primary?: boolean;
@@ -304,9 +313,11 @@ export type Booking = {
 	membership?: Membership | null;
 	isMembership?: boolean;
 	appendMembershipValidity?: boolean;
+	membershipAutoRenew?: boolean;
 	isRental?: boolean;
 	rentalDurationId?: string | null;
 	rentalDuration?: RentalDuration | null;
 	cardPayment?: CardPaymentGateway | null;
 	returnUrl?: string | null;
+	mappings?: Array<Mapping>;
 };
