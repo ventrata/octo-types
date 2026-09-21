@@ -77,4 +77,5 @@ export type Unit = {
 	questions?: Array<Question>;
 	extras?: Array<Extra>;
 	membershipBenefit?: MembershipBenefit | null;
+	redemptionCode?: string | null;
 };

@@ -9,4 +9,5 @@ export type BookingMemberships = {
 	membership?: Membership | null;
 	isMembership?: boolean;
 	appendMembershipValidity?: boolean;
+	membershipAutoRenew?: boolean;
 };

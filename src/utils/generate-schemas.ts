@@ -21,7 +21,9 @@ async function generateSchemas() {
 	const { modelsDir, schemasDir } = setupDirectories();
 
 	try {
+		await promises.rm(schemasDir, { recursive: true, force: true });
 		await ensureDirectoryExists(schemasDir);
+		await normalizeUuid(modelsDir);
 
 		const files =
 			CONFIG.specificModels.length > 0
@@ -31,6 +33,7 @@ async function generateSchemas() {
 		console.log(`Found ${files.length} TypeScript files to process`);
 
 		await Promise.all(files.map((file) => processFile(file, { modelsDir, schemasDir })));
+		await replaceMissingSchemaImports(schemasDir);
 
 		console.log('Analyzing and fixing circular dependencies...');
 		await fixCircularDependencies(schemasDir);
@@ -42,6 +45,70 @@ async function generateSchemas() {
 		console.error('Unhandled error:', err);
 		process.exit(1);
 	}
+}
+
+async function replaceMissingSchemaImports(schemasDir: string): Promise<void> {
+	const schemaFiles = glob.sync('**/*.ts', { cwd: schemasDir });
+	const emptySchemaFiles = new Set(
+		await Promise.all(
+			schemaFiles.map(async (schemaFile) => {
+				const schemaText = await promises.readFile(path.join(schemasDir, schemaFile), 'utf-8');
+				return schemaText.includes('export const ') ? undefined : path.basename(schemaFile, '.ts');
+			}),
+		).then((files) => files.filter((file): file is string => file !== undefined)),
+	);
+
+	await Promise.all(
+		schemaFiles.map(async (schemaFile) => {
+			const schemaPath = path.join(schemasDir, schemaFile);
+			const schemaText = await promises.readFile(schemaPath, 'utf-8');
+			const normalizedText = schemaText.replace(
+				/import \{ (\w+Schema) \} from ['"]\.\/(\w+)['"];\n/g,
+				(importStatement, schemaName: string, importedFile: string) => {
+					const importedSchemaPath = path.join(path.dirname(schemaPath), `${importedFile}.ts`);
+					if (!existsSync(importedSchemaPath) || emptySchemaFiles.has(importedFile)) {
+						return `const ${schemaName} = z.any();\n`;
+					}
+
+					return importStatement;
+				},
+			);
+
+			if (normalizedText !== schemaText) {
+				await promises.writeFile(schemaPath, normalizedText);
+			}
+		}),
+	);
+}
+
+async function normalizeUuid(modelsDir: string): Promise<void> {
+	const uuidPath = path.join(modelsDir, 'UUID.ts');
+	const uuidText = await promises.readFile(uuidPath, 'utf-8');
+	await promises.writeFile(
+		uuidPath,
+		uuidText.includes('export type UUID = uuid;') ? uuidText : `${uuidText.trimEnd()}\nexport type UUID = uuid;\n`,
+	);
+
+	const modelFiles = await promises.readdir(modelsDir);
+	await Promise.all(
+		modelFiles
+			.filter((modelFile) => modelFile.endsWith('.ts') && modelFile !== 'UUID.ts')
+			.map(async (modelFile) => {
+				const modelPath = path.join(modelsDir, modelFile);
+				const modelText = await promises.readFile(modelPath, 'utf-8');
+				await promises.writeFile(modelPath, modelText.replaceAll("from './uuid'", "from './UUID'"));
+			}),
+	);
+
+	const indexPath = path.join(process.cwd(), 'src', 'index.ts');
+	const indexText = await promises.readFile(indexPath, 'utf-8');
+	await promises.writeFile(
+		indexPath,
+		indexText.replace(
+			"export type { UUID } from './models/UUID';\nexport type { uuid } from './models/uuid';",
+			"export type { UUID, uuid } from './models/UUID';",
+		),
+	);
 }
 
 function setupDirectories() {
@@ -411,9 +478,8 @@ async function updateIndexFileWithSchemas(schemasDir: string): Promise<void> {
 		const projectRoot = process.cwd();
 		const indexPath = path.join(projectRoot, 'src', 'index.ts');
 
-		if (!existsSync(indexPath)) return;
-
 		let indexContent = await promises.readFile(indexPath, 'utf-8');
+		indexContent = indexContent.split('\n\n// Zod Schemas')[0];
 		const schemaFiles = glob.sync('**/*.ts', {
 			cwd: schemasDir,
 		});

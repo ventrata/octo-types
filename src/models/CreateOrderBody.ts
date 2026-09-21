@@ -23,6 +23,7 @@ export type CreateOrderBody = {
 	expirationMinutes?: number;
 	quote?: boolean;
 	settlementMethod?: SettlementMethod;
+	notes?: string | null;
 	/**
 	 * Optional ISO 4217 currency code for the order.
 	 */

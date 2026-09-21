@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { DependentAnswer } from './DependentAnswer';
 import type { QuestionInputType } from './QuestionInputType';
 import type { SelectOption } from './SelectOption';
 export type Question = {
@@ -29,6 +30,10 @@ export type Question = {
 	 * The options that the customer can select from. Only present when `inputType` is `radio` or `select`.
 	 */
 	selectOptions: Array<SelectOption>;
+	/**
+	 * The answers to other questions that must be given before this question becomes available.
+	 */
+	dependentAnswers: Array<DependentAnswer>;
 	coverImageUrl: string | null;
 	/**
 	 * Description A hint to help the customer answer the question.
@@ -40,4 +45,5 @@ export type Question = {
 	 * Title The question that should be asked to the customer.
 	 */
 	title: string | null;
+	pattern: string | null;
 };

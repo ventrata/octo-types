@@ -4,12 +4,12 @@
 /* eslint-disable */
 import type { CheckoutSitemapEntryRel } from './CheckoutSitemapEntryRel';
 export type CheckoutSitemapEntry = {
-	id?: string;
-	description?: string;
+	id: string | null;
+	description: string | null;
 	destinationId?: string;
 	keywords: Array<string>;
 	language: string;
-	name?: string;
+	name: string | null;
 	rel: CheckoutSitemapEntryRel;
-	title?: string;
+	title: string | null;
 };
