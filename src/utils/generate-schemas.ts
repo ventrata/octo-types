@@ -495,7 +495,7 @@ async function updateIndexFileWithSchemas(schemasDir: string): Promise<void> {
 			const schemaFilePath = path.join(schemasDir, schemaFile);
 			const schemaContent = await promises.readFile(schemaFilePath, 'utf-8');
 
-			const exportRegex = /export\s+const\s+(\w+Schema)\s*=/g;
+			const exportRegex = /export\s+const\s+(\w+Schema)(?:\s*:\s*[^=]+)?\s*=/g;
 			let match: RegExpExecArray | null;
 
 			match = exportRegex.exec(schemaContent);
