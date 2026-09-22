@@ -5,8 +5,8 @@ import { capabilityIdSchema } from './CapabilityId';
 
 export const createWebhookBodySchema = z.object({
 	url: z.string(),
+	function: z.string().optional().nullable(),
 	event: webhookEventSchema,
-	retryOnError: z.boolean().optional(),
 	useContactLanguage: z.boolean().optional(),
 	headers: z.record(z.string()).optional(),
 	capabilities: z.array(capabilityIdSchema).optional(),

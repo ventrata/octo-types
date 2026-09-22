@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { unitItemIdentifierSchema } from './UnitItemIdentifier';
 import { bookingContactSchema } from './BookingContact';
 import { settlementMethodSchema } from './SettlementMethod';
+import { resourceAllocationRequestSchema } from './ResourceAllocationRequest';
 
 export const bookingReservationBodySchema = z.object({
 	resellerReference: z.string().optional(),
@@ -30,4 +31,6 @@ export const bookingReservationBodySchema = z.object({
 	pickupHotelRoom: z.string().optional(),
 	termsAccepted: z.boolean().optional(),
 	identityId: z.string().optional(),
+	offerCode: z.string().optional(),
+	resourceAllocations: z.array(resourceAllocationRequestSchema).optional(),
 });

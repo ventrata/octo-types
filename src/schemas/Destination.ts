@@ -4,6 +4,7 @@ import { destinationContactSchema } from './DestinationContact';
 import { brandSchema } from './Brand';
 import { categorySchema } from './Category';
 import { noticeSchema } from './Notice';
+import { availableLanguagesItemSchema } from './AvailableLanguagesItem';
 import { pageSchema } from './Page';
 import { articleSchema } from './Article';
 import { navSchema } from './Nav';
@@ -38,8 +39,8 @@ export const destinationSchema = z.object({
 	defaultCurrency: z.string().optional(),
 	availableCurrencies: z.array(z.string()).optional(),
 	href: z.string().optional().nullable(),
-	availableLanguages: z.array(z.string()).optional(),
-	meta: z.record(z.any()).optional(),
+	availableLanguages: availableLanguagesItemSchema.optional().nullable(),
+	meta: z.record(z.string()).optional(),
 	pages: z.array(pageSchema).optional(),
 	articles: z.array(articleSchema).optional(),
 	navs: z.array(navSchema).optional(),

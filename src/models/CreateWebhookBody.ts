@@ -13,6 +13,10 @@ export type CreateWebhookBody = {
 	 */
 	url: string;
 	/**
+	 * A JavaScript function body that runs in place of an HTTP delivery, receiving the payload's top-level fields as arguments.
+	 */
+	function?: string | null;
+	/**
 	 * The event that will trigger the webhook. Possible values are:
 	 *
 	 * booking_update triggered when an existing booking is confirmed, updated or cancelled.
@@ -20,10 +24,6 @@ export type CreateWebhookBody = {
 	 * availability_update triggered when an availability changes.
 	 */
 	event: WebhookEvent;
-	/**
-	 * Whether the webhook should be retried if the HTTP endpoint doesn't return a success status (200 to 299), default is true.
-	 */
-	retryOnError?: boolean;
 	/**
 	 * Whether the webhook event should attempt to use the language configured by the guest when they booked. This makes sure the data in the webhook body is in the guest's language, default is true.
 	 */

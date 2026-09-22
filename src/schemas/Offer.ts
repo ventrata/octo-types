@@ -10,9 +10,12 @@ export const offerSchema = z.object({
 	label: z.string(),
 	code: z.string(),
 	description: z.string().nullable(),
+	availabilityLocalDateStart: z.string().nullable(),
+	availabilityLocalDateEnd: z.string().nullable(),
 	netDiscount: netDiscountSchema.nullable(),
 	restrictions: offerRestrictionsSchema,
 	usable: z.boolean(),
 	unusableReason: z.string().nullable(),
+	tags: z.array(z.string()),
 	membershipBenefit: membershipBenefitSchema.optional().nullable(),
 });

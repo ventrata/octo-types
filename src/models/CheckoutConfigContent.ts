@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Article } from './Article';
+import type { AvailableLanguages } from './AvailableLanguages';
 import type { Brand } from './Brand';
 import type { Category } from './Category';
 import type { CheckoutDomain } from './CheckoutDomain';
@@ -14,84 +15,37 @@ import type { Nav } from './Nav';
 import type { Notice } from './Notice';
 import type { Page } from './Page';
 export type CheckoutConfigContent = {
-	/**
-	 * Unique identifier used in the platform to represent the destination.
-	 */
+	bodyHtml: string | null;
+	destinations?: Array<Destination>;
+	domains?: Array<CheckoutDomain>;
+	footerHtml: string | null;
+	headHtml: string | null;
+	legacyWidgetToken?: string | null;
+	redirects?: Record<string, string>;
+	showFooter?: boolean;
+	showHeader?: boolean;
+	sitemap?: Record<string, CheckoutSitemapEntry>;
 	id: string;
-	/**
-	 * TRUE` identifies the destination as default, and should therefore rendered and selected first
-	 */
 	default: boolean;
-	/**
-	 * The name of the destination.
-	 */
 	name: string | null;
-	/**
-	 * The title of the destination.
-	 */
 	title: string | null;
-	/**
-	 * The description of the destination.
-	 */
 	shortDescription: string | null;
-	/**
-	 * `TRUE` identifies the destination as featured, and should therefore rendered and selected first
-	 */
 	featured: boolean;
-	/**
-	 * The country the destination is in
-	 */
 	country: string | null;
 	contact: DestinationContact;
 	brand: Brand;
-	/**
-	 * The latitude of the destination.
-	 */
 	latitude: number | null;
-	/**
-	 * The longitude of the destination.
-	 */
 	longitude: number | null;
-	/**
-	 * The Google Place ID for the destination.
-	 */
 	googlePlaceId: string | null;
-	/**
-	 * The URL of the image that represents the destination.
-	 */
 	bannerImageUrl: string | null;
-	/**
-	 * The URL of the image that represents the destination.
-	 */
 	coverImageUrl: string | null;
-	/**
-	 * The URL of the video that represents the destination.
-	 */
 	videoUrl: string | null;
-	/**
-	 * The Facebook URL for the destination.
-	 */
 	facebookUrl: string | null;
-	/**
-	 * The Google URL for the destination.
-	 */
 	googleUrl: string | null;
-	/**
-	 * The Tripadvisor URL for the destination.
-	 */
 	tripadvisorUrl: string | null;
-	/**
-	 * The Twitter URL for the destination.
-	 */
 	twitterUrl: string | null;
 	youtubeUrl: string | null;
-	/**
-	 * The Instagram URL for the destination.
-	 */
 	instagramUrl: string | null;
-	/**
-	 * An array of categories that the destination falls under.
-	 */
 	categories?: Array<Category>;
 	tags: Array<string>;
 	address: string | null;
@@ -105,21 +59,11 @@ export type CheckoutConfigContent = {
 	 */
 	availableCurrencies?: Array<string>;
 	href?: string | null;
-	availableLanguages?: Array<string>;
-	meta?: Record<string, any>;
+	availableLanguages?: AvailableLanguages | null;
+	meta?: Record<string, string>;
 	pages?: Array<Page>;
 	articles?: Array<Article>;
 	navs?: Array<Nav>;
 	claims?: Array<Claim>;
 	featuredCategories?: Array<Category>;
-	bodyHtml?: string | null;
-	destinations?: Array<Destination>;
-	domains?: Array<CheckoutDomain>;
-	footerHtml?: string | null;
-	headHtml?: string | null;
-	legacyWidgetToken?: string | null;
-	redirects?: Record<string, string>;
-	showFooter?: boolean;
-	showHeader?: boolean;
-	sitemap?: Record<string, CheckoutSitemapEntry>;
 };

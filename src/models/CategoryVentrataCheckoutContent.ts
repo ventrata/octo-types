@@ -2,8 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { AvailableLanguages } from './AvailableLanguages';
 export type CategoryVentrataCheckoutContent = {
 	href?: string | null;
-	availableLanguages?: Array<string>;
-	meta?: Record<string, any>;
+	availableLanguages?: AvailableLanguages | null;
+	meta?: Record<string, string>;
 };

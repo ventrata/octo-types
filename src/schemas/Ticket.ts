@@ -7,5 +7,5 @@ export const ticketSchema = z.object({
 	redemptionMethod: redemptionMethodSchema,
 	utcRedeemedAt: z.string().nullable(),
 	deliveryOptions: z.array(deliveryOptionSchema),
-	utcNoshowedAt: z.string().optional().nullable(),
+	utcNoshowedAt: z.string().nullable(),
 });

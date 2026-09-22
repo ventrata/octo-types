@@ -2,10 +2,11 @@
 import { z } from 'zod';
 import { adjustmentPerSchema } from './AdjustmentPer';
 import { adjustmentDiscountSchema } from './AdjustmentDiscount';
+import { type BookingAdjustment } from '../models/BookingAdjustment';
 
-export const bookingAdjustmentSchema = z.object({
+export const bookingAdjustmentSchema: z.ZodType<BookingAdjustment> = z.object({
 	per: adjustmentPerSchema,
-	amount: z.number(),
+	amount: z.any(),
 	notes: z.string().nullable(),
 	netDiscount: adjustmentDiscountSchema,
-});
+}) as z.ZodType<BookingAdjustment>;

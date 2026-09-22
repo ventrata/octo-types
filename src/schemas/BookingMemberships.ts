@@ -8,4 +8,5 @@ export const bookingMembershipsSchema = z.object({
 	membership: membershipSchema.optional().nullable(),
 	isMembership: z.boolean().optional(),
 	appendMembershipValidity: z.boolean().optional(),
+	membershipAutoRenew: z.boolean().optional(),
 });

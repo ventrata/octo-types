@@ -3,12 +3,12 @@ import { z } from 'zod';
 import { checkoutSitemapEntryRelSchema } from './CheckoutSitemapEntryRel';
 
 export const checkoutSitemapEntrySchema = z.object({
-	id: z.string().optional(),
-	description: z.string().optional(),
+	id: z.string().nullable(),
+	description: z.string().nullable(),
 	destinationId: z.string().optional(),
 	keywords: z.array(z.string()),
 	language: z.string(),
-	name: z.string().optional(),
+	name: z.string().nullable(),
 	rel: checkoutSitemapEntryRelSchema,
-	title: z.string().optional(),
+	title: z.string().nullable(),
 });

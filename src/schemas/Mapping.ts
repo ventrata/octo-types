@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { resellerStatusSchema } from './ResellerStatus';
 
 export const mappingSchema = z.object({
-	id: z.string(),
 	resellerReference: z.string(),
 	resellerStatus: resellerStatusSchema,
 	title: z.string(),

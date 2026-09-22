@@ -15,12 +15,13 @@ export type AvailabilityCalendarBody = {
 	/**
 	 * Start date to query for (YYYY-MM-DD).
 	 */
-	localDateStart?: string;
+	localDateStart: string;
 	/**
 	 * End date to query for (YYYY-MM-DD).
 	 */
-	localDateEnd?: string;
+	localDateEnd: string;
 	units?: Array<AvailabilityUnit>;
+	uuid?: string;
 	/**
 	 * Can be used only when pricing capability is used.
 	 */

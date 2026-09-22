@@ -18,9 +18,9 @@ export type Webhook = {
 	 */
 	url: string | null;
 	/**
-	 * Whether to retry delivery if an error occurs.
+	 * A JavaScript function body that runs in place of an HTTP delivery, receiving the payload's top-level fields as arguments.
 	 */
-	retryOnError: boolean;
+	function: string | null;
 	/**
 	 * Whether to format the payload using the contact's preferred language.
 	 */

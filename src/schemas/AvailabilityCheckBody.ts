@@ -4,7 +4,10 @@ import { availabilityUnitSchema } from './AvailabilityUnit';
 
 export const availabilityCheckBodySchema = z.object({
 	productId: z.string(),
-	optionId: z.string(),
+	optionId: z.string().optional(),
+	uuid: z.string().optional(),
+	localTime: z.string().optional(),
+	localDate: z.string().optional(),
 	localDateStart: z.string().optional(),
 	localDateEnd: z.string().optional(),
 	availabilityIds: z.array(z.string()).optional(),

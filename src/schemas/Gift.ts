@@ -12,7 +12,7 @@ import { sellerSchema } from './Seller';
 import { settlementMethodSchema } from './SettlementMethod';
 import { bookingStatusSchema } from './BookingStatus';
 import { userSchema } from './User';
-import { ticketSchema } from './Ticket';
+import { giftVoucherSchema } from './GiftVoucher';
 import { identitySchema } from './Identity';
 import { cardPaymentGatewaySchema } from './CardPaymentGateway';
 import { offerComparisonSchema } from './OfferComparison';
@@ -21,6 +21,7 @@ import { offerSchema } from './Offer';
 export const giftSchema = z.object({
 	agent: agentSchema.nullable(),
 	alias: z.string().nullable(),
+	active: z.boolean(),
 	amount: z.number(),
 	cancellable: z.boolean(),
 	updatable: z.boolean(),
@@ -40,7 +41,9 @@ export const giftSchema = z.object({
 	resellerReference: z.string().nullable(),
 	seller: sellerSchema.nullable(),
 	settlementMethod: settlementMethodSchema,
+	settlementMethods: z.array(settlementMethodSchema),
 	status: bookingStatusSchema,
+	internalStatus: z.string(),
 	supplierReference: z.string(),
 	testMode: z.boolean().nullable(),
 	user: userSchema.nullable(),
@@ -50,8 +53,8 @@ export const giftSchema = z.object({
 	utcRedeemedAt: z.string().nullable(),
 	utcConfirmedAt: z.string().nullable(),
 	uuid: z.string(),
-	VisibleContactFields: z.array(contactFieldSchema),
-	voucher: ticketSchema,
+	visibleContactFields: z.array(contactFieldSchema),
+	voucher: giftVoucherSchema,
 	identity: identitySchema.optional(),
 	identityId: z.string().optional(),
 	cardPayment: cardPaymentGatewaySchema.optional().nullable(),

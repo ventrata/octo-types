@@ -20,4 +20,12 @@ export type UnitItemIdentifier = {
 	 * The alias of the unit item.
 	 */
 	alias?: string;
+	/**
+	 * The weight value of the unit item, as specified by the customer.
+	 */
+	weightValue?: number;
+	/**
+	 * The unit of the weight value (e.g. "kg" or "lb").
+	 */
+	weightUnit?: string;
 };

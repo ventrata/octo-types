@@ -2,6 +2,7 @@
 import { z } from 'zod';
 import { questionInputTypeSchema } from './QuestionInputType';
 import { selectOptionSchema } from './SelectOption';
+import { dependentAnswerSchema } from './DependentAnswer';
 
 export const questionSchema = z.object({
 	id: z.string(),
@@ -10,9 +11,11 @@ export const questionSchema = z.object({
 	inputType: questionInputTypeSchema,
 	required: z.boolean(),
 	selectOptions: z.array(selectOptionSchema),
+	dependentAnswers: z.array(dependentAnswerSchema),
 	coverImageUrl: z.string().nullable(),
 	description: z.string().nullable(),
 	shortDescription: z.string().nullable(),
 	internalName: z.string().nullable(),
 	title: z.string().nullable(),
+	pattern: z.string().nullable(),
 });

@@ -13,6 +13,7 @@ export const createOrderBodySchema = z.object({
 	expirationMinutes: z.number().optional(),
 	quote: z.boolean().optional(),
 	settlementMethod: settlementMethodSchema.optional(),
+	notes: z.string().optional().nullable(),
 	currency: z.string().optional(),
 	cardPayment: cardPaymentSchema.optional(),
 	returnUrl: z.string().optional().nullable(),

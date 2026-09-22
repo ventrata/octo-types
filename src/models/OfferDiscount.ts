@@ -7,7 +7,7 @@ export type OfferDiscount = {
 	/**
 	 * Net price before discount.
 	 */
-	net: number;
+	net: number | null;
 	/**
 	 * Retail price after discount.
 	 */

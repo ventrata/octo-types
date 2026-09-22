@@ -2,23 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { GoogleLocalizedText } from './GoogleLocalizedText';
 import type { GoogleLocation } from './GoogleLocation';
+import type { GoogleNullableLocalizedName } from './GoogleNullableLocalizedName';
 export type GoogleOperator = {
-	/**
-	 * Display name of the operator.
-	 */
-	name: string;
 	/**
 	 * Localized business profile name as shown on Google.
 	 */
-	google_business_profile_name: {
-		localized_texts: Array<GoogleLocalizedText>;
-	};
-	/**
-	 * Operator’s phone number.
-	 */
-	phone_number: string;
+	google_business_profile_name: GoogleNullableLocalizedName;
 	/**
 	 * List of associated locations.
 	 */

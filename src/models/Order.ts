@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Agent } from './Agent';
 import type { Booking } from './Booking';
 import type { Brand } from './Brand';
 import type { CardPaymentGateway } from './CardPaymentGateway';
@@ -10,13 +11,13 @@ import type { CustomerContact } from './CustomerContact';
 import type { Destination } from './Destination';
 import type { Gift } from './Gift';
 import type { GiftPayment } from './GiftPayment';
+import type { GiftVoucher } from './GiftVoucher';
 import type { Identity } from './Identity';
 import type { Membership } from './Membership';
 import type { OfferCombination } from './OfferCombination';
 import type { Pricing } from './Pricing';
 import type { QuestionAnswer } from './QuestionAnswer';
 import type { SettlementMethod } from './SettlementMethod';
-import type { Ticket } from './Ticket';
 export type Order = {
 	id: string;
 	testMode: boolean;
@@ -25,6 +26,7 @@ export type Order = {
 	supplierReference: string;
 	quote: boolean;
 	status: string;
+	internalStatus: string;
 	utcCreatedAt: string;
 	utcExpiresAt: string | null;
 	utcConfirmedAt: string | null;
@@ -32,12 +34,14 @@ export type Order = {
 	cancellable: boolean;
 	confirmable: boolean;
 	updatable: boolean;
+	agent?: Agent;
 	contact?: CustomerContact;
 	emailReceipt?: boolean;
+	notes?: string | null;
 	bookings: Array<Booking>;
 	visibleContactFields: Array<ContactField>;
 	requiredContactFields: Array<ContactField>;
-	voucher: Ticket | null;
+	voucher: GiftVoucher | null;
 	active: boolean;
 	termsAccepted?: boolean;
 	destination?: Destination;
@@ -58,4 +62,13 @@ export type Order = {
 	membership?: Membership | null;
 	cardPayment?: CardPaymentGateway | null;
 	returnUrl?: string | null;
+	fingerprintLinkedId?: string | null;
+	fingerprintReceived?: boolean;
+	recaptchaEnterpriseReceived?: string | null;
+	recoveryUrl?: string | null;
+	segmentAnonymousId?: string | null;
+	utmCampaign?: string | null;
+	utmContent?: string | null;
+	utmMedium?: string | null;
+	utmSource?: string | null;
 };

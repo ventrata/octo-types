@@ -11,7 +11,16 @@ export type AvailabilityCheckBody = {
 	/**
 	 * The option id.
 	 */
-	optionId: string;
+	optionId?: string;
+	/**
+	 * Optional booking UUID. When set, the slot matching this booking's travel date (and tour time when applicable) is exempt from booking-cutoff and advance-notice closures.
+	 */
+	uuid?: string;
+	/**
+	 * Optional local time (HH:MM).
+	 */
+	localTime?: string;
+	localDate?: string;
 	/**
 	 * Start date to query for (YYYY-MM-DD). Required if `localDateEnd` is set.
 	 */

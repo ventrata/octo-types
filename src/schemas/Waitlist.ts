@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { defaultableIDSchema } from './DefaultableID';
 import { waitlistUnitIdentifierSchema } from './WaitlistUnitIdentifier';
 import { customerContactSchema } from './CustomerContact';
+import { contactFieldSchema } from './ContactField';
 
 export const waitlistSchema = z.object({
 	id: z.string(),
@@ -11,4 +12,6 @@ export const waitlistSchema = z.object({
 	localDate: z.string(),
 	units: z.array(waitlistUnitIdentifierSchema),
 	contact: customerContactSchema.nullable(),
+	visibleContactFields: z.array(contactFieldSchema),
+	requiredContactFields: z.array(contactFieldSchema),
 });

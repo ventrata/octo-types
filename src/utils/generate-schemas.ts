@@ -3,460 +3,421 @@ import * as path from 'node:path';
 import * as glob from 'glob';
 import { generate } from 'ts-to-zod';
 
-type ZanySchema = {
-	fullMatch: string;
-	schemaName: string;
-};
-
 const CONFIG = {
 	ignorePatterns: ['**/*.spec.ts', '**/*.test.ts', '**/*.d.ts'],
 	relativePaths: {
 		models: 'src/models',
 		schemas: 'src/schemas',
+		rules: 'src/rules',
+		index: 'src/index.ts',
 	},
-	specificModels: [],
+	specificModels: [] as string[],
 };
 
-async function generateSchemas() {
-	const { modelsDir, schemasDir } = setupDirectories();
+const SCHEMA_SECTION_HEADER = '\n\n// Zod Schemas';
+const EXPORTED_SCHEMA = /export\s+const\s+(\w+Schema)\b/g;
+const EXPORTED_MODEL_TYPE = /export\s+(?:type|interface|enum)\s+(\w+)\b/g;
+const MODEL_TYPE_IMPORT = /import\s+type\s+\{([^}]+)\}\s+from\s+['"]([^'"]+)['"]/g;
+const SIBLING_SCHEMA_IMPORT = /import\s+\{\s*(\w+Schema)\s*\}\s+from\s+['"]\.\/(\w+)['"]/g;
+const PLACEHOLDER_SCHEMA = /const\s+(\w+Schema)\s*=\s*z\.any\(\);\n?/g;
 
-	try {
-		await ensureDirectoryExists(schemasDir);
+type SchemaExport = {
+	schemaName: string;
+	typeName?: string;
+};
 
-		const files =
-			CONFIG.specificModels.length > 0
-				? await findSpecificModelFiles(modelsDir, CONFIG.specificModels)
-				: findTypeScriptFiles(modelsDir);
+type GeneratedSchema = {
+	relativePath: string;
+	modelImportPath: string;
+	exports: SchemaExport[];
+	text: string;
+};
 
-		console.log(`Found ${files.length} TypeScript files to process`);
+async function generateSchemas(): Promise<void> {
+	const modelsDir = path.resolve(process.cwd(), CONFIG.relativePaths.models);
+	const schemasDir = path.resolve(process.cwd(), CONFIG.relativePaths.schemas);
 
-		await Promise.all(files.map((file) => processFile(file, { modelsDir, schemasDir })));
+	await normalizeUuidModel(modelsDir);
 
-		console.log('Analyzing and fixing circular dependencies...');
-		await fixCircularDependencies(schemasDir);
+	const modelFiles = await findModelFiles(modelsDir);
+	console.log(`Generating Zod schemas for ${modelFiles.length} models`);
 
-		await updateIndexFileWithSchemas(schemasDir);
+	const schemas = await Promise.all(modelFiles.map((modelFile) => buildSchema(modelFile, modelsDir, schemasDir)));
 
-		console.log('Finished generating Zod schemas');
-	} catch (err) {
-		console.error('Unhandled error:', err);
-		process.exit(1);
-	}
+	console.log(`Typed ${typeRequiredAnySchemas(schemas)} schemas that use required z.any()`);
+	console.log(`Wrapped ${typeRecursiveSchemas(schemas)} recursive schemas in z.lazy()`);
+	assertSchemasAreComplete(schemas);
+
+	await writeSchemas(schemas, schemasDir);
+	await writeIndexExports(schemasDir);
 }
 
-function setupDirectories() {
-	const projectRoot = process.cwd();
+async function normalizeUuidModel(modelsDir: string): Promise<void> {
+	const uuidPath = path.join(modelsDir, 'UUID.ts');
+	const uuidText = await promises.readFile(uuidPath, 'utf-8');
+
+	if (!uuidText.includes('export type UUID = uuid;')) {
+		await promises.writeFile(uuidPath, `${uuidText.trimEnd()}\nexport type UUID = uuid;\n`);
+	}
+
+	const modelFiles = await promises.readdir(modelsDir);
+	await Promise.all(
+		modelFiles
+			.filter((modelFile) => modelFile.endsWith('.ts') && modelFile !== 'UUID.ts')
+			.map(async (modelFile) => {
+				const modelPath = path.join(modelsDir, modelFile);
+				const modelText = await promises.readFile(modelPath, 'utf-8');
+				await promises.writeFile(modelPath, modelText.replaceAll("from './uuid'", "from './UUID'"));
+			}),
+	);
+
+	const indexPath = path.resolve(process.cwd(), CONFIG.relativePaths.index);
+	const indexText = await promises.readFile(indexPath, 'utf-8');
+	await promises.writeFile(
+		indexPath,
+		indexText.replace(
+			"export type { UUID } from './models/UUID';\nexport type { uuid } from './models/uuid';",
+			"export type { UUID, uuid } from './models/UUID';",
+		),
+	);
+}
+
+async function findModelFiles(modelsDir: string): Promise<string[]> {
+	if (CONFIG.specificModels.length === 0) {
+		return glob.sync('**/*.ts', { cwd: modelsDir, ignore: CONFIG.ignorePatterns }).sort();
+	}
+
+	const matches = CONFIG.specificModels.map((spec) => {
+		const modelFile = spec.endsWith('.ts') ? spec : `${spec}.ts`;
+		if (existsSync(path.join(modelsDir, modelFile))) return [modelFile];
+
+		return glob.sync(`**/${path.basename(modelFile)}`, { cwd: modelsDir, ignore: CONFIG.ignorePatterns });
+	});
+
+	return Array.from(new Set(matches.flat())).sort();
+}
+
+async function buildSchema(modelFile: string, modelsDir: string, schemasDir: string): Promise<GeneratedSchema> {
+	const modelPath = path.join(modelsDir, modelFile);
+	const schemaPath = path.join(schemasDir, modelFile);
+	const modelImportPath = toModuleSpecifier(path.relative(path.dirname(schemaPath), modelPath));
+	const modelText = await promises.readFile(modelPath, 'utf-8');
+
+	const generated = generate({ sourceText: modelText, getSchemaName: toSchemaName });
+	if (generated.errors.length > 0) {
+		console.warn(`ts-to-zod reported errors for ${modelFile}:`, generated.errors);
+	}
+
+	let text = generated.getZodSchemasFile(modelImportPath);
+	text = importPlaceholderSchemas(text, modelText);
+	text = applyRules(text, path.basename(modelFile, '.ts'));
+	text = dropUnusedZodImport(text);
+	text = tidyBlankLines(text);
 
 	return {
-		modelsDir: path.resolve(projectRoot, CONFIG.relativePaths.models),
-		schemasDir: path.resolve(projectRoot, CONFIG.relativePaths.schemas),
+		relativePath: modelFile,
+		modelImportPath,
+		exports: findSchemaExports(text, modelText),
+		text,
 	};
 }
 
-async function ensureDirectoryExists(dirPath: string): Promise<void> {
-	try {
-		await promises.mkdir(dirPath, { recursive: true });
-		console.log(`Created directory at ${dirPath}`);
-	} catch (err) {
-		console.error(`Error creating directory: ${err}`);
-		throw err;
+function importPlaceholderSchemas(schemaText: string, modelText: string): string {
+	const placeholders = Array.from(schemaText.matchAll(PLACEHOLDER_SCHEMA));
+	if (placeholders.length === 0) return schemaText;
+
+	const modelFileNames = importedModelFileNames(modelText);
+	const imports: string[] = [];
+	let text = schemaText;
+
+	for (const [statement, schemaName] of placeholders) {
+		const fileName = modelFileNames.get(schemaName) ?? toPascalCase(schemaName.replace(/Schema$/, ''));
+		imports.push(`import { ${schemaName} } from './${fileName}';`);
+		text = text.replace(statement, '');
 	}
+
+	return appendImports(text, imports);
 }
 
-function findTypeScriptFiles(dir: string): string[] {
-	return glob.sync('**/*.ts', {
-		cwd: dir,
-		ignore: CONFIG.ignorePatterns,
-	});
-}
+function importedModelFileNames(modelText: string): Map<string, string> {
+	const fileNames = new Map<string, string>();
 
-async function findSpecificModelFiles(dir: string, modelSpecs: string[]): Promise<string[]> {
-	const result: string[] = [];
-
-	for (const spec of modelSpecs) {
-		const normalizedSpec = spec.endsWith('.ts') ? spec : `${spec}.ts`;
-
-		if (await promises.stat(path.join(dir, normalizedSpec)).catch(() => null)) {
-			result.push(normalizedSpec);
-			continue;
+	for (const [, importedTypes, modulePath] of modelText.matchAll(MODEL_TYPE_IMPORT)) {
+		const fileName = path.basename(modulePath.replace(/\.ts$/, ''));
+		for (const importedType of importedTypes.split(',')) {
+			const typeName = importedType
+				.trim()
+				.split(/\s+as\s+/)
+				.pop()
+				?.trim();
+			if (typeName) fileNames.set(toSchemaName(typeName), fileName);
 		}
-
-		const fileName = path.basename(normalizedSpec);
-		const matches = glob.sync(`**/${fileName}`, {
-			cwd: dir,
-			ignore: CONFIG.ignorePatterns,
-		});
-
-		result.push(...matches);
 	}
 
-	return Array.from(new Set(result));
+	return fileNames;
 }
 
-async function processFile(file: string, dirs: { modelsDir: string; schemasDir: string }): Promise<void> {
-	const { modelsDir, schemasDir } = dirs;
-	const inputPath = path.join(modelsDir, file);
-	const relativePath = path.relative(modelsDir, inputPath);
-	const outputDir = path.dirname(path.join(schemasDir, relativePath));
-	const fileName = path.basename(relativePath, '.ts');
-	const outputPath = path.join(outputDir, `${fileName}.ts`);
+function applyRules(schemaText: string, modelName: string): string {
+	const rulesPath = path.resolve(process.cwd(), CONFIG.relativePaths.rules, `${modelName}.ts`);
+	if (!existsSync(rulesPath)) return schemaText;
 
-	try {
-		await ensureDirectoryExists(outputDir);
+	const ruleName = `${modelName.charAt(0).toLowerCase()}${modelName.slice(1)}Rule`;
 
-		const sourceText = await promises.readFile(inputPath, 'utf-8');
-		const result = generateSchema(sourceText);
+	return `import { ${ruleName} } from '../rules/${modelName}';\n${schemaText.replace(/(}\))\s*;/g, `$1.superRefine(${ruleName}());`)}`;
+}
 
-		if (result.errors.length > 0) {
-			console.warn(`Errors in ${file}:`, result.errors);
+function dropUnusedZodImport(schemaText: string): string {
+	if (schemaText.includes('z.')) return schemaText;
+
+	return schemaText.replace(/import\s*\{\s*z\s*\}\s*from\s*["']zod["'];\s*\n?/g, '');
+}
+
+function findSchemaExports(schemaText: string, modelText: string): SchemaExport[] {
+	const typeNames = new Map(
+		Array.from(modelText.matchAll(EXPORTED_MODEL_TYPE), ([, typeName]) => [toSchemaName(typeName), typeName]),
+	);
+
+	return findExportedSchemaNames(schemaText).map((schemaName) => ({
+		schemaName,
+		typeName: typeNames.get(schemaName),
+	}));
+}
+
+function typeRequiredAnySchemas(schemas: GeneratedSchema[]): number {
+	let typed = 0;
+
+	for (const schema of schemas) {
+		if (!/:\s*z\.any\(\)(?!\.optional)/.test(schema.text)) continue;
+
+		for (const { schemaName, typeName } of schema.exports) {
+			if (!typeName) continue;
+
+			schema.text = annotateSchema(schema.text, schemaName, typeName, schema.modelImportPath, { assert: true });
+			typed += 1;
 		}
+	}
 
-		const modelImportPathRaw = path.relative(outputDir, inputPath).replace(/\.ts$/, '');
-		const modelImportPath = (modelImportPathRaw.startsWith('.') ? modelImportPathRaw : `./${modelImportPathRaw}`)
-			.split(path.sep)
-			.join('/');
+	return typed;
+}
 
-		let zodSchemasText = result.getZodSchemasFile(modelImportPath);
+function typeRecursiveSchemas(schemas: GeneratedSchema[]): number {
+	const cyclicModules = findCyclicModules(schemas);
+	let typed = 0;
 
-		zodSchemasText = replaceZanySchemas(zodSchemasText);
-		zodSchemasText = addRules(zodSchemasText, fileName);
+	for (const schema of schemas) {
+		const inCycle = cyclicModules.has(toModuleName(schema.relativePath));
 
-		if (!zodSchemasText.includes('z.')) {
-			zodSchemasText = zodSchemasText.replace(/import\s*{\s*z\s*}\s*from\s*["']zod["'];\s*\n?/g, '');
+		for (const { schemaName, typeName } of schema.exports) {
+			if (!typeName) continue;
+			if (!inCycle && !isLazySchema(schema.text, schemaName)) continue;
+
+			schema.text = annotateSchema(schema.text, schemaName, typeName, schema.modelImportPath, { wrapLazy: true });
+			typed += 1;
 		}
-
-		zodSchemasText = `${zodSchemasText
-			.split('\n')
-			.map((line) => line.trimEnd())
-			.filter((line, idx, arr) => line !== '' || (idx > 0 && arr[idx - 1] !== ''))
-			.join('\n')
-			.trimEnd()}\n`;
-
-		await promises.writeFile(outputPath, zodSchemasText);
-		console.log(`Created schema file: ${outputPath}`);
-	} catch (err) {
-		console.error(`Error processing ${file}:`, err);
-	}
-}
-
-function generateSchema(sourceText: string) {
-	return generate({
-		sourceText,
-		getSchemaName: (name) => `${name.charAt(0).toLowerCase() + name.slice(1)}Schema`,
-	});
-}
-
-function replaceZanySchemas(fileContent: string): string {
-	const zanySchemas = findZanySchemas(fileContent);
-	if (zanySchemas.length === 0) return fileContent;
-
-	const importsToAdd: string[] = [];
-	let modifiedContent = fileContent;
-
-	for (const schema of zanySchemas) {
-		const baseName = schema.schemaName.replace(/Schema$/, '');
-		const fileName = baseName.charAt(0).toUpperCase() + baseName.slice(1);
-
-		importsToAdd.push(`import { ${schema.schemaName} } from "./${fileName}";`);
-		modifiedContent = modifiedContent.replace(schema.fullMatch, '');
 	}
 
-	return reorganizeImports(modifiedContent, importsToAdd);
+	return typed;
 }
 
-function findZanySchemas(content: string): ZanySchema[] {
-	const zanyRegex = /const\s+([a-zA-Z0-9_]+)\s+=\s+z\.any\(\);/g;
-	const zanySchemas: ZanySchema[] = [];
-	let match = zanyRegex.exec(content);
+function findCyclicModules(schemas: GeneratedSchema[]): Set<string> {
+	const dependencies = new Map(
+		schemas.map((schema) => [
+			toModuleName(schema.relativePath),
+			new Set(Array.from(schema.text.matchAll(SIBLING_SCHEMA_IMPORT), ([, , moduleName]) => moduleName)),
+		]),
+	);
 
-	while (match !== null) {
-		zanySchemas.push({
-			fullMatch: match[0],
-			schemaName: match[1],
-		});
-		match = zanyRegex.exec(content);
-	}
-
-	return zanySchemas;
-}
-
-function reorganizeImports(content: string, newImports: string[]): string {
-	if (newImports.length === 0) return content;
-
-	const existingImportRegex = /^import .+ from .+;\n*/gm;
-	const matches = content.match(existingImportRegex);
-	const existingImports: string[] = matches ? [...matches] : [];
-	const endOfImportsIndex = existingImports.reduce((lastIndex: number, imp: string) => {
-		const index = content.indexOf(imp);
-		return index > lastIndex ? index + imp.length : lastIndex;
-	}, 0);
-	const cleanedContent = content.slice(endOfImportsIndex).replace(/^\s*\n+/g, '');
-
-	return `${content.slice(0, endOfImportsIndex).trimEnd()}\n${newImports.join('\n')}\n\n${cleanedContent}`;
-}
-
-export function addRules(zodSchemasText: string, fileName: string): string {
-	const rulesFilePath = path.resolve(process.cwd(), 'src/rules', `${fileName}.ts`);
-
-	if (!existsSync(rulesFilePath)) {
-		return zodSchemasText;
-	}
-
-	const ruleFunctionName = `${fileName.charAt(0).toLowerCase() + fileName.slice(1)}Rule`;
-	const schemaRegex = /(}\))\s*;/g;
-	const refineCall = `.superRefine(${ruleFunctionName}())`;
-
-	const modifiedText = zodSchemasText.replace(schemaRegex, `$1${refineCall};`);
-	const importLine = `import { ${ruleFunctionName} } from '../rules/${fileName}';\n`;
-
-	return importLine + modifiedText;
-}
-
-function toPascalCase(name: string): string {
-	return name
-		.split(/[-_\s]/)
-		.map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-		.join('');
-}
-
-async function fixCircularDependencies(schemasDir: string): Promise<void> {
-	const schemaFiles = glob.sync('**/*.ts', { cwd: schemasDir });
-	const dependencyGraph = new Map<string, Set<string>>();
-	const schemaContents = new Map<
-		string,
-		{
-			content: string;
-			relativePath: string;
-		}
-	>();
-
-	for (const schemaFile of schemaFiles) {
-		const baseName = path.basename(schemaFile, '.ts');
-		const schemaFilePath = path.join(schemasDir, schemaFile);
-		const content = await promises.readFile(schemaFilePath, 'utf-8');
-		schemaContents.set(baseName, {
-			content,
-			relativePath: schemaFile,
-		});
-
-		const dependencies = new Set<string>();
-		const importRegex = /import\s+\{[^}]*\}\s+from\s+['"]([^'"]+)['"]/g;
-		let match;
-		// biome-ignore lint/suspicious/noAssignInExpressions: <any>
-		while ((match = importRegex.exec(content)) !== null) {
-			const importPath = match[1];
-			if (importPath.startsWith('./') || importPath.startsWith('../')) {
-				const importedFile = path.basename(importPath, '.ts');
-				if (importedFile !== baseName) {
-					dependencies.add(importedFile);
-				}
-			}
-		}
-		dependencyGraph.set(baseName, dependencies);
-	}
-
+	const cyclic = new Set<string>();
 	const visited = new Set<string>();
-	const recursionStack: string[] = [];
-	const circularSchemas = new Set<string>();
+	const stack: string[] = [];
 
-	function detectCycles(node: string): void {
-		const existingIndex = recursionStack.indexOf(node);
-		if (existingIndex !== -1) {
-			for (const schema of recursionStack.slice(existingIndex)) {
-				circularSchemas.add(schema);
+	const visit = (moduleName: string): void => {
+		const cycleStart = stack.indexOf(moduleName);
+		if (cycleStart !== -1) {
+			for (const cyclicModule of stack.slice(cycleStart)) {
+				cyclic.add(cyclicModule);
 			}
 			return;
 		}
-		if (visited.has(node)) return;
+		if (visited.has(moduleName)) return;
 
-		visited.add(node);
-		recursionStack.push(node);
-
-		const dependencies = dependencyGraph.get(node) || new Set();
-		for (const dep of dependencies) {
-			detectCycles(dep);
+		visited.add(moduleName);
+		stack.push(moduleName);
+		for (const dependency of dependencies.get(moduleName) ?? []) {
+			visit(dependency);
 		}
+		stack.pop();
+	};
 
-		recursionStack.pop();
+	for (const moduleName of dependencies.keys()) {
+		visit(moduleName);
 	}
 
-	for (const schema of dependencyGraph.keys()) {
-		if (!visited.has(schema)) {
-			detectCycles(schema);
-		}
-	}
-
-	for (const schemaName of circularSchemas) {
-		const metadata = schemaContents.get(schemaName);
-		if (!metadata) continue;
-		const { content, relativePath } = metadata;
-
-		const exportMatches = Array.from(content.matchAll(/export\s+const\s+(\w+Schema)\s*=/g));
-		if (exportMatches.length === 0) continue;
-
-		let updatedContent = content;
-		const seenImports = new Set<string>();
-
-		for (const match of exportMatches) {
-			const schemaVarName = match[1];
-			const baseTypeName = schemaVarName.replace(/Schema$/, '');
-			const typeName = toPascalCase(baseTypeName);
-			const importTypeLine = getTypeImportLine(relativePath, typeName, schemasDir);
-
-			if (!seenImports.has(importTypeLine)) {
-				updatedContent = ensureTypeImport(updatedContent, importTypeLine);
-				seenImports.add(importTypeLine);
-			}
-
-			updatedContent = ensureSchemaIsLazy(updatedContent, schemaVarName, typeName);
-		}
-
-		const schemaFilePath = path.join(schemasDir, relativePath);
-		await promises.writeFile(schemaFilePath, updatedContent);
-	}
+	return cyclic;
 }
 
-function ensureTypeImport(content: string, importLine: string): string {
-	if (content.includes(importLine)) {
-		return content;
+function annotateSchema(
+	schemaText: string,
+	schemaName: string,
+	typeName: string,
+	modelImportPath: string,
+	options: { wrapLazy?: boolean; assert?: boolean } = {},
+): string {
+	const declaration = new RegExp(`export\\s+const\\s+${schemaName}\\s*(?::[^=]+)?=\\s*`).exec(schemaText);
+	if (!declaration) return schemaText;
+
+	const valueStart = declaration.index + declaration[0].length;
+	const valueEnd = findStatementEnd(schemaText, valueStart);
+	if (valueEnd === -1) return schemaText;
+
+	const annotation = `z.ZodType<${typeName}>`;
+	let value = schemaText.slice(valueStart, valueEnd).trimEnd();
+
+	if (options.wrapLazy && !value.startsWith('z.lazy(')) {
+		value = `z.lazy(() => ${value})`;
 	}
 
-	const lines = content.split('\n');
-	const trimmedImport = importLine.trimEnd();
-	const firstImportIndex = lines.findIndex((line) => line.startsWith('import '));
-
-	if (firstImportIndex !== -1) {
-		lines.splice(firstImportIndex, 0, trimmedImport);
-	} else {
-		let insertAt = 0;
-		while (insertAt < lines.length && lines[insertAt].startsWith('//')) {
-			insertAt += 1;
-		}
-		lines.splice(insertAt, 0, trimmedImport);
+	if (options.assert && !value.endsWith(`as ${annotation}`)) {
+		value = `${value} as ${annotation}`;
 	}
 
-	return lines.join('\n');
+	const typedSchema = `${schemaText.slice(0, declaration.index)}export const ${schemaName}: ${annotation} = ${value}${schemaText.slice(valueEnd)}`;
+
+	return ensureModelTypeImport(typedSchema, typeName, modelImportPath);
 }
 
-function ensureSchemaIsLazy(content: string, schemaVarName: string, typeName: string): string {
-	const exportRegex = new RegExp(`export\\s+const\\s+${schemaVarName}\\s*[:=]`);
-	if (!exportRegex.test(content)) {
-		return content;
-	}
-
-	let updatedContent = content;
-	const annotationRegex = new RegExp(`export\\s+const\\s+${schemaVarName}\\s*:\\s*z\\.ZodSchema<${typeName}>\\s*=`);
-	if (!annotationRegex.test(updatedContent)) {
-		const assignmentRegex = new RegExp(`export\\s+const\\s+${schemaVarName}\\s*=\\s*`);
-		updatedContent = updatedContent.replace(
-			assignmentRegex,
-			`export const ${schemaVarName}: z.ZodSchema<${typeName}> = `,
-		);
-	}
-
-	const exportIndex = updatedContent.indexOf(`export const ${schemaVarName}`);
-	if (exportIndex === -1) return updatedContent;
-
-	const equalsIndex = updatedContent.indexOf('=', exportIndex);
-	if (equalsIndex === -1) return updatedContent;
-
-	const semicolonIndex = findExpressionEnd(updatedContent, equalsIndex + 1);
-	if (semicolonIndex === -1) return updatedContent;
-
-	const expression = updatedContent.slice(equalsIndex + 1, semicolonIndex);
-	const trimmedExpression = expression.trimStart();
-
-	if (trimmedExpression.startsWith('z.lazy')) {
-		return updatedContent;
-	}
-
-	const leadingWhitespace = expression.slice(0, expression.length - trimmedExpression.length);
-	const wrappedExpression = `${leadingWhitespace}z.lazy(() => ${trimmedExpression})`;
-
-	return updatedContent.slice(0, equalsIndex + 1) + wrappedExpression + updatedContent.slice(semicolonIndex);
+function isLazySchema(schemaText: string, schemaName: string): boolean {
+	return new RegExp(`export\\s+const\\s+${schemaName}\\s*(?::[^=]+)?=\\s*z\\.lazy\\(`).test(schemaText);
 }
 
-function getTypeImportLine(relativeSchemaPath: string, typeName: string, schemasDir: string): string {
-	const schemaFileDir = path.dirname(path.join(schemasDir, relativeSchemaPath));
-	const modelsDir = path.join(process.cwd(), CONFIG.relativePaths.models);
-	const targetTypePath = path.join(modelsDir, typeName);
-	let importPath = path.relative(schemaFileDir, targetTypePath);
+function ensureModelTypeImport(schemaText: string, typeName: string, modelImportPath: string): string {
+	if (new RegExp(`import\\s+\\{\\s*type\\s+${typeName}\\s*\\}`).test(schemaText)) return schemaText;
 
-	if (!importPath.startsWith('.')) {
-		importPath = `./${importPath}`;
-	}
-
-	importPath = importPath.split(path.sep).join('/');
-
-	return `import { type ${typeName} } from '${importPath}';`;
+	return appendImports(schemaText, [`import { type ${typeName} } from '${modelImportPath}';`]);
 }
 
-function findExpressionEnd(content: string, startIndex: number): number {
+function findStatementEnd(text: string, startIndex: number): number {
 	let depth = 0;
-	for (let idx = startIndex; idx < content.length; idx++) {
-		const char = content[idx];
+
+	for (let index = startIndex; index < text.length; index++) {
+		const char = text[index];
 		if (char === '(' || char === '{' || char === '[') {
 			depth += 1;
 		} else if (char === ')' || char === '}' || char === ']') {
 			depth = Math.max(depth - 1, 0);
 		} else if (char === ';' && depth === 0) {
-			return idx;
+			return index;
 		}
 	}
+
 	return -1;
 }
 
-async function updateIndexFileWithSchemas(schemasDir: string): Promise<void> {
-	try {
-		const projectRoot = process.cwd();
-		const indexPath = path.join(projectRoot, 'src', 'index.ts');
+function assertSchemasAreComplete(schemas: GeneratedSchema[]): void {
+	const exportsByModule = new Map(
+		schemas.map((schema) => [
+			toModuleName(schema.relativePath),
+			new Set(schema.exports.map(({ schemaName }) => schemaName)),
+		]),
+	);
 
-		if (!existsSync(indexPath)) return;
+	const problems = schemas.flatMap((schema) => {
+		if (schema.exports.length === 0) return `${schema.relativePath}: no exported schema`;
 
-		let indexContent = await promises.readFile(indexPath, 'utf-8');
-		const schemaFiles = glob.sync('**/*.ts', {
-			cwd: schemasDir,
-		});
+		const missing = Array.from(schema.text.matchAll(SIBLING_SCHEMA_IMPORT))
+			.filter(([, schemaName, moduleName]) => !exportsByModule.get(moduleName)?.has(schemaName))
+			.map(([, schemaName, moduleName]) => `${schemaName} from ./${moduleName}`);
 
-		const schemaExports: string[] = [];
-		const seenSchemaNames = new Set<string>();
+		return missing.length === 0 ? [] : `${schema.relativePath}: missing ${missing.join(', ')}`;
+	});
 
-		for (const schemaFile of schemaFiles) {
-			const baseName = path.basename(schemaFile, '.ts');
-			const schemaFilePath = path.join(schemasDir, schemaFile);
-			const schemaContent = await promises.readFile(schemaFilePath, 'utf-8');
-
-			const exportRegex = /export\s+const\s+(\w+Schema)\s*=/g;
-			let match: RegExpExecArray | null;
-
-			match = exportRegex.exec(schemaContent);
-			while (match !== null) {
-				const schemaName = match[1];
-				if (!seenSchemaNames.has(schemaName)) {
-					seenSchemaNames.add(schemaName);
-					const exportStatement = `export { ${schemaName} } from './schemas/${baseName}';`;
-					if (!indexContent.includes(exportStatement)) {
-						schemaExports.push(exportStatement);
-					}
-				}
-				match = exportRegex.exec(schemaContent);
-			}
-		}
-
-		if (schemaExports.length > 0) {
-			if (!indexContent.includes('// Zod Schemas')) {
-				indexContent += '\n\n// Zod Schemas';
-			}
-			indexContent += `\n${schemaExports.join('\n')}`;
-
-			await promises.writeFile(indexPath, indexContent);
-			console.log(`Updated index file with ${schemaExports.length} schema exports`);
-		} else {
-			console.log('No new schema exports to add to index file');
-		}
-	} catch (err) {
-		console.error('Error updating index file with schemas:', err);
+	if (problems.length > 0) {
+		throw new Error(`Generated schemas are incomplete:\n${problems.join('\n')}`);
 	}
 }
 
-generateSchemas().catch((err) => console.log(err));
+async function writeSchemas(schemas: GeneratedSchema[], schemasDir: string): Promise<void> {
+	if (CONFIG.specificModels.length === 0) {
+		await promises.rm(schemasDir, { recursive: true, force: true });
+	}
+
+	await Promise.all(
+		schemas.map(async (schema) => {
+			const schemaPath = path.join(schemasDir, schema.relativePath);
+			await promises.mkdir(path.dirname(schemaPath), { recursive: true });
+			await promises.writeFile(schemaPath, schema.text);
+		}),
+	);
+
+	console.log(`Wrote ${schemas.length} schema files to ${CONFIG.relativePaths.schemas}`);
+}
+
+async function writeIndexExports(schemasDir: string): Promise<void> {
+	const indexPath = path.resolve(process.cwd(), CONFIG.relativePaths.index);
+	const indexText = await promises.readFile(indexPath, 'utf-8');
+	const schemaFiles = glob.sync('**/*.ts', { cwd: schemasDir }).sort().reverse();
+
+	const exported = new Set<string>();
+	const exportLines: string[] = [];
+
+	for (const schemaFile of schemaFiles) {
+		const moduleName = toModuleSpecifier(schemaFile).replace(/^\.\//, '');
+		const schemaText = await promises.readFile(path.join(schemasDir, schemaFile), 'utf-8');
+
+		for (const schemaName of findExportedSchemaNames(schemaText)) {
+			if (exported.has(schemaName)) continue;
+
+			exported.add(schemaName);
+			exportLines.push(`export { ${schemaName} } from './schemas/${moduleName}';`);
+		}
+	}
+
+	const modelExports = indexText.split(SCHEMA_SECTION_HEADER)[0].trimEnd();
+	await promises.writeFile(indexPath, `${modelExports}${SCHEMA_SECTION_HEADER}\n${exportLines.join('\n')}\n`);
+
+	console.log(`Updated ${CONFIG.relativePaths.index} with ${exportLines.length} schema exports`);
+}
+
+function findExportedSchemaNames(schemaText: string): string[] {
+	return Array.from(new Set(Array.from(schemaText.matchAll(EXPORTED_SCHEMA), ([, schemaName]) => schemaName)));
+}
+
+function appendImports(text: string, imports: string[]): string {
+	const lines = text.split('\n');
+	const lastImport = lines.reduce((last, line, index) => (line.startsWith('import ') ? index : last), -1);
+	lines.splice(lastImport + 1, 0, ...imports);
+
+	return lines.join('\n');
+}
+
+function tidyBlankLines(text: string): string {
+	const lines = text
+		.split('\n')
+		.map((line) => line.trimEnd())
+		.filter((line, index, all) => line !== '' || (index > 0 && all[index - 1] !== ''));
+
+	return `${lines.join('\n').trimEnd()}\n`;
+}
+
+function toSchemaName(typeName: string): string {
+	return `${typeName.charAt(0).toLowerCase()}${typeName.slice(1)}Schema`;
+}
+
+function toPascalCase(name: string): string {
+	return `${name.charAt(0).toUpperCase()}${name.slice(1)}`;
+}
+
+function toModuleName(relativePath: string): string {
+	return path.basename(relativePath, '.ts');
+}
+
+function toModuleSpecifier(relativePath: string): string {
+	const modulePath = relativePath.replace(/\.ts$/, '').split(path.sep).join('/');
+
+	return modulePath.startsWith('.') ? modulePath : `./${modulePath}`;
+}
+
+generateSchemas().catch((err) => {
+	console.error(err);
+	process.exit(1);
+});
