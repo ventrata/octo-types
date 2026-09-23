@@ -9,5 +9,6 @@ export const updateOrderBodySchema = z.object({
 	contact: bookingContactSchema.optional(),
 	quote: z.boolean().optional(),
 	settlementMethod: settlementMethodSchema.optional(),
+	notes: z.string().optional().nullable(),
 	currency: z.string().optional(),
 });

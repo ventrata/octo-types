@@ -7,4 +7,5 @@ export const productPricingSchema = z.object({
 	availableCurrencies: z.array(z.string()).optional(),
 	pricingPer: pricingPerSchema.optional(),
 	includeTax: z.boolean().optional(),
+	hidePricingFrom: z.boolean().optional(),
 });

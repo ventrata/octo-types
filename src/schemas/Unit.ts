@@ -25,4 +25,5 @@ export const unitSchema = z.object({
 	questions: z.array(questionSchema).optional(),
 	extras: z.array(extraSchema).optional(),
 	membershipBenefit: membershipBenefitSchema.optional().nullable(),
+	redemptionCode: z.string().optional().nullable(),
 });

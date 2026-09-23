@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { resourceGroupSchema } from './ResourceGroup';
 import { resourceSchema } from './Resource';
 import { seatSchema } from './Seat';
+import { sellerSchema } from './Seller';
 
 export const resourceAllocationSchema = z.object({
 	id: z.string(),
@@ -13,4 +14,6 @@ export const resourceAllocationSchema = z.object({
 	paxCount: z.number(),
 	seatIds: z.array(z.string()),
 	seats: z.array(seatSchema),
+	guide: sellerSchema.nullable(),
+	driver: sellerSchema.nullable(),
 });

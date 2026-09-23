@@ -4,24 +4,24 @@ import { giftExpiryUnitSchema } from './GiftExpiryUnit';
 import { giftsRestrictionsSchema } from './GiftsRestrictions';
 import { checkoutConfigPricingDisplaySchema } from './CheckoutConfigPricingDisplay';
 import { resellerSchema } from './Reseller';
-import { agentSchema } from './Agent';
+import { envSchema } from './Env';
+import { destinationSchema } from './Destination';
+import { checkoutDomainSchema } from './CheckoutDomain';
+import { checkoutSitemapEntrySchema } from './CheckoutSitemapEntry';
 import { destinationContactSchema } from './DestinationContact';
 import { brandSchema } from './Brand';
 import { categorySchema } from './Category';
 import { noticeSchema } from './Notice';
+import { availableLanguagesSchema } from './AvailableLanguages';
 import { pageSchema } from './Page';
 import { articleSchema } from './Article';
 import { navSchema } from './Nav';
 import { claimSchema } from './Claim';
-import { destinationSchema } from './Destination';
-import { checkoutDomainSchema } from './CheckoutDomain';
-import { checkoutSitemapEntrySchema } from './CheckoutSitemapEntry';
 
 export const checkoutConfigSchema = z.object({
 	allowedCheckinMethods: z.array(z.string()),
 	conversionHtml: z.string().nullable(),
 	defaultMarketingAllowed: z.boolean(),
-	fingerprintPublicKey: z.string(),
 	giftsAllowed: z.boolean(),
 	giftsDuration: z.string(),
 	giftsDurationAmount: z.number(),
@@ -35,7 +35,6 @@ export const checkoutConfigSchema = z.object({
 	memberSignupUrl: z.string().nullable(),
 	membersAllowed: z.boolean(),
 	noindex: z.boolean(),
-	postHogExperiment: z.string().nullable(),
 	pricingDisplay: checkoutConfigPricingDisplaySchema,
 	quotesAllowed: z.boolean(),
 	recaptchaEnterpriseSiteKey: z.string().nullable(),
@@ -43,9 +42,19 @@ export const checkoutConfigSchema = z.object({
 	theme: z.string(),
 	waitlistsAllowed: z.boolean(),
 	widgetCss: z.string().nullable(),
-	marketingConsent: z.boolean().nullable(),
+	marketingConsent: z.string().nullable(),
 	reseller: resellerSchema.nullable(),
-	agent: agentSchema.nullable(),
+	env: envSchema,
+	bodyHtml: z.string().nullable(),
+	destinations: z.array(destinationSchema).optional(),
+	domains: z.array(checkoutDomainSchema).optional(),
+	footerHtml: z.string().nullable(),
+	headHtml: z.string().nullable(),
+	legacyWidgetToken: z.string().optional().nullable(),
+	redirects: z.record(z.string()).optional(),
+	showFooter: z.boolean().optional(),
+	showHeader: z.boolean().optional(),
+	sitemap: z.record(checkoutSitemapEntrySchema).optional(),
 	id: z.string(),
 	default: z.boolean(),
 	name: z.string().nullable(),
@@ -74,21 +83,11 @@ export const checkoutConfigSchema = z.object({
 	defaultCurrency: z.string().optional(),
 	availableCurrencies: z.array(z.string()).optional(),
 	href: z.string().optional().nullable(),
-	availableLanguages: z.array(z.string()).optional(),
-	meta: z.record(z.any()).optional(),
+	availableLanguages: availableLanguagesSchema.optional().nullable(),
+	meta: z.record(z.string()).optional(),
 	pages: z.array(pageSchema).optional(),
 	articles: z.array(articleSchema).optional(),
 	navs: z.array(navSchema).optional(),
 	claims: z.array(claimSchema).optional(),
 	featuredCategories: z.array(categorySchema).optional(),
-	bodyHtml: z.string().optional().nullable(),
-	destinations: z.array(destinationSchema).optional(),
-	domains: z.array(checkoutDomainSchema).optional(),
-	footerHtml: z.string().optional().nullable(),
-	headHtml: z.string().optional().nullable(),
-	legacyWidgetToken: z.string().optional().nullable(),
-	redirects: z.record(z.string()).optional(),
-	showFooter: z.boolean().optional(),
-	showHeader: z.boolean().optional(),
-	sitemap: z.record(checkoutSitemapEntrySchema).optional(),
 });

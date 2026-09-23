@@ -5,6 +5,8 @@ import { seatSchema } from './Seat';
 export const resourceSchema = z.object({
 	id: z.string(),
 	title: z.string(),
+	internalName: z.string(),
+	tags: z.array(z.string()),
 	seating: z.boolean(),
 	seats: z.array(seatSchema),
 });

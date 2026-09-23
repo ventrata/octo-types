@@ -5,5 +5,6 @@ import { refundSchema } from './Refund';
 export const cancellationSchema = z.object({
 	refund: refundSchema,
 	reason: z.string().nullable(),
+	notes: z.string().nullable(),
 	utcCancelledAt: z.string(),
 });

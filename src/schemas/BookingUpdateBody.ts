@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { unitItemIdentifierSchema } from './UnitItemIdentifier';
 import { bookingContactSchema } from './BookingContact';
 import { settlementMethodSchema } from './SettlementMethod';
+import { resourceAllocationRequestSchema } from './ResourceAllocationRequest';
 
 export const bookingUpdateBodySchema = z.object({
 	resellerReference: z.string().optional(),
@@ -21,10 +22,12 @@ export const bookingUpdateBodySchema = z.object({
 	redeemed: z.boolean().optional(),
 	uuid: z.string().optional(),
 	tags: z.array(z.string()).optional(),
-	metadata: z.record(z.string()).optional(),
+	meta: z.record(z.string()).optional(),
 	pickupRequested: z.boolean().optional(),
 	pickupPointId: z.string().optional(),
 	pickupHotel: z.string().optional(),
 	pickupHotelRoom: z.string().optional(),
 	termsAccepted: z.boolean().optional(),
+	offerCode: z.string().optional(),
+	resourceAllocations: z.array(resourceAllocationRequestSchema).optional(),
 });

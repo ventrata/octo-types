@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { discountTaxSchema } from './DiscountTax';
 
 export const offerDiscountSchema = z.object({
-	net: z.number(),
+	net: z.number().nullable(),
 	retail: z.number(),
 	includedTaxes: z.array(discountTaxSchema),
 });

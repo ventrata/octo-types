@@ -5,8 +5,9 @@ import { availabilityUnitSchema } from './AvailabilityUnit';
 export const availabilityCalendarBodySchema = z.object({
 	productId: z.string(),
 	optionId: z.string(),
-	localDateStart: z.string().optional(),
-	localDateEnd: z.string().optional(),
+	localDateStart: z.string(),
+	localDateEnd: z.string(),
 	units: z.array(availabilityUnitSchema).optional(),
+	uuid: z.string().optional(),
 	currency: z.string().optional().nullable(),
 });

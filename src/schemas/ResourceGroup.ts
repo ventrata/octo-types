@@ -4,5 +4,7 @@ import { z } from 'zod';
 export const resourceGroupSchema = z.object({
 	id: z.string(),
 	title: z.string(),
+	internalName: z.string(),
+	tags: z.array(z.string()),
 	split: z.boolean(),
 });

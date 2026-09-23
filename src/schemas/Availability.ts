@@ -2,28 +2,45 @@
 import { z } from 'zod';
 import { availabilityStatusSchema } from './AvailabilityStatus';
 import { openingHoursSchema } from './OpeningHours';
+import { sellerSchema } from './Seller';
 import { pickupPointSchema } from './PickupPoint';
+import { dropoffPointSchema } from './DropoffPoint';
 import { pricingUnitSchema } from './PricingUnit';
 import { pricingSchema } from './Pricing';
 import { offerSchema } from './Offer';
 import { tourGroupSchema } from './TourGroup';
+import { fareSchema } from './Fare';
 import { noticeSchema } from './Notice';
 import { extraPricingSchema } from './ExtraPricing';
+import { mappingSchema } from './Mapping';
+import { packageAvailabilitySchema } from './PackageAvailability';
 
 export const availabilitySchema = z.object({
 	id: z.string(),
 	localDateTimeStart: z.string(),
 	localDateTimeEnd: z.string(),
 	utcCutoffAt: z.string(),
+	utcOnsaleAt: z.string().nullable(),
 	allDay: z.boolean(),
 	available: z.boolean(),
 	status: availabilityStatusSchema,
+	statusCode: z.string(),
+	statusMessage: z.string(),
 	vacancies: z.number().nullable(),
 	capacity: z.number().nullable(),
 	maxUnits: z.number().nullable(),
 	openingHours: z.array(openingHoursSchema),
-	code: z.string().nullable(),
+	driver: sellerSchema.nullable(),
+	guide: sellerSchema.nullable(),
+	internalName: z.string().optional(),
+	tags: z.array(z.string()).optional(),
+	reference: z.string().nullable(),
 	totalCapacity: z.number().nullable(),
+	totalMaxWeight: z.number().optional().nullable(),
+	paxWeight: z.number().optional(),
+	maxWeight: z.number().optional().nullable(),
+	weightUnit: z.string().optional().nullable(),
+	availableWeight: z.number().optional().nullable(),
 	limitCapacity: z.number().nullable(),
 	limitPaxCount: z.number(),
 	noShows: z.number(),
@@ -34,6 +51,9 @@ export const availabilitySchema = z.object({
 	pickupAvailable: z.boolean().optional(),
 	pickupRequired: z.boolean().optional(),
 	pickupPoints: z.array(pickupPointSchema).optional(),
+	dropoffAvailable: z.boolean().optional(),
+	dropoffRequired: z.boolean().optional(),
+	dropoffPoints: z.array(dropoffPointSchema).optional(),
 	unitPricing: z.array(pricingUnitSchema).optional(),
 	pricing: pricingSchema.optional(),
 	offerCode: z.string().optional().nullable(),
@@ -47,8 +67,10 @@ export const availabilitySchema = z.object({
 	meetingPointLongitude: z.number().optional().nullable(),
 	meetingLocalDateTime: z.string().optional().nullable(),
 	tourGroup: tourGroupSchema.optional().nullable(),
-	fare: z.any().optional(),
+	fare: fareSchema.optional().nullable(),
 	notices: z.array(noticeSchema).optional(),
 	extraPricing: z.array(extraPricingSchema).optional(),
 	hasResources: z.boolean().optional(),
+	mappings: z.array(mappingSchema).optional(),
+	packageAvailabilities: z.array(packageAvailabilitySchema).optional(),
 });

@@ -7,7 +7,6 @@ export const adyenPaymentMethodsConfigurationCardSchema = z.object({
 	billingAddressRequired: z.boolean(),
 	billingAddressMode: adyenPaymentMethodsConfigurationCardBillingAddressModeSchema,
 	data: z.object({
-		holderName: z.string(),
 		billingAddress: z.object({
 			street: z.string(),
 			postalCode: z.string(),
