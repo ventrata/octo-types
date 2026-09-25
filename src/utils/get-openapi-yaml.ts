@@ -17,4 +17,7 @@ async function fetchAndSaveYaml() {
 	console.log(`OpenAPI YAML saved to ${outputPath}`);
 }
 
-fetchAndSaveYaml().catch((e) => console.error(e));
+fetchAndSaveYaml().catch((error) => {
+	console.error(error);
+	process.exit(1);
+});
