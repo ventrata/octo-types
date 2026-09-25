@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { GiftExpiryUnit } from '../models/GiftExpiryUnit';
 
-export const giftExpiryUnitSchema = z.nativeEnum(GiftExpiryUnit);
+export const giftExpiryUnitSchema = z.enum(GiftExpiryUnit);

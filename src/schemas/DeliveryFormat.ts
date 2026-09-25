@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { DeliveryFormat } from '../models/DeliveryFormat';
 
-export const deliveryFormatSchema = z.nativeEnum(DeliveryFormat);
+export const deliveryFormatSchema = z.enum(DeliveryFormat);

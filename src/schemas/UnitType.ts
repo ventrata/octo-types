@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { UnitType } from '../models/UnitType';
 
-export const unitTypeSchema = z.nativeEnum(UnitType);
+export const unitTypeSchema = z.enum(UnitType);

@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { Env } from '../models/Env';
 
-export const envSchema = z.nativeEnum(Env);
+export const envSchema = z.enum(Env);

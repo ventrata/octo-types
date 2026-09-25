@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { NetDiscount } from '../models/NetDiscount';
 
-export const netDiscountSchema = z.nativeEnum(NetDiscount);
+export const netDiscountSchema = z.enum(NetDiscount);

@@ -2,6 +2,6 @@
 import { z } from 'zod';
 import { AdyenPaymentMethodsConfigurationCardBillingAddressMode } from '../models/AdyenPaymentMethodsConfigurationCardBillingAddressMode';
 
-export const adyenPaymentMethodsConfigurationCardBillingAddressModeSchema = z.nativeEnum(
+export const adyenPaymentMethodsConfigurationCardBillingAddressModeSchema = z.enum(
 	AdyenPaymentMethodsConfigurationCardBillingAddressMode,
 );

@@ -24,7 +24,7 @@ export const bookingReservationBodySchema = z.object({
 	uuid: z.string().optional(),
 	tags: z.array(z.string()).optional(),
 	orderId: z.string().optional(),
-	metadata: z.record(z.string()).optional(),
+	metadata: z.record(z.string(), z.string()).optional(),
 	pickupRequested: z.boolean().optional(),
 	pickupPointId: z.string().optional(),
 	pickupHotel: z.string().optional(),

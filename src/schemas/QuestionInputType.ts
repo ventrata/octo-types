@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { QuestionInputType } from '../models/QuestionInputType';
 
-export const questionInputTypeSchema = z.nativeEnum(QuestionInputType);
+export const questionInputTypeSchema = z.enum(QuestionInputType);

@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { ItineraryItemType } from '../models/ItineraryItemType';
 
-export const itineraryItemTypeSchema = z.nativeEnum(ItineraryItemType);
+export const itineraryItemTypeSchema = z.enum(ItineraryItemType);

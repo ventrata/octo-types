@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { RedemptionMethod } from '../models/RedemptionMethod';
 
-export const redemptionMethodSchema = z.nativeEnum(RedemptionMethod);
+export const redemptionMethodSchema = z.enum(RedemptionMethod);

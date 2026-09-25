@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { AdjustmentDiscount } from '../models/AdjustmentDiscount';
 
-export const adjustmentDiscountSchema = z.nativeEnum(AdjustmentDiscount);
+export const adjustmentDiscountSchema = z.enum(AdjustmentDiscount);

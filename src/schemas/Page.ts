@@ -8,7 +8,7 @@ export const pageSchema = z.object({
 	fullscreen: z.boolean(),
 	href: z.string().optional(),
 	availableLanguages: availableLanguagesItemSchema.nullable(),
-	meta: z.record(z.string()).optional(),
+	meta: z.record(z.string(), z.string()).optional(),
 	shortDescription: z.string().nullable(),
 	showFooter: z.boolean(),
 	showHeader: z.boolean(),

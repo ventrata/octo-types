@@ -93,7 +93,7 @@ export const productSchema: z.ZodType<Product> = z.lazy(() =>
 		outstandingBalanceShortDescription: z.string().optional(),
 		outstandingBalanceTitle: z.string().optional(),
 		href: z.string().optional().nullable(),
-		meta: z.record(z.string()).optional(),
+		meta: z.record(z.string(), z.string()).optional(),
 		links: z.array(linkSchema).optional(),
 		giftCardAllowed: z.boolean().optional(),
 		relatedProductIds: z.array(z.string()).optional(),

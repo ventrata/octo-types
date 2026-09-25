@@ -2,6 +2,6 @@
 import { z } from 'zod';
 import { AdyenPaymentMethodsConfigurationGooglePayBillingAddressParameters } from '../models/AdyenPaymentMethodsConfigurationGooglePayBillingAddressParameters';
 
-export const adyenPaymentMethodsConfigurationGooglePayBillingAddressParametersSchema = z.nativeEnum(
+export const adyenPaymentMethodsConfigurationGooglePayBillingAddressParametersSchema = z.enum(
 	AdyenPaymentMethodsConfigurationGooglePayBillingAddressParameters,
 );

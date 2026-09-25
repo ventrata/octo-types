@@ -8,7 +8,7 @@ export const articleSchema = z.object({
 	coverImageUrl: z.string().nullable(),
 	href: z.string().nullable(),
 	keywords: z.array(z.string()),
-	meta: z.record(z.string()),
+	meta: z.record(z.string(), z.string()),
 	shortDescription: z.string().nullable(),
 	title: z.string().nullable(),
 	videoUrl: z.string().nullable(),

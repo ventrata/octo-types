@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { Refund } from '../models/Refund';
 
-export const refundSchema = z.nativeEnum(Refund);
+export const refundSchema = z.enum(Refund);

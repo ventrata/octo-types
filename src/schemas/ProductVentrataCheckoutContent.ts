@@ -5,7 +5,7 @@ import { availableLanguagesSchema } from './AvailableLanguages';
 
 export const productVentrataCheckoutContentSchema = z.object({
 	href: z.string().optional().nullable(),
-	meta: z.record(z.string()).optional(),
+	meta: z.record(z.string(), z.string()).optional(),
 	links: z.array(linkSchema).optional(),
 	giftCardAllowed: z.boolean().optional(),
 	relatedProductIds: z.array(z.string()).optional(),

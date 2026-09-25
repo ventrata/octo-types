@@ -40,7 +40,7 @@ export const destinationSchema = z.object({
 	availableCurrencies: z.array(z.string()).optional(),
 	href: z.string().optional().nullable(),
 	availableLanguages: availableLanguagesItemSchema.optional().nullable(),
-	meta: z.record(z.string()).optional(),
+	meta: z.record(z.string(), z.string()).optional(),
 	pages: z.array(pageSchema).optional(),
 	articles: z.array(articleSchema).optional(),
 	navs: z.array(navSchema).optional(),

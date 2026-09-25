@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { DeliveryMethod } from '../models/DeliveryMethod';
 
-export const deliveryMethodSchema = z.nativeEnum(DeliveryMethod);
+export const deliveryMethodSchema = z.enum(DeliveryMethod);

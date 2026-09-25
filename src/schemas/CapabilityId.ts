@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { CapabilityId } from '../models/CapabilityId';
 
-export const capabilityIdSchema = z.nativeEnum(CapabilityId);
+export const capabilityIdSchema = z.enum(CapabilityId);

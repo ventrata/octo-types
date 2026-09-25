@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { ContactField } from '../models/ContactField';
 
-export const contactFieldSchema = z.nativeEnum(ContactField);
+export const contactFieldSchema = z.enum(ContactField);

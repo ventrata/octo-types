@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { ResellerStatus } from '../models/ResellerStatus';
 
-export const resellerStatusSchema = z.nativeEnum(ResellerStatus);
+export const resellerStatusSchema = z.enum(ResellerStatus);
