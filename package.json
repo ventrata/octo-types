@@ -31,7 +31,7 @@
 		"test": ""
 	},
 	"peerDependencies": {
-		"zod": "^3.25.0"
+		"zod": "^4.6.5"
 	},
 	"overrides": {
 		"js-yaml": "4.3.2",
@@ -39,15 +39,15 @@
 	},
 	"devDependencies": {
 		"@types/glob": "^8.1.0",
-		"@types/node": "^22.9.0",
-		"glob": "^11.0.3",
-		"openapi-typescript-codegen": "^0.29.0",
+		"@types/node": "^22.20.4",
+		"glob": "^11.1.0",
+		"openapi-typescript-codegen": "^0.31.0",
 		"ts-node": "^10.9.2",
-		"ts-to-zod": "^3.4.0",
-		"typescript": "^5.7.2",
-		"zod": "^3.25.0"
+		"ts-to-zod": "^5.1.0",
+		"typescript": "^5.9.3",
+		"zod": "^4.6.5"
 	},
 	"dependencies": {
-		"@biomejs/biome": "2.2.0"
+		"@biomejs/biome": "2.5.14"
 	}
 }

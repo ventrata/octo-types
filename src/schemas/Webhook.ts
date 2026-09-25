@@ -9,6 +9,6 @@ export const webhookSchema = z.object({
 	url: z.string().nullable(),
 	function: z.string().nullable(),
 	useContactLanguage: z.boolean(),
-	headers: z.record(z.string()),
+	headers: z.record(z.string(), z.string()),
 	capabilities: z.array(capabilityIdSchema),
 });

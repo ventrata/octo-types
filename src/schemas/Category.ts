@@ -14,5 +14,5 @@ export const categorySchema = z.object({
 	productIds: z.array(z.string()).optional(),
 	href: z.string().optional().nullable(),
 	availableLanguages: availableLanguagesItemSchema.optional().nullable(),
-	meta: z.record(z.string()).optional(),
+	meta: z.record(z.string(), z.string()).optional(),
 });

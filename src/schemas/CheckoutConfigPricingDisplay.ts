@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { CheckoutConfigPricingDisplay } from '../models/CheckoutConfigPricingDisplay';
 
-export const checkoutConfigPricingDisplaySchema = z.nativeEnum(CheckoutConfigPricingDisplay);
+export const checkoutConfigPricingDisplaySchema = z.enum(CheckoutConfigPricingDisplay);

@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { CheckoutSitemapEntryRel } from '../models/CheckoutSitemapEntryRel';
 
-export const checkoutSitemapEntryRelSchema = z.nativeEnum(CheckoutSitemapEntryRel);
+export const checkoutSitemapEntryRelSchema = z.enum(CheckoutSitemapEntryRel);

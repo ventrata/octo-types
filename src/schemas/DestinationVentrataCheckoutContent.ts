@@ -10,7 +10,7 @@ import { categorySchema } from './Category';
 export const destinationVentrataCheckoutContentSchema = z.object({
 	href: z.string().optional().nullable(),
 	availableLanguages: availableLanguagesSchema.optional().nullable(),
-	meta: z.record(z.string()).optional(),
+	meta: z.record(z.string(), z.string()).optional(),
 	pages: z.array(pageSchema).optional(),
 	articles: z.array(articleSchema).optional(),
 	navs: z.array(navSchema).optional(),

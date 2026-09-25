@@ -22,7 +22,7 @@ export const bookingUpdateBodySchema = z.object({
 	redeemed: z.boolean().optional(),
 	uuid: z.string().optional(),
 	tags: z.array(z.string()).optional(),
-	meta: z.record(z.string()).optional(),
+	meta: z.record(z.string(), z.string()).optional(),
 	pickupRequested: z.boolean().optional(),
 	pickupPointId: z.string().optional(),
 	pickupHotel: z.string().optional(),

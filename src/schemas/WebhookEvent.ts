@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { WebhookEvent } from '../models/WebhookEvent';
 
-export const webhookEventSchema = z.nativeEnum(WebhookEvent);
+export const webhookEventSchema = z.enum(WebhookEvent);

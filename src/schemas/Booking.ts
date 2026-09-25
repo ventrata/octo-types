@@ -89,7 +89,7 @@ export const bookingSchema: z.ZodType<Booking> = z.lazy(() =>
 		emailReceipt: z.boolean(),
 		orderNotes: z.string().nullable(),
 		label: labelSchema.nullable(),
-		metadata: z.record(z.any()),
+		metadata: z.record(z.string(), z.any()),
 		updatable: z.boolean(),
 		availabilityLocalDateStart: z.string().nullable(),
 		availabilityLocalDateEnd: z.string().nullable(),

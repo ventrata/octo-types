@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { AdjustmentPer } from '../models/AdjustmentPer';
 
-export const adjustmentPerSchema = z.nativeEnum(AdjustmentPer);
+export const adjustmentPerSchema = z.enum(AdjustmentPer);

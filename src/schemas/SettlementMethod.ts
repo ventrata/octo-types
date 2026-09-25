@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { SettlementMethod } from '../models/SettlementMethod';
 
-export const settlementMethodSchema = z.nativeEnum(SettlementMethod);
+export const settlementMethodSchema = z.enum(SettlementMethod);

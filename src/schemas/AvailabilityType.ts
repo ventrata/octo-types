@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { AvailabilityType } from '../models/AvailabilityType';
 
-export const availabilityTypeSchema = z.nativeEnum(AvailabilityType);
+export const availabilityTypeSchema = z.enum(AvailabilityType);

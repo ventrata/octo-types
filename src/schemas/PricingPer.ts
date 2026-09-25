@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { PricingPer } from '../models/PricingPer';
 
-export const pricingPerSchema = z.nativeEnum(PricingPer);
+export const pricingPerSchema = z.enum(PricingPer);

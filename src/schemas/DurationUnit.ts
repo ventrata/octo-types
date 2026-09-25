@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { DurationUnit } from '../models/DurationUnit';
 
-export const durationUnitSchema = z.nativeEnum(DurationUnit);
+export const durationUnitSchema = z.enum(DurationUnit);

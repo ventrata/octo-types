@@ -8,6 +8,6 @@ export const createWebhookBodySchema = z.object({
 	function: z.string().optional().nullable(),
 	event: webhookEventSchema,
 	useContactLanguage: z.boolean().optional(),
-	headers: z.record(z.string()).optional(),
+	headers: z.record(z.string(), z.string()).optional(),
 	capabilities: z.array(capabilityIdSchema).optional(),
 });

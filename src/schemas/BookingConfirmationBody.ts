@@ -9,7 +9,7 @@ export const bookingConfirmationBodySchema = z.object({
 	unitItems: z.array(unitItemIdentifierSchema).optional(),
 	contact: bookingContactSchema,
 	notes: z.string().optional(),
-	metadata: z.record(z.string()).optional(),
+	metadata: z.record(z.string(), z.string()).optional(),
 	pickupRequested: z.boolean().optional(),
 	pickupPointId: z.string().optional(),
 	pickupHotel: z.string().optional(),

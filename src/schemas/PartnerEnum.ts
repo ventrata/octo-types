@@ -2,4 +2,4 @@
 import { z } from 'zod';
 import { PartnerEnum } from '../models/PartnerEnum';
 
-export const partnerEnumSchema = z.nativeEnum(PartnerEnum);
+export const partnerEnumSchema = z.enum(PartnerEnum);

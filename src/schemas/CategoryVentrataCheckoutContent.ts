@@ -5,5 +5,5 @@ import { availableLanguagesSchema } from './AvailableLanguages';
 export const categoryVentrataCheckoutContentSchema = z.object({
 	href: z.string().optional().nullable(),
 	availableLanguages: availableLanguagesSchema.optional().nullable(),
-	meta: z.record(z.string()).optional(),
+	meta: z.record(z.string(), z.string()).optional(),
 });
