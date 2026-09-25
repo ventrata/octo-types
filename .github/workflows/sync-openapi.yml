@@ -1,0 +1,91 @@
+name: Sync OpenAPI
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+  repository_dispatch:
+    types: [openapi-updated]
+
+env:
+  NODE_VERSION: 22.9.0
+  BRANCH: chore/sync-openapi
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    name: Sync OpenAPI and open PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - uses: actions/cache@v4
+        name: Setup node modules cache
+        id: cache-node-modules
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('./package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Install node modules
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm install --no-lockfile --ignore-scripts --prefer-offline --unsafe-perm
+
+      - name: Fetch OpenAPI contract
+        run: npm run get:openapi:yaml
+
+      - name: Check for OpenAPI changes
+        id: diff
+        run: |
+          if git diff --quiet -- src/openapi.yaml; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "OpenAPI contract is already up to date"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "OpenAPI contract changed"
+          fi
+
+      - name: Regenerate models and schemas
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          npm run generate:models
+          npm run generate:schemas
+          npm run fix
+          npm version patch --no-git-tag-version
+
+      - name: Commit, push, and open PR
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git add -A
+          git commit -m "chore: sync OpenAPI contract"
+          git push -u origin HEAD --force
+
+          if gh pr view "$BRANCH" --json number --jq .number > /dev/null 2>&1; then
+            echo "Updated existing PR for $BRANCH"
+          else
+            gh pr create --base main --head "$BRANCH" \
+              --title "chore: sync OpenAPI contract" \
+              --body "## Summary
+- Fetched the latest OpenAPI YAML from ventrata/octo-typespec
+- Regenerated models and Zod schemas
+- Bumped the package patch version so the version check passes"
+          fi
