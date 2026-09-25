@@ -84,8 +84,5 @@ jobs:
           else
             gh pr create --base main --head "$BRANCH" \
               --title "chore: sync OpenAPI contract" \
-              --body "## Summary
-- Fetched the latest OpenAPI YAML from ventrata/octo-typespec
-- Regenerated models and Zod schemas
-- Bumped the package patch version so the version check passes"
+              --body "Fetched the latest OpenAPI YAML from ventrata/octo-typespec, regenerated models and Zod schemas, and bumped the package patch version."
           fi
