@@ -4,35 +4,34 @@ on:
   schedule:
     - cron: '0 6 * * *'
   workflow_dispatch:
-  repository_dispatch:
-    types: [openapi-updated]
+
+permissions:
+  contents: read
+  id-token: write
 
 env:
   NODE_VERSION: 22.9.0
+  SERVICE_ACCOUNT_CI: ventrata-openapi-sync-ci@ventrata-prod.iam.gserviceaccount.com
   BRANCH: chore/sync-openapi
-
-permissions:
-  contents: write
-  pull-requests: write
 
 jobs:
   sync:
     name: Sync OpenAPI and open PR
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    environment: openapi-sync
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         name: Setup node modules cache
         id: cache-node-modules
         with:
@@ -44,6 +43,29 @@ jobs:
       - name: Install node modules
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --no-lockfile --ignore-scripts --prefer-offline --unsafe-perm
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ env.SERVICE_ACCOUNT_CI }}
+
+      - name: Get GitHub App credentials
+        id: secrets
+        uses: google-github-actions/get-secretmanager-secrets@2b5f97c5a4b9c105e64646762ad4fc3f5128e6f5 # v2.2.5
+        with:
+          secrets: |-
+            GH_APP_PEM:ventrata-prod/ventrata-openapi-sync--pem
+            GH_APP:ventrata-prod/ventrata-openapi-sync--app
+
+      - name: Create GitHub App installation token
+        id: app-token
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
+        with:
+          app-id: ${{ steps.secrets.outputs.GH_APP }}
+          private-key: ${{ steps.secrets.outputs.GH_APP_PEM }}
+          owner: ${{ github.repository_owner }}
+          repositories: octo-types
 
       - name: Fetch OpenAPI contract
         run: npm run get:openapi:yaml
@@ -70,14 +92,14 @@ jobs:
       - name: Commit, push, and open PR
         if: steps.diff.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "openapi-sync[bot]"
+          git config user.email "openapi-sync[bot]@users.noreply.github.com"
           git checkout -B "$BRANCH"
           git add -A
           git commit -m "chore: sync OpenAPI contract"
-          git push -u origin HEAD --force
+          git push --force "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" "HEAD:${BRANCH}"
 
           if gh pr view "$BRANCH" --json number --jq .number > /dev/null 2>&1; then
             echo "Updated existing PR for $BRANCH"
