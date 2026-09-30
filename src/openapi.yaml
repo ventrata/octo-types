@@ -3459,16 +3459,6 @@ components:
         type: string
       explode: false
   schemas:
-    AdjustmentDiscount:
-      type: string
-      enum:
-        - NONE
-        - FULL
-        - SPLIT
-        - PRORATED
-        - MANUAL
-      description: The type of discount. Possible values are `NONE`, `FULL`, `SPLIT`, `PRORATED` or `MANUAL`
-      example: FULL
     AdjustmentPer:
       type: string
       enum:
@@ -6964,7 +6954,6 @@ components:
             - per: UNIT
               amount: 10
               notes: ""
-              netDiscount: FULL
           x-oapi-codegen-extra-tags:
             capability: octo/adjustments
           x-capability-data:
@@ -7418,7 +7407,6 @@ components:
         - per
         - amount
         - notes
-        - netDiscount
       properties:
         per:
           allOf:
@@ -7436,11 +7424,6 @@ components:
           nullable: true
           description: Optional notes for the adjustment.
           example: ""
-        netDiscount:
-          allOf:
-            - $ref: "#/components/schemas/AdjustmentDiscount"
-          description: ""
-          example: FULL
     BookingAdjustments:
       type: object
       properties:
@@ -7453,7 +7436,6 @@ components:
             - per: UNIT
               amount: 10
               notes: ""
-              netDiscount: FULL
           x-oapi-codegen-extra-tags:
             capability: octo/adjustments
           x-capability-data:
@@ -12221,6 +12203,55 @@ components:
       enum:
         - live
         - test
+    ExpediaTicketTypePrice:
+      type: object
+      required:
+        - ticketType
+        - minimumAge
+        - maximumAge
+        - minimumGroupSize
+        - maximumGroupSize
+        - partnerTicketTypeId
+      properties:
+        ticketType:
+          type: string
+          enum:
+            - Adult
+            - Youth
+            - Child
+            - Infant
+            - Senior
+            - Student
+            - Traveler
+        minimumAge:
+          type: integer
+        maximumAge:
+          type: integer
+        minimumGroupSize:
+          type: integer
+        maximumGroupSize:
+          type: integer
+        partnerTicketTypeId:
+          type: string
+        basePrice:
+          type: string
+        netPrice:
+          type: string
+    ExpediaVolumeBasedPricing:
+      type: object
+      required:
+        - priceType
+        - ticketTypePrices
+      properties:
+        priceType:
+          type: string
+          enum:
+            - VolumeBasedPerGroup
+            - VolumeBasedPerTraveler
+        ticketTypePrices:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExpediaTicketTypePrice"
     ExtendOrderBody:
       type: object
       properties:
@@ -12380,6 +12411,73 @@ components:
           x-capability-data:
             capability: octo/content
             required: true
+        shortDescription:
+          type: string
+          nullable: true
+          description: Short description of the extra. Only present when octo/content capability is requested.
+          example: Skip the line!
+          x-oapi-codegen-extra-tags:
+            capability: octo/content
+            resolver: Content.ShortDescription
+          x-capability-data:
+            capability: octo/content
+            required: true
+        duration:
+          type: string
+          nullable: true
+          description: |-
+            Human readable duration of the extra.
+            This field can be hidden by `hide_duration`.
+            Only present when octo/content capability is requested.
+          example: 3 hours
+          x-oapi-codegen-extra-tags:
+            capability: octo/content
+            resolver: Content.Duration
+          x-capability-data:
+            capability: octo/content
+            required: true
+        durationAmount:
+          type: number
+          nullable: true
+          description: |-
+            The duration amount of the extra.
+            This field can be hidden by `hide_duration`.
+            Only present when octo/content capability is requested.
+          example: 3
+          x-go-type: float64
+          x-oapi-codegen-extra-tags:
+            capability: octo/content
+            resolver: Content.DurationAmount
+          x-capability-data:
+            capability: octo/content
+            required: true
+        durationUnit:
+          allOf:
+            - $ref: "#/components/schemas/DurationUnit"
+          nullable: true
+          description: |-
+            The duration unit. Possible values are `hour`, `minute`, `day`.
+            This field can be hidden by `hide_duration`.
+            Only present when octo/content capability is requested.
+          example: hour
+          x-oapi-codegen-extra-tags:
+            capability: octo/content
+            resolver: Content.DurationUnit
+          x-capability-data:
+            capability: octo/content
+            required: true
+        coverImageUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: Cover image URL of the extra. Only present when octo/content capability is requested.
+          example: null
+          x-oapi-codegen-extra-tags:
+            capability: octo/content
+            resolver: Content.CoverImageUrl
+          x-capability-data:
+            capability: octo/content
+            required: true
       example:
         id: extra-001
         internalName: fast_track_entry
@@ -12428,8 +12526,80 @@ components:
           x-capability-data:
             capability: octo/content
             required: true
+        shortDescription:
+          type: string
+          nullable: true
+          description: Short description of the extra. Only present when octo/content capability is requested.
+          example: Skip the line!
+          x-oapi-codegen-extra-tags:
+            capability: octo/content
+            resolver: Content.ShortDescription
+          x-capability-data:
+            capability: octo/content
+            required: true
+        duration:
+          type: string
+          nullable: true
+          description: |-
+            Human readable duration of the extra.
+            This field can be hidden by `hide_duration`.
+            Only present when octo/content capability is requested.
+          example: 3 hours
+          x-oapi-codegen-extra-tags:
+            capability: octo/content
+            resolver: Content.Duration
+          x-capability-data:
+            capability: octo/content
+            required: true
+        durationAmount:
+          type: number
+          nullable: true
+          description: |-
+            The duration amount of the extra.
+            This field can be hidden by `hide_duration`.
+            Only present when octo/content capability is requested.
+          example: 3
+          x-go-type: float64
+          x-oapi-codegen-extra-tags:
+            capability: octo/content
+            resolver: Content.DurationAmount
+          x-capability-data:
+            capability: octo/content
+            required: true
+        durationUnit:
+          allOf:
+            - $ref: "#/components/schemas/DurationUnit"
+          nullable: true
+          description: |-
+            The duration unit. Possible values are `hour`, `minute`, `day`.
+            This field can be hidden by `hide_duration`.
+            Only present when octo/content capability is requested.
+          example: hour
+          x-oapi-codegen-extra-tags:
+            capability: octo/content
+            resolver: Content.DurationUnit
+          x-capability-data:
+            capability: octo/content
+            required: true
+        coverImageUrl:
+          type: string
+          format: uri
+          nullable: true
+          description: Cover image URL of the extra. Only present when octo/content capability is requested.
+          example: null
+          x-oapi-codegen-extra-tags:
+            capability: octo/content
+            resolver: Content.CoverImageUrl
+          x-capability-data:
+            capability: octo/content
+            required: true
       example:
         title: Fast Track Entry
+        shortDescription: Skip the line!
+        duration: 3 hours
+        durationAmount: 3
+        durationUnit: hour
+        coverImageUrl: null
     ExtraItem:
       type: object
       required:
@@ -12966,6 +13136,11 @@ components:
         gygLoginOTPSecret: OTPSECRET123
         gygSupplierId: "7890"
         gygSupplierName: Tour Supplier Inc.
+    GetYourGuideBookingCategory:
+      type: string
+      enum:
+        - STANDARD
+        - FREE_NO_TICKET
     GetYourGuideConnection:
       type: object
       required:
@@ -13015,6 +13190,105 @@ components:
         gygSupplierId: "7890"
         gygSupplierName: Tour Supplier Inc.
         gygActivated: true
+    GetYourGuidePrice:
+      type: object
+      required:
+        - priceType
+        - price
+        - currency
+      properties:
+        priceType:
+          $ref: "#/components/schemas/GetYourGuidePriceType"
+        price:
+          type: integer
+        currency:
+          type: string
+    GetYourGuidePriceType:
+      type: string
+      enum:
+        - RETAIL_PRICE
+    GetYourGuidePricingCategory:
+      type: object
+      required:
+        - category
+        - minTicketAmount
+        - maxTicketAmount
+        - groupSizeMin
+        - groupSizeMax
+        - ageFrom
+        - ageTo
+        - bookingCategory
+        - price
+        - tiers
+      properties:
+        category:
+          type: string
+        minTicketAmount:
+          type: integer
+          nullable: true
+        maxTicketAmount:
+          type: integer
+          nullable: true
+        groupSizeMin:
+          type: integer
+        groupSizeMax:
+          type: integer
+          nullable: true
+        ageFrom:
+          type: integer
+          nullable: true
+        ageTo:
+          type: integer
+          nullable: true
+        bookingCategory:
+          $ref: "#/components/schemas/GetYourGuideBookingCategory"
+        price:
+          type: array
+          items:
+            $ref: "#/components/schemas/GetYourGuidePrice"
+        tiers:
+          type: array
+          items:
+            $ref: "#/components/schemas/GetYourGuidePricingTier"
+          nullable: true
+    GetYourGuidePricingTier:
+      type: object
+      required:
+        - lowerBound
+        - upperBound
+        - price
+        - currency
+      properties:
+        lowerBound:
+          type: integer
+        upperBound:
+          type: integer
+        price:
+          type: integer
+        currency:
+          type: string
+    GetYourGuideTier:
+      type: object
+      required:
+        - lowerBound
+        - upperBound
+      properties:
+        lowerBound:
+          type: integer
+        upperBound:
+          type: integer
+    GetYourGuideTiersByCategory:
+      type: object
+      required:
+        - category
+        - tiers
+      properties:
+        category:
+          type: string
+        tiers:
+          type: array
+          items:
+            $ref: "#/components/schemas/GetYourGuideTier"
     Gift:
       type: object
       required:
@@ -15917,6 +16191,47 @@ components:
           x-capability-data:
             capability: octo/rentals
             required: true
+        hasTieredPrices:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/getyourguide,ventrata/viator
+            resolver: TieredPricing.HasTieredPrices
+            omitnil: "true"
+          x-capability-data:
+            capability: ventrata/getyourguide,ventrata/viator
+            required: true
+        tiersByCategory:
+          type: array
+          items:
+            $ref: "#/components/schemas/GetYourGuideTiersByCategory"
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/getyourguide,ventrata/viator
+            resolver: TieredPricing.TiersByCategory
+            omitnil: "true"
+          x-capability-data:
+            capability: ventrata/getyourguide,ventrata/viator
+            required: true
+        hasVolumeBasedPricing:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/expedia
+            resolver: Expedia.HasVolumeBasedPricing
+            omitnil: "true"
+          x-capability-data:
+            capability: ventrata/expedia
+            required: true
+        volumeBasedPricing:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/ExpediaVolumeBasedPricing"
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/expedia
+            resolver: Expedia.VolumeBasedPricing
+          x-capability-data:
+            capability: ventrata/expedia
+            required: true
       example:
         id: DEFAULT
         default: true
@@ -16163,6 +16478,29 @@ components:
         itinerary: []
         fromPoint: null
         toPoint: null
+    OptionExpedia:
+      type: object
+      properties:
+        hasVolumeBasedPricing:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/expedia
+            resolver: Expedia.HasVolumeBasedPricing
+            omitnil: "true"
+          x-capability-data:
+            capability: ventrata/expedia
+            required: true
+        volumeBasedPricing:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/ExpediaVolumeBasedPricing"
+          nullable: true
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/expedia
+            resolver: Expedia.VolumeBasedPricing
+          x-capability-data:
+            capability: ventrata/expedia
+            required: true
     OptionExtras:
       type: object
       properties:
@@ -16175,6 +16513,30 @@ components:
             resolver: Extras
           x-capability-data:
             capability: octo/extras
+            required: true
+    OptionGetYourGuide:
+      type: object
+      properties:
+        hasTieredPrices:
+          type: boolean
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/getyourguide,ventrata/viator
+            resolver: TieredPricing.HasTieredPrices
+            omitnil: "true"
+          x-capability-data:
+            capability: ventrata/getyourguide,ventrata/viator
+            required: true
+        tiersByCategory:
+          type: array
+          items:
+            $ref: "#/components/schemas/GetYourGuideTiersByCategory"
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/getyourguide,ventrata/viator
+            resolver: TieredPricing.TiersByCategory
+            omitnil: "true"
+          x-capability-data:
+            capability: ventrata/getyourguide,ventrata/viator
             required: true
     OptionPackages:
       type: object
@@ -20862,7 +21224,6 @@ components:
             - per: UNIT
               amount: 10
               notes: ""
-              netDiscount: FULL
           x-oapi-codegen-extra-tags:
             capability: octo/adjustments
           x-capability-data:
@@ -22155,6 +22516,28 @@ components:
           x-capability-data:
             capability: octo/redemption
             required: true
+        pricingCategory:
+          allOf:
+            - $ref: "#/components/schemas/GetYourGuidePricingCategory"
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/getyourguide
+            resolver: PricingCategory
+            omitnil: "true"
+          x-capability-data:
+            capability: ventrata/getyourguide
+            required: true
+        ticketTypePrices:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExpediaTicketTypePrice"
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/expedia
+            resolver: TicketTypePrices
+            omitnil: "true"
+          x-capability-data:
+            capability: ventrata/expedia
+            required: true
       example:
         id: adult_697e3ce8-1860-4cbf-80ad-95857df1f640
         internalName: Adult(s)
@@ -22208,6 +22591,21 @@ components:
         title: ""
         titlePlural: ""
         subtitle: null
+    UnitExpedia:
+      type: object
+      properties:
+        ticketTypePrices:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExpediaTicketTypePrice"
+          x-go-type-skip-optional-pointer: true
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/expedia
+            resolver: TicketTypePrices
+            omitnil: "true"
+          x-capability-data:
+            capability: ventrata/expedia
+            required: true
     UnitExtras:
       type: object
       properties:
@@ -22220,6 +22618,19 @@ components:
             resolver: Extras
           x-capability-data:
             capability: octo/extras
+            required: true
+    UnitGetYourGuide:
+      type: object
+      properties:
+        pricingCategory:
+          allOf:
+            - $ref: "#/components/schemas/GetYourGuidePricingCategory"
+          x-oapi-codegen-extra-tags:
+            capability: ventrata/getyourguide
+            resolver: PricingCategory
+            omitnil: "true"
+          x-capability-data:
+            capability: ventrata/getyourguide
             required: true
     UnitItem:
       type: object
