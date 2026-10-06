@@ -25,6 +25,16 @@
 			"types": "./dist/schemas/*.d.ts",
 			"import": "./dist/esm/schemas/*.js",
 			"require": "./dist/schemas/*.js"
+		},
+		"./schemas-mini": {
+			"types": "./dist/schemas-mini/index.d.ts",
+			"import": "./dist/esm/schemas-mini/index.js",
+			"require": "./dist/schemas-mini/index.js"
+		},
+		"./schemas-mini/*": {
+			"types": "./dist/schemas-mini/*.d.ts",
+			"import": "./dist/esm/schemas-mini/*.js",
+			"require": "./dist/schemas-mini/*.js"
 		}
 	},
 	"files": [
@@ -34,12 +44,14 @@
 		"get:openapi:yaml": "ts-node src/utils/get-openapi-yaml.ts",
 		"generate:models": "openapi --input src/openapi.yaml --output src/ --exportCore false --exportServices false --client none",
 		"generate:schemas": "ts-node src/utils/generate-schemas.ts",
+		"generate:schemas-mini": "node scripts/generate-zod-mini-schemas.mjs",
 		"clean": "rm -rf dist",
-		"generate": "npm run get:openapi:yaml && npm run generate:models && npm run generate:schemas && npm run fix",
+		"generate": "npm run get:openapi:yaml && npm run generate:models && npm run generate:schemas && npm run generate:schemas-mini && npm run fix",
 		"build": "tsc -p tsconfig.json && tsc -p tsconfig.esm.json && node scripts/prepare-esm.mjs",
 		"build:dry": "tsc --noEmit",
 		"build:dry:ci": "tsc --noEmit",
 		"check": "npm run build:dry && npm run format && npm run lint",
+		"test:prepare-esm": "node scripts/prepare-esm.test.mjs",
 		"fix": "biome check --write .",
 		"format": "biome format",
 		"format:fix": "biome format --write .",
