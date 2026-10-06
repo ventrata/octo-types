@@ -1,6 +1,6 @@
 {
 	"name": "@ventrata/octo-types",
-	"version": "0.1.02",
+	"version": "0.1.2",
 	"private": false,
 	"license": "ISC",
 	"types": "dist/index.d.ts",
@@ -8,6 +8,25 @@
 		"url": "https://github.com/ventrata/octo-types"
 	},
 	"main": "dist/index.js",
+	"module": "dist/esm/index.js",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/esm/index.js",
+			"require": "./dist/index.js"
+		},
+		"./models/*": {
+			"types": "./dist/models/*.d.ts",
+			"import": "./dist/esm/models/*.js",
+			"require": "./dist/models/*.js"
+		},
+		"./schemas/*": {
+			"types": "./dist/schemas/*.d.ts",
+			"import": "./dist/esm/schemas/*.js",
+			"require": "./dist/schemas/*.js"
+		}
+	},
 	"files": [
 		"dist"
 	],
@@ -17,7 +36,7 @@
 		"generate:schemas": "ts-node src/utils/generate-schemas.ts",
 		"clean": "rm -rf dist",
 		"generate": "npm run get:openapi:yaml && npm run generate:models && npm run generate:schemas && npm run fix",
-		"build": "npx tsc",
+		"build": "tsc -p tsconfig.json && tsc -p tsconfig.esm.json && node scripts/prepare-esm.mjs",
 		"build:dry": "tsc --noEmit",
 		"build:dry:ci": "tsc --noEmit",
 		"check": "npm run build:dry && npm run format && npm run lint",

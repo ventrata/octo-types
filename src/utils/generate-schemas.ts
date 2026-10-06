@@ -112,6 +112,7 @@ async function buildSchema(modelFile: string, modelsDir: string, schemasDir: str
 	text = importPlaceholderSchemas(text, modelText);
 	text = applyRules(text, path.basename(modelFile, '.ts'));
 	text = dropUnusedZodImport(text);
+	text = useZodNamespaceImport(text);
 	text = tidyBlankLines(text);
 
 	return {
@@ -170,6 +171,10 @@ function dropUnusedZodImport(schemaText: string): string {
 	if (schemaText.includes('z.')) return schemaText;
 
 	return schemaText.replace(/import\s*\{\s*z\s*\}\s*from\s*["']zod["'];\s*\n?/g, '');
+}
+
+function useZodNamespaceImport(schemaText: string): string {
+	return schemaText.replace(/import\s*\{\s*z\s*\}\s*from\s*(['"])zod\1;/, 'import * as z from $1zod$1;');
 }
 
 function findSchemaExports(schemaText: string, modelText: string): SchemaExport[] {
