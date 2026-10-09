@@ -1,6 +1,6 @@
 import { promises } from 'node:fs';
 import * as path from 'node:path';
-export async function normalizeUuidModel(modelsDir: string): Promise<void> {
+export async function normalizeUuidModel(modelsDir: string, indexPath: string): Promise<void> {
 	const uuidPath = path.join(modelsDir, 'UUID.ts');
 	const uuidText = await promises.readFile(uuidPath, 'utf-8');
 
@@ -19,7 +19,6 @@ export async function normalizeUuidModel(modelsDir: string): Promise<void> {
 			}),
 	);
 
-	const indexPath = path.resolve(process.cwd(), 'src/index.ts');
 	const indexText = await promises.readFile(indexPath, 'utf-8');
 	await promises.writeFile(
 		indexPath,

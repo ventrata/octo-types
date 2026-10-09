@@ -1,6 +1,15 @@
 import * as path from 'node:path';
 import ts from 'typescript';
-import { findCyclicNodes } from './dependencies';
+import {
+	findExportedSchemaNames,
+	isExported,
+	isZodCall,
+	isZodImport,
+	parse,
+	transform,
+	zodNamespaceImport,
+} from '../ast.mts';
+import { findCyclicNodes } from './dependencies.mts';
 
 export type SchemaExport = {
 	schemaName: string;
@@ -19,8 +28,7 @@ export function importPlaceholderSchemas(schemaText: string, modelText: string):
 	const imports: string[] = [];
 	const source = parse(schemaText);
 	const statements = source.statements.filter((statement) => {
-		if (!ts.isVariableStatement(statement) || statement.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword))
-			return true;
+		if (!ts.isVariableStatement(statement) || isExported(statement)) return true;
 		if (statement.declarationList.declarations.length !== 1) return true;
 		const declaration = statement.declarationList.declarations[0];
 		if (
@@ -51,23 +59,6 @@ export function importedModelFileNames(modelText: string): Map<string, string> {
 	return fileNames;
 }
 
-export function applyRules(schemaText: string, modelName: string): string {
-	const ruleName = `${modelName.charAt(0).toLowerCase()}${modelName.slice(1)}Rule`;
-	const text = transform(schemaText, (node, factory) => {
-		if (!ts.isVariableDeclaration(node) || !node.initializer || !isZodCall(node.initializer, 'object')) return node;
-		return factory.updateVariableDeclaration(
-			node,
-			node.name,
-			node.exclamationToken,
-			node.type,
-			factory.createCallExpression(factory.createPropertyAccessExpression(node.initializer, 'superRefine'), undefined, [
-				factory.createCallExpression(factory.createIdentifier(ruleName), undefined, []),
-			]),
-		);
-	});
-	return appendImports(text, [`import { ${ruleName} } from '../rules/${modelName}';`]);
-}
-
 export function dropUnusedZodImport(schemaText: string): string {
 	const source = parse(schemaText);
 	let used = false;
@@ -79,33 +70,14 @@ export function dropUnusedZodImport(schemaText: string): string {
 	visit(source);
 	if (used) return schemaText;
 	let text = schemaText;
-	const imports = source.statements.filter(
-		(statement) =>
-			ts.isImportDeclaration(statement) &&
-			ts.isStringLiteral(statement.moduleSpecifier) &&
-			statement.moduleSpecifier.text === 'zod',
-	);
+	const imports = source.statements.filter(isZodImport);
 	for (const statement of imports.reverse())
 		text = text.slice(0, statement.getStart(source)) + text.slice(statement.end);
 	return text;
 }
 
 export function useZodNamespaceImport(schemaText: string): string {
-	return transform(schemaText, (node, factory) => {
-		if (
-			!ts.isImportDeclaration(node) ||
-			!ts.isStringLiteral(node.moduleSpecifier) ||
-			node.moduleSpecifier.text !== 'zod'
-		)
-			return node;
-		return factory.updateImportDeclaration(
-			node,
-			node.modifiers,
-			factory.createImportClause(false, undefined, factory.createNamespaceImport(factory.createIdentifier('z'))),
-			node.moduleSpecifier,
-			node.attributes,
-		);
-	});
+	return transform(schemaText, (node, factory) => (isZodImport(node) ? zodNamespaceImport(node, factory) : node));
 }
 
 export function findSchemaExports(schemaText: string, modelText: string): SchemaExport[] {
@@ -115,7 +87,7 @@ export function findSchemaExports(schemaText: string, modelText: string): Schema
 			(ts.isTypeAliasDeclaration(statement) ||
 				ts.isInterfaceDeclaration(statement) ||
 				ts.isEnumDeclaration(statement)) &&
-			statement.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)
+			isExported(statement)
 		) {
 			typeNames.set(toSchemaName(statement.name.text), statement.name.text);
 		}
@@ -270,16 +242,6 @@ export function assertSchemasAreComplete(schemas: GeneratedSchema[]): void {
 	}
 }
 
-export function findExportedSchemaNames(schemaText: string): string[] {
-	return parse(schemaText).statements.flatMap((statement) => {
-		if (!ts.isVariableStatement(statement) || !statement.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword))
-			return [];
-		return statement.declarationList.declarations.flatMap((declaration) =>
-			ts.isIdentifier(declaration.name) && declaration.name.text.endsWith('Schema') ? [declaration.name.text] : [],
-		);
-	});
-}
-
 export function appendImports(text: string, imports: string[]): string {
 	if (!imports.length) return text;
 	const source = parse(text);
@@ -314,33 +276,6 @@ export function toModuleSpecifier(relativePath: string): string {
 	const modulePath = relativePath.replace(/\.ts$/, '').split(path.sep).join('/');
 
 	return modulePath.startsWith('.') ? modulePath : `./${modulePath}`;
-}
-
-function parse(text: string): ts.SourceFile {
-	return ts.createSourceFile('schema.ts', text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-}
-function transform(text: string, rewrite: (node: ts.Node, factory: ts.NodeFactory) => ts.Node): string {
-	const result = ts.transform(parse(text), [
-		(context) => {
-			const visit: ts.Visitor = (node) => rewrite(ts.visitEachChild(node, visit, context), context.factory);
-			return (source) => ts.visitNode(source, visit) as ts.SourceFile;
-		},
-	]);
-	try {
-		return ts.createPrinter({ newLine: ts.NewLineKind.LineFeed }).printFile(result.transformed[0]);
-	} finally {
-		result.dispose();
-	}
-}
-function isZodCall(node: ts.Node | undefined, name: string): boolean {
-	return (
-		!!node &&
-		ts.isCallExpression(node) &&
-		ts.isPropertyAccessExpression(node.expression) &&
-		ts.isIdentifier(node.expression.expression) &&
-		node.expression.expression.text === 'z' &&
-		node.expression.name.text === name
-	);
 }
 
 function hasRequiredAny(text: string): boolean {

@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import test from 'node:test';
@@ -9,24 +8,24 @@ import ts from 'typescript';
 
 const projectRoot = path.resolve(import.meta.dirname, '..');
 const require = createRequire(import.meta.url);
+// Resolved at runtime from the built dist/ (built by `npm run test:package`), so type-check them as any.
+const load = (specifier: string): Promise<any> => import(specifier);
 
 test('package supports CJS, ESM, TypeScript and browser tree-shaking', async () => {
-	execFileSync('npm', ['run', 'build'], { cwd: projectRoot, stdio: 'inherit' });
-
 	const cjs = require('@ventrata/octo-types');
 	assert.ok(cjs.CapabilityId, 'CommonJS entry point should export CapabilityId');
 
-	const esm = await import('@ventrata/octo-types');
+	const esm = await load('@ventrata/octo-types');
 	assert.ok(esm.CapabilityId, 'native ESM entry point should export CapabilityId');
 
-	const classic = await import('@ventrata/octo-types/schemas/BookingGifts');
-	const mini = await import('@ventrata/octo-types/schemas-mini/BookingGifts');
+	const classic = await load('@ventrata/octo-types/schemas/BookingGifts');
+	const mini = await load('@ventrata/octo-types/schemas-mini/BookingGifts');
 	for (const value of [{ giftPayment: null }, {}]) {
 		assert.equal(mini.bookingGiftsSchema.safeParse(value).success, classic.bookingGiftsSchema.safeParse(value).success);
 	}
 
-	const classicIndex = await import('@ventrata/octo-types');
-	const miniIndex = await import('@ventrata/octo-types/schemas-mini');
+	const classicIndex = await load('@ventrata/octo-types');
+	const miniIndex = await load('@ventrata/octo-types/schemas-mini');
 	assert.deepEqual(
 		Object.keys(miniIndex).sort(),
 		Object.keys(classicIndex)
@@ -62,7 +61,7 @@ test('package supports CJS, ESM, TypeScript and browser tree-shaking', async () 
 		};
 		const host = ts.createCompilerHost(options);
 		const readFile = host.readFile.bind(host);
-		host.readFile = (name) => (name === fileName ? contents : readFile(name));
+		host.readFile = (name: string) => (name === fileName ? contents : readFile(name));
 		const program = ts.createProgram([fileName], options, host);
 		const diagnostics = ts.getPreEmitDiagnostics(program);
 		assert.equal(
@@ -76,7 +75,7 @@ test('package supports CJS, ESM, TypeScript and browser tree-shaking', async () 
 		);
 	}
 
-	async function bundle(source) {
+	async function bundle(source: string): Promise<number> {
 		const result = await build({
 			stdin: { contents: source, resolveDir: projectRoot, sourcefile: 'bundle-test.mjs' },
 			bundle: true,

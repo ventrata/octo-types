@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createRequire } from 'node:module';
 import ts from 'typescript';
-import { transformSchemaSource } from './generate-zod-mini-schemas.mjs';
+import { transformSchemaSource } from './generate-zod-mini-schemas.mts';
 
 const input = `
 import * as z from 'zod';
@@ -21,9 +21,9 @@ test('classic and Mini schemas parse recursive intersections with identical resu
 		export const treeSchema: z.ZodType<Tree> = z.lazy(() =>
 			z.object({ name: z.string() }).and(z.object({ children: z.array(treeSchema).optional().nullable() })));
 	`;
-	const evaluate = (text) => {
+	const evaluate = (text: string) => {
 		const { outputText } = ts.transpileModule(text, { compilerOptions: { module: ts.ModuleKind.CommonJS } });
-		const exports = {};
+		const exports: Record<string, any> = {};
 		new Function('require', 'exports', outputText)(createRequire(import.meta.url), exports);
 		return exports.treeSchema;
 	};

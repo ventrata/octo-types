@@ -3,8 +3,13 @@
 	"compilerOptions": {
 		"rootDir": ".",
 		"noEmit": true,
-		"checkJs": false
+		"target": "ES2023",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"allowImportingTsExtensions": true,
+		"erasableSyntaxOnly": true,
+		"verbatimModuleSyntax": true
 	},
-	"include": ["scripts/**/*.ts"],
+	"include": ["scripts/**/*.mts"],
 	"exclude": ["node_modules", "dist"]
 }

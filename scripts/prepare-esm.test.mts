@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { rewriteRelativeImportSpecifiers } from './prepare-esm.mjs';
+import { rewriteRelativeImportSpecifiers } from './prepare-esm.mts';
 
 const input = [
 	"import { foo } from './foo';",

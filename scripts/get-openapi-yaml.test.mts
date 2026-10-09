@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
-import { fetchAndSaveYaml } from './get-openapi-yaml.mjs';
+import { fetchAndSaveYaml } from './get-openapi-yaml.mts';
 
 test('download failures preserve the existing specification', async () => {
 	const directory = await mkdtemp(path.join(tmpdir(), 'octo-openapi-'));

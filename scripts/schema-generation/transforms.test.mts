@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { findCyclicNodes } from './dependencies';
-import { annotateSchema, findExportedSchemaNames, typeRecursiveSchemas, type GeneratedSchema } from './transforms';
+import { findCyclicNodes } from './dependencies.mts';
+import { findExportedSchemaNames } from '../ast.mts';
+import { annotateSchema, typeRecursiveSchemas, type GeneratedSchema } from './transforms.mts';
 
 test('annotations preserve delimiters inside string literals and comments', () => {
 	const source = "export const exampleSchema = z.object({ value: z.literal('};(') }); // comment";

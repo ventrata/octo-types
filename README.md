@@ -15,12 +15,15 @@ Individual schemas are available through `schemas/BookingGifts` and
 
 ## Development
 
+Use the Node version in `.nvmrc` (24). Generation scripts are TypeScript (`.mts`) run directly by Node, no build step.
+
 - `npm run generate` regenerates models and both schema variants from the checked-in `src/openapi.yaml`.
 - `npm run generate:update` downloads the latest specification, then regenerates everything. Download failures stop the command.
 - `npm run build` cleans `dist` and builds both module formats. Generation utilities are excluded from the published output.
 - `npm run check` checks package and tooling types, formatting, and lint.
-- `npm test` checks source transformations, downloads, recursion, package exports, TypeScript consumers, and browser bundle sizes.
+- `npm test` checks source transformations, downloads, recursion, and then builds the package to check its exports, TypeScript consumers, and browser bundle sizes.
 
 Generation tooling lives in `scripts/`, with its TypeScript configuration in
-`tsconfig.scripts.json`. Pure schema transformations and dependency analysis
-live in `scripts/schema-generation/`.
+`tsconfig.scripts.json`. Shared TypeScript AST helpers are in `scripts/ast.mts`;
+schema transformations, dependency analysis and index generation live in
+`scripts/schema-generation/`.

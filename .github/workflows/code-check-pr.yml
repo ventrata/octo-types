@@ -2,12 +2,6 @@ name: Code check
 
 on:
   pull_request:
-    branches:
-      - '!main'
-      - '**'
-
-env:
-  NODE_VERSION: 22.9.0
 
 jobs:
   build:
@@ -18,119 +12,66 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-depth: 0
 
       - name: Setup node
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        name: Setup node modules cache
-        id: cache-node-modules
-        with:
-          path: ./node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('./package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-
+          node-version-file: .nvmrc
+          cache: npm
 
       - name: Install node modules
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm install --no-lockfile --ignore-scripts --prefer-offline --unsafe-perm
+        run: npm ci --ignore-scripts
 
       - name: Build the project
         run: npm run build
 
-
   check-vulnerabilities:
     name: Check vulnerabilities
-    needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-depth: 0
 
       - name: Setup node
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: .nvmrc
 
-      - uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        name: Restore node modules cache
-        id: cache-node-modules
-        with:
-          path: ./node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('./package-lock.json') }}
-
-      - name: Install node modules
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm install --no-lockfile --ignore-scripts --prefer-offline --unsafe-perm
-
-      - name: Setup tsc cache
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        with:
-          path: ./.cache/tsc
-          key: ${{ runner.os }}-node-tsc-${{ hashFiles('./package-lock.json', './tsconfig.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-tsc-
-
+      # npm audit only needs package-lock.json, so no install is required.
       - name: Do npm audit check
         run: npm run audit
 
   check-types:
     name: Check Types
-    needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-depth: 0
 
       - name: Setup node
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        name: Restore node modules cache
-        id: cache-node-modules
-        with:
-          path: ./node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('./package-lock.json') }}
+          node-version-file: .nvmrc
+          cache: npm
 
       - name: Install node modules
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm install --no-lockfile --ignore-scripts --prefer-offline --unsafe-perm
-
-      - name: Setup tsc cache
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        with:
-          path: ./.cache/tsc
-          key: ${{ runner.os }}-node-tsc-${{ hashFiles('./package-lock.json', './tsconfig.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-tsc-
+        run: npm ci --ignore-scripts
 
       - name: Do dry build
-        run: npm run build:dry:ci
+        run: npm run build:dry
 
   check-code-quality:
     name: Check code quality
-    needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-depth: 0
 
       - name: Setup Biome
         uses: biomejs/setup-biome@4c91541eaada48f67d7dbd7833600ce162b68f51 # v2.7.1
@@ -142,31 +83,21 @@ jobs:
 
   run-tests:
     name: Run tests
-    needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-depth: 0
 
       - name: Setup node
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        name: Restore node modules cache
-        id: cache-node-modules
-        with:
-          path: ./node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('./package-lock.json') }}
+          node-version-file: .nvmrc
+          cache: npm
 
       - name: Install node modules
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm install --no-lockfile --ignore-scripts --prefer-offline --unsafe-perm
+        run: npm ci --ignore-scripts
 
-      - name: Run Vitest
-        run: npm run test
+      - name: Run tests
+        run: npm test
