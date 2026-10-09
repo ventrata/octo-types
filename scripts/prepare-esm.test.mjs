@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import test from 'node:test';
 import { rewriteRelativeImportSpecifiers } from './prepare-esm.mjs';
 
 const input = [
@@ -17,5 +18,11 @@ const expected = [
 	"import json from './config.json';",
 ].join('\n');
 
-assert.equal(rewriteRelativeImportSpecifiers(input), expected);
-console.log('prepare-esm rewrite test passed');
+test('rewrites relative module specifiers and preserves existing extensions', () => {
+	assert.equal(rewriteRelativeImportSpecifiers(input), expected);
+});
+
+test('rewrites dynamic imports without modifying comments or string contents', () => {
+	const source = `// import './comment';\nconst text = "from './string'";\nconst module = import('./lazy');`;
+	assert.equal(rewriteRelativeImportSpecifiers(source), source.replace("import('./lazy')", "import('./lazy.js')"));
+});

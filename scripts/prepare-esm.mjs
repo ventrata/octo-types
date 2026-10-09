@@ -1,18 +1,36 @@
 import { globSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import ts from 'typescript';
+import { parseSource } from './ast.mjs';
 
 const DIST_ESM_DIR = 'dist/esm';
 const ESM_GLOB = `${DIST_ESM_DIR}/**/*.js`;
 const ESM_PACKAGE_JSON_PATH = path.join(DIST_ESM_DIR, 'package.json');
 const SPECIFIER_WITH_EXT = /\.(?:js|json|mjs|cjs)$/;
-const RELATIVE_SPECIFIER = /((?:from|import)\s*)(['"])(\.\.?\/[^'"]+?)\2/g;
 
 export function rewriteRelativeImportSpecifiers(source) {
-	return source.replace(RELATIVE_SPECIFIER, (match, lead, quote, specifier) => {
-		if (SPECIFIER_WITH_EXT.test(specifier)) return match;
-		return `${lead}${quote}${specifier}.js${quote}`;
-	});
+	const edits = [];
+	const file = parseSource(source);
+	const visit = (node) => {
+		let specifier;
+		if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) specifier = node.moduleSpecifier;
+		if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword)
+			specifier = node.arguments[0];
+		if (
+			specifier &&
+			ts.isStringLiteral(specifier) &&
+			/^\.\.?\//.test(specifier.text) &&
+			!SPECIFIER_WITH_EXT.test(specifier.text)
+		) {
+			edits.push(specifier.end - 1);
+		}
+		ts.forEachChild(node, visit);
+	};
+	visit(file);
+	for (const position of edits.sort((a, b) => b - a))
+		source = `${source.slice(0, position)}.js${source.slice(position)}`;
+	return source;
 }
 
 function rewriteEsmOutputFiles() {
