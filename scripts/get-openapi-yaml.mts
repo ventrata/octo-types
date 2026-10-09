@@ -1,4 +1,5 @@
 import { writeFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
 
 const SPEC_URL =
 	'https://raw.githubusercontent.com/ventrata/octo-typespec/main/tsp-output/%40typespec/openapi3/openapi.Ventrata.yaml';
@@ -17,7 +18,7 @@ export async function fetchAndSaveYaml({
 	await writeFile(outputPath, yamlText, 'utf-8');
 }
 
-if (import.meta.main) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
 	fetchAndSaveYaml().catch((error) => {
 		console.error(error);
 		process.exitCode = 1;

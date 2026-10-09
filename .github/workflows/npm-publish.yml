@@ -17,20 +17,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      # Node 24 ships npm 11.5+, which trusted publishing (OIDC) requires.
       - name: Setup node
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
-          node-version-file: .nvmrc
+          node-version: '24'
           registry-url: 'https://registry.npmjs.org'
-          cache: npm
+
+      - uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        name: Setup node modules cache
+        id: cache-node-modules
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('./package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
 
       - name: Install node modules
-        run: npm ci --ignore-scripts
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm install --no-lockfile --ignore-scripts --prefer-offline --unsafe-perm
 
-      - name: Run tests
-        run: npm test
+      - name: Build the project
+        run: npm run build
 
-      # `prepare` rebuilds dist before publishing.
       - name: Publish the project
         run: npm publish

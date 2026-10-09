@@ -1,5 +1,6 @@
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import ts from 'typescript';
 import { isZodImport, transform, zodNamespaceImport } from './ast.mts';
 import { findSchemaFiles, schemaExportLines } from './schema-generation/schema-index.mts';
@@ -65,6 +66,6 @@ export function generateMiniSchemas(): void {
 	console.log(`Generated ${schemaFiles.length} zod/mini schema files in src/schemas-mini`);
 }
 
-if (import.meta.main) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
 	generateMiniSchemas();
 }

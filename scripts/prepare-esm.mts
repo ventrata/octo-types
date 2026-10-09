@@ -1,5 +1,6 @@
 import { globSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import ts from 'typescript';
 import { parse } from './ast.mts';
 
@@ -56,6 +57,6 @@ export function prepareEsm(): void {
 	writeEsmPackageJson();
 }
 
-if (import.meta.main) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
 	prepareEsm();
 }

@@ -15,7 +15,7 @@ Individual schemas are available through `schemas/BookingGifts` and
 
 ## Development
 
-Use the Node version in `.nvmrc` (24). Generation scripts are TypeScript (`.mts`) run directly by Node, no build step.
+Generation scripts are TypeScript (`.mts`) run directly by Node with `--experimental-strip-types`, no build step.
 
 - `npm run generate` regenerates models and both schema variants from the checked-in `src/openapi.yaml`.
 - `npm run generate:update` downloads the latest specification, then regenerates everything. Download failures stop the command.
