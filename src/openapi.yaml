@@ -11511,6 +11511,7 @@ components:
       type: string
       enum:
         - PDF_URL
+        - HTML_URL
         - QRCODE
         - CODE128
         - PKPASS_URL
