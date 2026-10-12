@@ -19,8 +19,5 @@ export async function fetchAndSaveYaml({
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-	fetchAndSaveYaml().catch((error) => {
-		console.error(error);
-		process.exitCode = 1;
-	});
+	await fetchAndSaveYaml();
 }
