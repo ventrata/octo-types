@@ -1,4 +1,3 @@
-/** Find every node in a cycle using strongly connected components. */
 export function findCyclicNodes(dependencies: Map<string, Set<string>>): Set<string> {
 	const indices = new Map<string, number>();
 	const lowLinks = new Map<string, number>();

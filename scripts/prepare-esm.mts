@@ -48,7 +48,6 @@ function rewriteEsmOutputFiles(): void {
 
 function writeEsmPackageJson(): void {
 	mkdirSync(DIST_ESM_DIR, { recursive: true });
-	// Keep sideEffects false in the ESM folder so bundlers can tree-shake unused exports.
 	writeFileSync(ESM_PACKAGE_JSON_PATH, `${JSON.stringify({ type: 'module', sideEffects: false }, null, '\t')}\n`);
 }
 

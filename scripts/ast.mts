@@ -6,7 +6,6 @@ export function parse(text: string): ts.SourceFile {
 	return ts.createSourceFile('source.ts', text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
 }
 
-/** Rewrite every node bottom-up and print the result. */
 export function transform(text: string, rewrite: Rewrite): string {
 	const result = ts.transform(parse(text), [
 		(context) => {
@@ -42,7 +41,6 @@ export function isZodImport(node: ts.Node): node is ts.ImportDeclaration {
 	);
 }
 
-/** Rewrite a `zod` import to `import * as z from '<moduleName>'`. */
 export function zodNamespaceImport(
 	node: ts.ImportDeclaration,
 	factory: ts.NodeFactory,

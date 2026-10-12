@@ -52,7 +52,6 @@ export function generateMiniSchemas(): void {
 		throw new Error(`No schema files found in ${SCHEMAS_DIR}`);
 	}
 
-	// Avoid publishing schemas that were removed or renamed in the classic output.
 	rmSync(MINI_SCHEMAS_DIR, { recursive: true, force: true });
 
 	for (const schemaFile of schemaFiles) {

@@ -256,7 +256,6 @@ export function tidyBlankLines(text: string): string {
 		.filter((line, index, all) => line !== '' || (index > 0 && all[index - 1] !== ''));
 
 	const normalized = lines.join('\n').trimEnd();
-	// Keep generated declarations separated after the AST printer normalizes whitespace.
 	return `${normalized.replace(/\n(?=export const )/g, '\n\n').replace(/\n{3,}/g, '\n\n')}\n`;
 }
 

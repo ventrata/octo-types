@@ -8,7 +8,6 @@ import ts from 'typescript';
 
 const projectRoot = path.resolve(import.meta.dirname, '..');
 const require = createRequire(import.meta.url);
-// Resolved at runtime from the built dist/ (built by `npm run test:package`), so type-check them as any.
 const load = (specifier: string): Promise<any> => import(specifier);
 
 test('package supports CJS, ESM, TypeScript and browser tree-shaking', async () => {

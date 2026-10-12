@@ -64,7 +64,6 @@ function buildSchema(modelFile: string): GeneratedSchema {
 }
 
 function writeSchemas(schemas: GeneratedSchema[]): void {
-	// Start from an empty directory so removed models do not leave stale schemas behind.
 	rmSync(SCHEMAS_DIR, { recursive: true, force: true });
 	for (const schema of schemas) {
 		const schemaPath = path.join(SCHEMAS_DIR, schema.relativePath);
