@@ -1,0 +1,119 @@
+name: Regenerate types on sync PRs
+
+# octo-typespec's sync opens PRs that change only src/openapi.yaml. This workflow finishes them: it brings the
+# branch up to date with main, regenerates the models and schemas, bumps the version if needed, and pushes the
+# result to the PR. A person still reviews and merges the PR.
+#
+# It pushes with the ventrata-openapi-sync GitHub App token, not GITHUB_TOKEN, because pushes made with
+# GITHUB_TOKEN don't trigger other workflows. With the app token, the push reruns the PR's checks, and this
+# workflow too, which then finds nothing to change and stops.
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write # Lets google-github-actions/auth read the app's credentials from Secret Manager.
+
+concurrency:
+  group: regenerate-sync-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 22.9.0
+  SERVICE_ACCOUNT_CI: ventrata-openapi-sync-ci@ventrata-prod.iam.gserviceaccount.com
+  GIT_USERNAME: openapi-sync[bot]
+  GIT_EMAIL: openapi-sync[bot]@users.noreply.github.com
+
+jobs:
+  regenerate:
+    name: Regenerate types
+    # Only the sync's own branches in this repository, never forks.
+    if: >-
+      startsWith(github.event.pull_request.head.ref, 'repo-sync/') &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: openapi-sync
+
+    steps:
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ env.SERVICE_ACCOUNT_CI }}
+
+      - id: secrets
+        uses: google-github-actions/get-secretmanager-secrets@2b5f97c5a4b9c105e64646762ad4fc3f5128e6f5 # v2.2.5
+        with:
+          secrets: |-
+            GH_APP_PEM:ventrata-prod/ventrata-openapi-sync--pem
+            GH_APP:ventrata-prod/ventrata-openapi-sync--app
+
+      - name: Create GitHub App installation token
+        id: app-token
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
+        with:
+          app-id: ${{ steps.secrets.outputs.GH_APP }}
+          private-key: ${{ steps.secrets.outputs.GH_APP_PEM }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            octo-types
+
+      - name: Checkout the PR branch
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "$GIT_USERNAME"
+          git config user.email "$GIT_EMAIL"
+
+      # The sync creates its branch once and keeps adding to it, so it falls behind main. Merging main first
+      # runs the current generator and compares the version against the current release.
+      - name: Merge main into the PR branch
+        run: |
+          git fetch origin main
+          if ! git merge --no-edit origin/main; then
+            git merge --abort
+            echo "::error::main doesn't merge cleanly into ${GITHUB_HEAD_REF}. Resolve the conflict by hand."
+            exit 1
+          fi
+
+      - name: Setup node
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install node modules
+        run: npm install --no-lockfile --ignore-scripts --prefer-offline --unsafe-perm
+
+      - name: Regenerate models and schemas from src/openapi.yaml
+        run: npm run generate
+
+      # check-version-pr.yml requires a version different from main's. A patch bump is the default; a reviewer
+      # raises it to minor when the spec removes or changes types. A version already changed is left alone.
+      - name: Bump the patch version if the PR hasn't changed it
+        run: |
+          main_version=$(git show origin/main:package.json | node -p "JSON.parse(require('fs').readFileSync(0)).version")
+          pr_version=$(node -p "require('./package.json').version")
+          if [ "$pr_version" = "$main_version" ]; then
+            npm version patch --no-git-tag-version
+          fi
+
+      - name: Commit and push
+        run: |
+          git add --all
+          if git diff --cached --quiet && [ "$(git rev-parse HEAD)" = "$(git rev-parse "origin/${GITHUB_HEAD_REF}")" ]; then
+            echo "The types already match src/openapi.yaml. Nothing to push."
+            exit 0
+          fi
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: regenerate types from the synced OpenAPI spec"
+          fi
+          git push origin "HEAD:${GITHUB_HEAD_REF}"

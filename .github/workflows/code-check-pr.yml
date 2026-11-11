@@ -140,6 +140,46 @@ jobs:
       - name: Run Biome
         run: biome ci .
 
+  check-generated:
+    name: Check generated output
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup node
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        name: Restore node modules cache
+        id: cache-node-modules
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('./package-lock.json') }}
+
+      - name: Install node modules
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm install --no-lockfile --ignore-scripts --prefer-offline --unsafe-perm
+
+      - name: Regenerate models and schemas from src/openapi.yaml
+        run: npm run generate
+
+      - name: Fail if the committed output differs from src/openapi.yaml
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git status --short
+            git --no-pager diff --stat
+            echo "::error::The generated models and schemas don't match src/openapi.yaml. Run 'npm run generate' and commit the result."
+            exit 1
+          fi
+
   run-tests:
     name: Run tests
     needs: build

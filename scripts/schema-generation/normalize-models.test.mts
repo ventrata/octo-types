@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
@@ -33,6 +33,20 @@ test('merges the uuid and UUID models and is idempotent', () => {
 			assert.match(readFileSync(path.join(modelsDir, 'Booking.ts'), 'utf8'), /from '\.\/UUID'/);
 			assert.equal(readFileSync(indexPath, 'utf8'), "export type { UUID, uuid } from './models/UUID';\n");
 		}
+	});
+});
+
+test('folds a separate uuid.ts into UUID.ts, as generated on a case-sensitive file system', () => {
+	const index = "export type { UUID } from './models/UUID';\nexport type { uuid } from './models/uuid';\n";
+	withModels(index, (modelsDir, indexPath) => {
+		writeFileSync(path.join(modelsDir, 'UUID.ts'), 'export type UUID = string;\n');
+		writeFileSync(path.join(modelsDir, 'uuid.ts'), 'export type uuid = string;\n');
+		normalizeUuidModel(modelsDir, indexPath);
+		assert.equal(
+			readFileSync(path.join(modelsDir, 'UUID.ts'), 'utf8'),
+			'export type uuid = string;\nexport type UUID = uuid;\n',
+		);
+		assert.equal(readdirSync(modelsDir).includes('uuid.ts'), false);
 	});
 });
 
