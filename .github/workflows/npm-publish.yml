@@ -36,8 +36,15 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --no-lockfile --ignore-scripts --prefer-offline --unsafe-perm
 
+      # Skips merges that keep the version; see the script's header.
+      - name: Check whether the version is already published
+        id: version
+        run: npm run check:published
+
       - name: Build the project
+        if: steps.version.outputs.published == 'false'
         run: npm run build
 
       - name: Publish the project
+        if: steps.version.outputs.published == 'false'
         run: npm publish

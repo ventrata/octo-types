@@ -24,25 +24,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Get PR version
-        id: pr_version
-        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-
-      - name: Checkout main branch
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          ref: main
-          fetch-depth: 0
-
-      - name: Get main version
-        id: main_version
-        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-
-      - name: Compare versions
-        run: |
-          if [ "${{ steps.pr_version.outputs.VERSION }}" != "${{ steps.main_version.outputs.VERSION }}" ]; then
-            echo "Version changed: ${{ steps.pr_version.outputs.VERSION }}"
-          else
-            echo "Version did not change"
-            exit 1
-          fi
+      # Requires a version bump only when the published package changes; see the script's header.
+      - name: Check the version
+        run: npm run check:version
