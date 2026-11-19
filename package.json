@@ -63,6 +63,8 @@
 		"lint": "biome lint",
 		"lint:fix": "biome lint --write .",
 		"audit": "npm audit",
+		"check:version": "node --experimental-strip-types scripts/check-version.mts",
+		"check:published": "node --experimental-strip-types scripts/check-published.mts",
 		"prepare": "npm run build"
 	},
 	"peerDependencies": {
@@ -70,7 +72,8 @@
 	},
 	"overrides": {
 		"js-yaml": "4.3.2",
-		"lodash": "4.18.1"
+		"lodash": "4.18.1",
+		"minimatch": "11.0.8"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.14",
@@ -79,6 +82,6 @@
 		"openapi-typescript-codegen": "^0.31.0",
 		"ts-to-zod": "^5.1.0",
 		"typescript": "^5.9.3",
-		"zod": "^4.6.5"
+		"zod": "^4.6.7"
 	}
 }
