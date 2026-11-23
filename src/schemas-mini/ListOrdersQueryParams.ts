@@ -9,4 +9,5 @@ export const listOrdersQueryParamsSchema = z.object({
 	utcCreatedAtStart: z.optional(z.string()),
 	utcUpdatedAtEnd: z.optional(z.string()),
 	utcUpdatedAtStart: z.optional(z.string()),
+	filters: z.optional(z.string()),
 });
