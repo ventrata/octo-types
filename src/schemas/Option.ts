@@ -12,6 +12,8 @@ import { questionSchema } from './Question';
 import { extraSchema } from './Extra';
 import { packageIncludeSchema } from './PackageInclude';
 import { rentalDurationSchema } from './RentalDuration';
+import { getYourGuideTiersByCategorySchema } from './GetYourGuideTiersByCategory';
+import { expediaVolumeBasedPricingSchema } from './ExpediaVolumeBasedPricing';
 import { type Option } from '../models/Option';
 
 export const optionSchema: z.ZodType<Option> = z.lazy(() =>
@@ -62,5 +64,9 @@ export const optionSchema: z.ZodType<Option> = z.lazy(() =>
 		extras: z.array(extraSchema).optional(),
 		packageIncludes: z.array(packageIncludeSchema).optional(),
 		rentalDurations: z.array(rentalDurationSchema).optional(),
+		hasTieredPrices: z.boolean().optional(),
+		tiersByCategory: z.array(getYourGuideTiersByCategorySchema).optional(),
+		hasVolumeBasedPricing: z.boolean().optional(),
+		volumeBasedPricing: expediaVolumeBasedPricingSchema.optional().nullable(),
 	}),
 );

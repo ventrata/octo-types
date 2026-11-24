@@ -3,6 +3,7 @@ import * as z from 'zod/mini';
 import { extraRestrictionsSchema } from './ExtraRestrictions';
 import { customRetailOptionSchema } from './CustomRetailOption';
 import { pricingSchema } from './Pricing';
+import { durationUnitSchema } from './DurationUnit';
 export const extraSchema = z.object({
 	id: z.string(),
 	internalName: z.string(),
@@ -14,4 +15,9 @@ export const extraSchema = z.object({
 	pricingFrom: z.optional(z.array(pricingSchema)),
 	pricing: z.optional(z.array(pricingSchema)),
 	title: z.nullable(z.optional(z.string())),
+	shortDescription: z.nullable(z.optional(z.string())),
+	duration: z.nullable(z.optional(z.string())),
+	durationAmount: z.nullable(z.optional(z.number())),
+	durationUnit: z.nullable(z.optional(durationUnitSchema)),
+	coverImageUrl: z.nullable(z.optional(z.string())),
 });

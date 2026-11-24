@@ -7,6 +7,8 @@ import { pricingSchema } from './Pricing';
 import { questionSchema } from './Question';
 import { extraSchema } from './Extra';
 import { membershipBenefitSchema } from './MembershipBenefit';
+import { getYourGuidePricingCategorySchema } from './GetYourGuidePricingCategory';
+import { expediaTicketTypePriceSchema } from './ExpediaTicketTypePrice';
 export const unitSchema = z.object({
 	id: z.string(),
 	internalName: z.string(),
@@ -25,4 +27,6 @@ export const unitSchema = z.object({
 	extras: z.optional(z.array(extraSchema)),
 	membershipBenefit: z.nullable(z.optional(membershipBenefitSchema)),
 	redemptionCode: z.nullable(z.optional(z.string())),
+	pricingCategory: z.optional(getYourGuidePricingCategorySchema),
+	ticketTypePrices: z.optional(z.array(expediaTicketTypePriceSchema)),
 });

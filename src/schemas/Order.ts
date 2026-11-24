@@ -6,6 +6,9 @@ import { customerContactSchema } from './CustomerContact';
 import { bookingSchema } from './Booking';
 import { contactFieldSchema } from './ContactField';
 import { giftVoucherSchema } from './GiftVoucher';
+import { channelSchema } from './Channel';
+import { viaSchema } from './Via';
+import { userSchema } from './User';
 import { destinationSchema } from './Destination';
 import { brandSchema } from './Brand';
 import { pricingSchema } from './Pricing';
@@ -42,6 +45,9 @@ export const orderSchema = z.object({
 	requiredContactFields: z.array(contactFieldSchema),
 	voucher: giftVoucherSchema.nullable(),
 	active: z.boolean(),
+	channel: channelSchema.optional().nullable(),
+	via: viaSchema.optional().nullable(),
+	user: userSchema.optional().nullable(),
 	termsAccepted: z.boolean().optional(),
 	destination: destinationSchema.optional(),
 	brand: brandSchema.optional(),

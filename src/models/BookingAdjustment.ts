@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AdjustmentDiscount } from './AdjustmentDiscount';
 import type { AdjustmentPer } from './AdjustmentPer';
 export type BookingAdjustment = {
 	/**
@@ -18,5 +17,4 @@ export type BookingAdjustment = {
 	 * Optional notes for the adjustment.
 	 */
 	notes: string | null;
-	netDiscount: AdjustmentDiscount;
 };

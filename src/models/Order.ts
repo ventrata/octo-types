@@ -6,6 +6,7 @@ import type { Agent } from './Agent';
 import type { Booking } from './Booking';
 import type { Brand } from './Brand';
 import type { CardPaymentGateway } from './CardPaymentGateway';
+import type { Channel } from './Channel';
 import type { ContactField } from './ContactField';
 import type { CustomerContact } from './CustomerContact';
 import type { Destination } from './Destination';
@@ -18,6 +19,8 @@ import type { OfferCombination } from './OfferCombination';
 import type { Pricing } from './Pricing';
 import type { QuestionAnswer } from './QuestionAnswer';
 import type { SettlementMethod } from './SettlementMethod';
+import type { User } from './User';
+import type { Via } from './Via';
 export type Order = {
 	id: string;
 	testMode: boolean;
@@ -43,6 +46,20 @@ export type Order = {
 	requiredContactFields: Array<ContactField>;
 	voucher: GiftVoucher | null;
 	active: boolean;
+	/**
+	 * The sales channel the order came through. Planned: the dashboard serves it under `ventrata/dashboard` only today.
+	 */
+	channel?: Channel | null;
+	/**
+	 * How a staff member's sale reached them. Null when the order wasn't made by staff, or the way isn't known. Planned:
+	 * the dashboard doesn't record it yet.
+	 */
+	via?: Via | null;
+	/**
+	 * The staff member who created the order. Null for orders no staff member created, such as online and API sales.
+	 * Planned: the dashboard serves it under `ventrata/dashboard` only today.
+	 */
+	user?: User | null;
 	termsAccepted?: boolean;
 	destination?: Destination;
 	brand?: Brand;

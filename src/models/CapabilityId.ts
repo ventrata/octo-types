@@ -21,6 +21,7 @@ export enum CapabilityId {
 	OCTO_EXTRAS = 'octo/extras',
 	OCTO_PACKAGES = 'octo/packages',
 	OCTO_IDENTITIES = 'octo/identities',
+	OCTO_RETAIL = 'octo/retail',
 	VENTRATA_CONTENT = 'ventrata/content',
 	VENTRATA_GETYOURGUIDE = 'ventrata/getyourguide',
 	VENTRATA_EXPEDIA = 'ventrata/expedia',

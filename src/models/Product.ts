@@ -12,9 +12,11 @@ import type { DeliveryMethod } from './DeliveryMethod';
 import type { Destination } from './Destination';
 import type { DurationUnit } from './DurationUnit';
 import type { FAQ } from './FAQ';
+import type { GiftExpiryUnit } from './GiftExpiryUnit';
 import type { GoogleOptions } from './GoogleOptions';
 import type { Image } from './Image';
 import type { Link } from './Link';
+import type { MembershipRenewalPaymentMethod } from './MembershipRenewalPaymentMethod';
 import type { Operator } from './Operator';
 import type { Option } from './Option';
 import type { PricingPer } from './PricingPer';
@@ -213,6 +215,32 @@ export type Product = {
 	packageProduct?: boolean;
 	googleOptions?: GoogleOptions;
 	isMembership?: boolean;
+	/**
+	 * Whether a membership renews automatically unless the member turns it off.
+	 */
+	membershipAutoRenew?: boolean;
+	/**
+	 * How long a membership lasts, in `membershipDurationUnit`s: 12 for 12 months. Null when the product isn't a
+	 * membership. The length in days stays in `freesaleDurationAmount`.
+	 */
+	membershipDurationAmount?: number | null;
+	/**
+	 * The calendar unit of `membershipDurationAmount`, so the end date follows the calendar. Null when the product isn't
+	 * a membership.
+	 */
+	membershipDurationUnit?: GiftExpiryUnit | null;
+	/**
+	 * Whether a membership can be renewed.
+	 */
+	membershipRenewable?: boolean;
+	/**
+	 * How a renewal can be paid. Empty when the membership can't be renewed.
+	 */
+	membershipRenewalPaymentMethods?: Array<MembershipRenewalPaymentMethod>;
+	/**
+	 * How many days before a renewal the member gets a reminder. Null when no reminder is sent.
+	 */
+	membershipRenewalReminderDays?: number | null;
 	isRental?: boolean;
 	pricingDisplay?: CheckoutConfigPricingDisplay;
 	outstandingBalanceShortDescription?: string;

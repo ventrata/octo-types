@@ -15,6 +15,8 @@ import { imageSchema } from './Image';
 import { brandSchema } from './Brand';
 import { pricingPerSchema } from './PricingPer';
 import { googleOptionsSchema } from './GoogleOptions';
+import { giftExpiryUnitSchema } from './GiftExpiryUnit';
+import { membershipRenewalPaymentMethodSchema } from './MembershipRenewalPaymentMethod';
 import { checkoutConfigPricingDisplaySchema } from './CheckoutConfigPricingDisplay';
 import { linkSchema } from './Link';
 import { availableLanguagesItemSchema } from './AvailableLanguagesItem';
@@ -87,6 +89,12 @@ export const productSchema: z.ZodMiniType<Product> = z.lazy(() =>
 		packageProduct: z.optional(z.boolean()),
 		googleOptions: z.optional(googleOptionsSchema),
 		isMembership: z.optional(z.boolean()),
+		membershipAutoRenew: z.optional(z.boolean()),
+		membershipDurationAmount: z.nullable(z.optional(z.number())),
+		membershipDurationUnit: z.nullable(z.optional(giftExpiryUnitSchema)),
+		membershipRenewable: z.optional(z.boolean()),
+		membershipRenewalPaymentMethods: z.optional(z.array(membershipRenewalPaymentMethodSchema)),
+		membershipRenewalReminderDays: z.nullable(z.optional(z.number())),
 		isRental: z.optional(z.boolean()),
 		pricingDisplay: z.optional(checkoutConfigPricingDisplaySchema),
 		outstandingBalanceShortDescription: z.optional(z.string()),
