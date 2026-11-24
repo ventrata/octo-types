@@ -4,7 +4,9 @@
 /* eslint-disable */
 import type { ContactField } from './ContactField';
 import type { DurationUnit } from './DurationUnit';
+import type { ExpediaVolumeBasedPricing } from './ExpediaVolumeBasedPricing';
 import type { Extra } from './Extra';
+import type { GetYourGuideTiersByCategory } from './GetYourGuideTiersByCategory';
 import type { ItineraryItem } from './ItineraryItem';
 import type { OptionRestrictions } from './OptionRestrictions';
 import type { PackageInclude } from './PackageInclude';
@@ -180,4 +182,8 @@ export type Option = {
 	extras?: Array<Extra>;
 	packageIncludes?: Array<PackageInclude>;
 	rentalDurations?: Array<RentalDuration>;
+	hasTieredPrices?: boolean;
+	tiersByCategory?: Array<GetYourGuideTiersByCategory>;
+	hasVolumeBasedPricing?: boolean;
+	volumeBasedPricing?: ExpediaVolumeBasedPricing | null;
 };

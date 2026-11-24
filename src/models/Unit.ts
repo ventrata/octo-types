@@ -3,7 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ContactField } from './ContactField';
+import type { ExpediaTicketTypePrice } from './ExpediaTicketTypePrice';
 import type { Extra } from './Extra';
+import type { GetYourGuidePricingCategory } from './GetYourGuidePricingCategory';
 import type { MembershipBenefit } from './MembershipBenefit';
 import type { Pricing } from './Pricing';
 import type { Question } from './Question';
@@ -78,4 +80,6 @@ export type Unit = {
 	extras?: Array<Extra>;
 	membershipBenefit?: MembershipBenefit | null;
 	redemptionCode?: string | null;
+	pricingCategory?: GetYourGuidePricingCategory;
+	ticketTypePrices?: Array<ExpediaTicketTypePrice>;
 };

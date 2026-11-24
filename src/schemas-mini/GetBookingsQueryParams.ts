@@ -8,4 +8,5 @@ export const getBookingsQueryParamsSchema = z.object({
 	localDateEnd: z.optional(z.string()),
 	productId: z.optional(z.string()),
 	optionId: z.optional(z.string()),
+	filters: z.optional(z.string()),
 });

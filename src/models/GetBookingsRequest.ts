@@ -31,4 +31,26 @@ export type GetBookingsRequest = {
 	 * The option id to filter by.
 	 */
 	optionId?: string;
+	/**
+	 * A JSON object of conditions, applied on top of the other query parameters. A booking is listed when it meets every
+	 * condition. With `filters`, none of the other query parameters is required.
+	 *
+	 * A condition is `{ "<field>": { "<operator>": <value> } }`. Strings take the operators `equals`, `not_equals`, `in`,
+	 * `not_in`, `is_null`, `contains`, `starts_with` and `ends_with`; `in` and `not_in` take a list. Bookings in any of
+	 * several statuses:
+	 *
+	 * `{ "status": { "in": ["confirmed", "balance_due"] } }`
+	 *
+	 * Statuses here are the dashboard's own, not OCTO's: `pending`, `expired`, `balance_due`, `confirmed`, `cancelled`,
+	 * `part_redeemed`, `redeemed`, `upgraded`, `duplicate`, `noshow`, `pending_confirmation`, `rejected`, `quote`, `fraud`,
+	 * `disputed`, `part_checked_in`, `checked_in`. OCTO's `CONFIRMED` is `confirmed`, `balance_due`, `part_checked_in` and
+	 * `checked_in`; its `CANCELLED` is `cancelled`, `duplicate`, `fraud` and `disputed`.
+	 *
+	 * Conditions combine under `and` or `or`, each taking a list, and `not` negates one:
+	 *
+	 * `{ "and": [{ "status": { "in": ["confirmed"] } }, { "product_id": { "in": ["<product id>", "<product id>"] } }] }`
+	 *
+	 * A value that isn't a JSON object fails with `BAD_REQUEST` and "Filters must be a JSON object".
+	 */
+	filters?: string;
 };
