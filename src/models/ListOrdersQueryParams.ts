@@ -23,6 +23,13 @@ export type ListOrdersQueryParams = {
 	 *
 	 * `{ "bookings": { "any": { "status": { "in": ["confirmed", "balance_due"] } } } }`
 	 *
+	 * An order with any booking for one of several products, so an order with bookings for two products matches either:
+	 *
+	 * `{ "bookings": { "any": { "product_id": { "in": ["<product id>", "<product id>"] } } } }`
+	 *
+	 * ID fields such as `product_id` take UUIDs. An unknown ID matches no orders, and so does `in` with an empty list. A
+	 * value that isn't a UUID fails with `BAD_REQUEST` and "Invalid UUID".
+	 *
 	 * Booking statuses here are the dashboard's own, not OCTO's: `pending`, `expired`, `balance_due`, `confirmed`,
 	 * `cancelled`, `part_redeemed`, `redeemed`, `upgraded`, `duplicate`, `noshow`, `pending_confirmation`, `rejected`,
 	 * `quote`, `fraud`, `disputed`, `part_checked_in`, `checked_in`. OCTO's `CONFIRMED` is `confirmed`, `balance_due`,
@@ -30,7 +37,7 @@ export type ListOrdersQueryParams = {
 	 *
 	 * Conditions combine under `and` or `or`, each taking a list, and `not` negates one:
 	 *
-	 * `{ "and": [{ "bookings": { "any": { "status": { "in": ["confirmed"] } } } }, { "bookings": { "any": { "product_id": { "in": ["<product id>"] } } } }] }`
+	 * `{ "and": [{ "bookings": { "any": { "status": { "in": ["confirmed"] } } } }, { "bookings": { "any": { "product_id": { "in": ["<product id>", "<product id>"] } } } }] }`
 	 *
 	 * A value that isn't a JSON object fails with `BAD_REQUEST` and "Filters must be a JSON object".
 	 */

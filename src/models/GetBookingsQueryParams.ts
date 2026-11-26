@@ -41,6 +41,13 @@ export type GetBookingsQueryParams = {
 	 *
 	 * `{ "status": { "in": ["confirmed", "balance_due"] } }`
 	 *
+	 * Bookings for any of several products:
+	 *
+	 * `{ "product_id": { "in": ["<product id>", "<product id>"] } }`
+	 *
+	 * ID fields such as `product_id` take UUIDs. An unknown ID matches no bookings, and so does `in` with an empty list. A
+	 * value that isn't a UUID fails with `BAD_REQUEST` and "Invalid UUID".
+	 *
 	 * Statuses here are the dashboard's own, not OCTO's: `pending`, `expired`, `balance_due`, `confirmed`, `cancelled`,
 	 * `part_redeemed`, `redeemed`, `upgraded`, `duplicate`, `noshow`, `pending_confirmation`, `rejected`, `quote`, `fraud`,
 	 * `disputed`, `part_checked_in`, `checked_in`. OCTO's `CONFIRMED` is `confirmed`, `balance_due`, `part_checked_in` and
