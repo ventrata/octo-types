@@ -19,6 +19,7 @@ tags:
   - name: GetYourGuide
   - name: Partners
   - name: CheckinLookup
+  - name: Shifts
 paths:
   /availability/:
     post:
@@ -2871,6 +2872,99 @@ paths:
                 $ref: "#/components/schemas/RedemptionLookup"
       tags:
         - Redemption
+  /shifts/:
+    get:
+      operationId: Shifts_get
+      summary: List shifts
+      description: Fetch the supplier's shifts, newest first.
+      parameters:
+        - $ref: "#/components/parameters/ListShiftsQueryParams.destinationIds"
+        - $ref: "#/components/parameters/ListShiftsQueryParams.dateStart"
+        - $ref: "#/components/parameters/ListShiftsQueryParams.dateEnd"
+        - $ref: "#/components/parameters/ListShiftsQueryParams.limit"
+        - $ref: "#/components/parameters/ListShiftsQueryParams.page"
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Octo-Next-Page:
+              required: false
+              description: The cursor for the next page, sent back as the page query parameter. Absent on the last page.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Shift"
+              examples:
+                Shifts example:
+                  summary: Shifts example
+                  description: Shifts example
+                  value:
+                    - id: 3a6c3b5e-2f4d-4e7a-9a43-5b8f1c2d7e10
+                      reference: SH-2301
+                      destinationId: e78ae5c2-33d2-4702-a4d0-c6d60d3589c2
+                      sellerId: 6d1f0b7a-8c2e-4f39-b5a1-0e9d4c3b2a18
+                      seller:
+                        id: 6d1f0b7a-8c2e-4f39-b5a1-0e9d4c3b2a18
+                        name: Jana Novak
+                        reference: null
+                        tags: []
+                        emailAddress: null
+                        phoneNumber: null
+                      terminalId: 9b2e7c41-0d5a-4b8f-a6e3-7c1f2d9e4b05
+                      terminal:
+                        id: 9b2e7c41-0d5a-4b8f-a6e3-7c1f2d9e4b05
+                        name: Till 1
+                      locationId: null
+                      date: "2026-10-01"
+                      utcStartedAt: "2026-10-01T06:00:00Z"
+                      utcEndedAt: null
+                      status: open
+                      notes: null
+                      salesCount: 42
+                      cardTotals:
+                        - amount: 78600
+                          currency: EUR
+                          currencyPrecision: 2
+                      cashTotals:
+                        - amount: 31800
+                          currency: EUR
+                          currencyPrecision: 2
+                      giftTotals: []
+      tags:
+        - Shifts
   /supplier/:
     get:
       operationId: Suppliers_get
@@ -3410,6 +3504,13 @@ components:
 
         `{ "status": { "in": ["confirmed", "balance_due"] } }`
 
+        Bookings for any of several products:
+
+        `{ "product_id": { "in": ["<product id>", "<product id>"] } }`
+
+        ID fields such as `product_id` take UUIDs. An unknown ID matches no bookings, and so does `in` with an empty list. A
+        value that isn't a UUID fails with `BAD_REQUEST` and "Invalid UUID".
+
         Statuses here are the dashboard's own, not OCTO's: `pending`, `expired`, `balance_due`, `confirmed`, `cancelled`,
         `part_redeemed`, `redeemed`, `upgraded`, `duplicate`, `noshow`, `pending_confirmation`, `rejected`, `quote`, `fraud`,
         `disputed`, `part_checked_in`, `checked_in`. OCTO's `CONFIRMED` is `confirmed`, `balance_due`, `part_checked_in` and
@@ -3589,6 +3690,52 @@ components:
         type: string
       explode: false
     ListItemsQueryParams.page:
+      name: page
+      in: query
+      required: false
+      description: The cursor from the previous response's Octo-Next-Page header, sent with the same query.
+      schema:
+        type: string
+      explode: false
+    ListShiftsQueryParams.dateEnd:
+      name: dateEnd
+      in: query
+      required: false
+      description: Only the shifts on this business day or earlier.
+      schema:
+        type: string
+        format: date
+      explode: false
+    ListShiftsQueryParams.dateStart:
+      name: dateStart
+      in: query
+      required: false
+      description: Only the shifts on this business day or later.
+      schema:
+        type: string
+        format: date
+      explode: false
+    ListShiftsQueryParams.destinationIds:
+      name: destinationIds[]
+      in: query
+      required: false
+      description: Only the shifts in these destinations. Shifts without a destination are left out. Without it, every shift is listed, including those without a destination.
+      schema:
+        type: array
+        items:
+          type: string
+      explode: false
+    ListShiftsQueryParams.limit:
+      name: limit
+      in: query
+      required: false
+      description: The most shifts per response, from 1 to 100. Defaults to 100.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+      explode: false
+    ListShiftsQueryParams.page:
       name: page
       in: query
       required: false
@@ -12138,6 +12285,13 @@ components:
 
             `{ "status": { "in": ["confirmed", "balance_due"] } }`
 
+            Bookings for any of several products:
+
+            `{ "product_id": { "in": ["<product id>", "<product id>"] } }`
+
+            ID fields such as `product_id` take UUIDs. An unknown ID matches no bookings, and so does `in` with an empty list. A
+            value that isn't a UUID fails with `BAD_REQUEST` and "Invalid UUID".
+
             Statuses here are the dashboard's own, not OCTO's: `pending`, `expired`, `balance_due`, `confirmed`, `cancelled`,
             `part_redeemed`, `redeemed`, `upgraded`, `duplicate`, `noshow`, `pending_confirmation`, `rejected`, `quote`, `fraud`,
             `disputed`, `part_checked_in`, `checked_in`. OCTO's `CONFIRMED` is `confirmed`, `balance_due`, `part_checked_in` and
@@ -12184,6 +12338,13 @@ components:
             several statuses:
 
             `{ "status": { "in": ["confirmed", "balance_due"] } }`
+
+            Bookings for any of several products:
+
+            `{ "product_id": { "in": ["<product id>", "<product id>"] } }`
+
+            ID fields such as `product_id` take UUIDs. An unknown ID matches no bookings, and so does `in` with an empty list. A
+            value that isn't a UUID fails with `BAD_REQUEST` and "Invalid UUID".
 
             Statuses here are the dashboard's own, not OCTO's: `pending`, `expired`, `balance_due`, `confirmed`, `cancelled`,
             `part_redeemed`, `redeemed`, `upgraded`, `duplicate`, `noshow`, `pending_confirmation`, `rejected`, `quote`, `fraud`,
@@ -14028,6 +14189,13 @@ components:
 
             `{ "bookings": { "any": { "status": { "in": ["confirmed", "balance_due"] } } } }`
 
+            An order with any booking for one of several products, so an order with bookings for two products matches either:
+
+            `{ "bookings": { "any": { "product_id": { "in": ["<product id>", "<product id>"] } } } }`
+
+            ID fields such as `product_id` take UUIDs. An unknown ID matches no orders, and so does `in` with an empty list. A
+            value that isn't a UUID fails with `BAD_REQUEST` and "Invalid UUID".
+
             Booking statuses here are the dashboard's own, not OCTO's: `pending`, `expired`, `balance_due`, `confirmed`,
             `cancelled`, `part_redeemed`, `redeemed`, `upgraded`, `duplicate`, `noshow`, `pending_confirmation`, `rejected`,
             `quote`, `fraud`, `disputed`, `part_checked_in`, `checked_in`. OCTO's `CONFIRMED` is `confirmed`, `balance_due`,
@@ -14035,10 +14203,34 @@ components:
 
             Conditions combine under `and` or `or`, each taking a list, and `not` negates one:
 
-            `{ "and": [{ "bookings": { "any": { "status": { "in": ["confirmed"] } } } }, { "bookings": { "any": { "product_id": { "in": ["<product id>"] } } } }] }`
+            `{ "and": [{ "bookings": { "any": { "status": { "in": ["confirmed"] } } } }, { "bookings": { "any": { "product_id": { "in": ["<product id>", "<product id>"] } } } }] }`
 
             A value that isn't a JSON object fails with `BAD_REQUEST` and "Filters must be a JSON object".
           example: '{"bookings":{"any":{"status":{"in":["confirmed","balance_due","part_checked_in","checked_in"]}}}}'
+    ListShiftsRequest:
+      type: object
+      properties:
+        destinationIds:
+          type: array
+          items:
+            type: string
+          description: Only the shifts in these destinations. Shifts without a destination are left out. Without it, every shift is listed, including those without a destination.
+        dateStart:
+          type: string
+          format: date
+          description: Only the shifts on this business day or later.
+        dateEnd:
+          type: string
+          format: date
+          description: Only the shifts on this business day or earlier.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: The most shifts per response, from 1 to 100. Defaults to 100.
+        page:
+          type: string
+          description: The cursor from the previous response's Octo-Next-Page header, sent with the same query.
     ListWebhooksRequest:
       type: object
     Mapping:
@@ -20336,6 +20528,167 @@ components:
         - VOUCHER
         - WHOLESALE
       example: DIRECT
+    Shift:
+      type: object
+      required:
+        - id
+        - reference
+        - destinationId
+        - sellerId
+        - seller
+        - terminalId
+        - terminal
+        - locationId
+        - date
+        - utcStartedAt
+        - utcEndedAt
+        - status
+        - notes
+        - salesCount
+        - cardTotals
+        - cashTotals
+        - giftTotals
+      properties:
+        id:
+          type: string
+          format: uuid
+        reference:
+          type: string
+          example: SH-2301
+        destinationId:
+          type: string
+          nullable: true
+          format: uuid
+          description: The destination the shift belongs to. Null for a shift without one, which the dashboard allows.
+        sellerId:
+          type: string
+          nullable: true
+          format: uuid
+          description: |-
+            The point-of-sale staff member on the shift. Null for a shift without one, which the dashboard allows when its
+            location opens shifts on the terminal.
+        seller:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Seller"
+          nullable: true
+        terminalId:
+          type: string
+          nullable: true
+          format: uuid
+          description: "The till: the terminal the shift ran on."
+        terminal:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Terminal"
+          nullable: true
+        locationId:
+          type: string
+          nullable: true
+          format: uuid
+        date:
+          type: string
+          format: date
+          description: The shift's business day.
+        utcStartedAt:
+          type: string
+          format: date-time
+        utcEndedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Null while the shift is open.
+        status:
+          $ref: "#/components/schemas/ShiftStatus"
+        notes:
+          type: string
+          nullable: true
+        salesCount:
+          type: integer
+          description: How many sales were made on the shift.
+          example: 42
+        cardTotals:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShiftTotal"
+          description: "Card payments taken on the shift: one total per currency taken, none when nothing was."
+        cashTotals:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShiftTotal"
+          description: "Cash taken on the shift: one total per currency taken, none when nothing was."
+        giftTotals:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShiftTotal"
+          description: "Gift card payments taken on the shift: one total per currency taken, none when nothing was."
+      description: "A staff member's shift at a till: when it ran, its status and the payments taken on it, per method and currency."
+      example:
+        id: 3a6c3b5e-2f4d-4e7a-9a43-5b8f1c2d7e10
+        reference: SH-2301
+        destinationId: e78ae5c2-33d2-4702-a4d0-c6d60d3589c2
+        sellerId: 6d1f0b7a-8c2e-4f39-b5a1-0e9d4c3b2a18
+        seller:
+          id: 6d1f0b7a-8c2e-4f39-b5a1-0e9d4c3b2a18
+          name: Jana Novak
+          reference: null
+          tags: []
+          emailAddress: null
+          phoneNumber: null
+        terminalId: 9b2e7c41-0d5a-4b8f-a6e3-7c1f2d9e4b05
+        terminal:
+          id: 9b2e7c41-0d5a-4b8f-a6e3-7c1f2d9e4b05
+          name: Till 1
+        locationId: null
+        date: "2026-10-01"
+        utcStartedAt: "2026-10-01T06:00:00Z"
+        utcEndedAt: null
+        status: open
+        notes: null
+        salesCount: 42
+        cardTotals:
+          - amount: 78600
+            currency: EUR
+            currencyPrecision: 2
+        cashTotals:
+          - amount: 31800
+            currency: EUR
+            currencyPrecision: 2
+        giftTotals: []
+    ShiftStatus:
+      type: string
+      enum:
+        - open
+        - blocked
+        - ended
+        - reconciled
+        - approved
+        - rejected
+      description: |-
+        A shift's status: `open` until it ends, `blocked` while a
+        payment is pending, `ended`, then `reconciled` once every payment method is, and `approved` or `rejected` when a
+        supervisor signs the cash-up off.
+      example: open
+    ShiftTotal:
+      type: object
+      required:
+        - amount
+        - currency
+        - currencyPrecision
+      properties:
+        amount:
+          type: integer
+        currency:
+          type: string
+        currencyPrecision:
+          type: integer
+      description: |-
+        A shift's total in one currency, as `Pricing` gives an amount: in minor units, with the currency's precision. The
+        dashboard keeps each total as decimal amounts per currency (`card_total` and the other `*_total` columns).
+      example:
+        amount: 78600
+        currency: EUR
+        currencyPrecision: 2
     SpreedlyGateway:
       type: object
       properties:
