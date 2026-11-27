@@ -17,8 +17,10 @@ import type { Identity } from './Identity';
 import type { Membership } from './Membership';
 import type { OfferCombination } from './OfferCombination';
 import type { Pricing } from './Pricing';
+import type { Purchase } from './Purchase';
 import type { QuestionAnswer } from './QuestionAnswer';
 import type { SettlementMethod } from './SettlementMethod';
+import type { Transaction } from './Transaction';
 import type { User } from './User';
 import type { Via } from './Via';
 export type Order = {
@@ -47,19 +49,25 @@ export type Order = {
 	voucher: GiftVoucher | null;
 	active: boolean;
 	/**
-	 * The sales channel the order came through. Planned: the dashboard serves it under `ventrata/dashboard` only today.
+	 * The sales channel the order came through.
 	 */
 	channel?: Channel | null;
 	/**
-	 * How a staff member's sale reached them. Null when the order wasn't made by staff, or the way isn't known. Planned:
-	 * the dashboard doesn't record it yet.
+	 * How a staff member's sale reached them. Null when the order wasn't made by staff, or the way isn't known.
 	 */
 	via?: Via | null;
 	/**
 	 * The staff member who created the order. Null for orders no staff member created, such as online and API sales.
-	 * Planned: the dashboard serves it under `ventrata/dashboard` only today.
 	 */
 	user?: User | null;
+	/**
+	 * The order's payments and refunds, oldest first. Voided transactions are left out.
+	 */
+	transactions: Array<Transaction>;
+	/**
+	 * The shift the order was sold on, or null outside a shift.
+	 */
+	shiftId?: string | null;
 	termsAccepted?: boolean;
 	destination?: Destination;
 	brand?: Brand;
@@ -88,4 +96,8 @@ export type Order = {
 	utmContent?: string | null;
 	utmMedium?: string | null;
 	utmSource?: string | null;
+	/**
+	 * The order's shop items, oldest first. Cancelled purchases are left out.
+	 */
+	purchases?: Array<Purchase>;
 };

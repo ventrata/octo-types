@@ -1660,6 +1660,72 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateGiftBody"
+  /gifts/settings:
+    get:
+      operationId: Gifts_getSettings
+      summary: Get gift settings
+      description: Fetch the supplier's gift card as it is sold. Requires the octo/gifts capability.
+      parameters:
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GiftSettings"
+              examples:
+                Gift settings example:
+                  summary: Gift settings example
+                  description: Gift settings example
+                  value:
+                    allowed: true
+                    title: Eastgate Gift Card
+                    shortDescription: A chosen amount to spend on tickets, tours, memberships or the shop.
+                    description: Spend on any ticket, tour, membership or shop item at all three gardens. Valid for 24 months.
+                    coverImageUrl: https://example.com/gift-card.jpg
+                    restrictions:
+                      minAmounts:
+                        - amount: 1000
+                          currency: EUR
+                          currencyPrecision: 2
+                      maxAmounts:
+                        - amount: 30000
+                          currency: EUR
+                          currencyPrecision: 2
+                    validityAmount: 24
+                    validityUnit: month
+      tags:
+        - Gifts
   /gifts/{id}/update:
     post:
       operationId: Gifts_put
@@ -2179,7 +2245,7 @@ paths:
                       connected: true
       tags:
         - Mappings
-  /order/:
+  /orders:
     post:
       operationId: Orders_CreateOrder
       summary: Create Order
@@ -2230,7 +2296,58 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/CreateOrderBody"
-  /order/{id}:
+  /orders/confirm:
+    post:
+      operationId: Orders_CreateAndConfirmOrder
+      summary: Create and Confirm Order
+      description: Creates the order with everything in the body and confirms it in one request, for a sale that needs nothing held while the customer pays. A `DIRECT` order must be paid in full by the body's `transactions`, otherwise nothing is saved and the request fails with `BALANCE_DUE`.
+      parameters:
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderBody"
+  /orders/{id}:
     get:
       operationId: Orders_GetOrder
       summary: Get Order
@@ -2276,181 +2393,6 @@ paths:
                 $ref: "#/components/schemas/Order"
       tags:
         - Orders
-  /order/{id}/cancel:
-    post:
-      operationId: Orders_OrderCancellation
-      summary: Order Cancellation
-      description: This cancels the order and any bookings inside it.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: 0effd05e-d61e-47f2-8fc9-512f3144c69d
-          schema:
-            type: string
-            example: 0effd05e-d61e-47f2-8fc9-512f3144c69d
-        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
-        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
-      responses:
-        "200":
-          description: The request has succeeded.
-          headers:
-            Octo-Capabilities:
-              required: true
-              description: A list of the Capabilities (their IDs) initialized with your request.
-              schema:
-                type: string
-            Content-Language:
-              required: false
-              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
-              schema:
-                type: string
-                x-capability-data:
-                  capability: octo/content
-                  required: true
-              x-capability-data:
-                capability: octo/content
-                required: true
-            Available-Languages:
-              required: false
-              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
-              schema:
-                type: string
-                x-capability-data:
-                  capability: octo/content
-                  required: true
-              x-capability-data:
-                capability: octo/content
-                required: true
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Order"
-      tags:
-        - Orders
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CancelOrderBody"
-  /order/{id}/confirm:
-    post:
-      operationId: Orders_ConfirmOrder
-      summary: Order Confirmation
-      description: Confirms the order and all the bookings it contains.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: 0effd05e-d61e-47f2-8fc9-512f3144c69d
-          schema:
-            type: string
-            example: 0effd05e-d61e-47f2-8fc9-512f3144c69d
-        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
-        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
-      responses:
-        "200":
-          description: The request has succeeded.
-          headers:
-            Octo-Capabilities:
-              required: true
-              description: A list of the Capabilities (their IDs) initialized with your request.
-              schema:
-                type: string
-            Content-Language:
-              required: false
-              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
-              schema:
-                type: string
-                x-capability-data:
-                  capability: octo/content
-                  required: true
-              x-capability-data:
-                capability: octo/content
-                required: true
-            Available-Languages:
-              required: false
-              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
-              schema:
-                type: string
-                x-capability-data:
-                  capability: octo/content
-                  required: true
-              x-capability-data:
-                capability: octo/content
-                required: true
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Order"
-      tags:
-        - Orders
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ConfirmOrderBody"
-  /order/{id}/extend:
-    post:
-      operationId: Orders_ExtendOrder
-      summary: Extend Order
-      description: If the order has a status of ON_HOLD and you need more time before confirming the order.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: 0effd05e-d61e-47f2-8fc9-512f3144c69d
-          schema:
-            type: string
-            example: 0effd05e-d61e-47f2-8fc9-512f3144c69d
-        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
-        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
-      responses:
-        "200":
-          description: The request has succeeded.
-          headers:
-            Octo-Capabilities:
-              required: true
-              description: A list of the Capabilities (their IDs) initialized with your request.
-              schema:
-                type: string
-            Content-Language:
-              required: false
-              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
-              schema:
-                type: string
-                x-capability-data:
-                  capability: octo/content
-                  required: true
-              x-capability-data:
-                capability: octo/content
-                required: true
-            Available-Languages:
-              required: false
-              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
-              schema:
-                type: string
-                x-capability-data:
-                  capability: octo/content
-                  required: true
-              x-capability-data:
-                capability: octo/content
-                required: true
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Order"
-      tags:
-        - Orders
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ExtendOrderBody"
-  /order/{id}/update:
     patch:
       operationId: Orders_OrderUpdate
       summary: Order Update
@@ -2508,6 +2450,180 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/UpdateOrderBody"
+  /orders/{id}/cancel:
+    post:
+      operationId: Orders_OrderCancellation
+      summary: Order Cancellation
+      description: This cancels the order and any bookings inside it.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 0effd05e-d61e-47f2-8fc9-512f3144c69d
+          schema:
+            type: string
+            example: 0effd05e-d61e-47f2-8fc9-512f3144c69d
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CancelOrderBody"
+  /orders/{id}/confirm:
+    post:
+      operationId: Orders_ConfirmOrder
+      summary: Order Confirmation
+      description: Confirms the order and all the bookings it contains.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 0effd05e-d61e-47f2-8fc9-512f3144c69d
+          schema:
+            type: string
+            example: 0effd05e-d61e-47f2-8fc9-512f3144c69d
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfirmOrderBody"
+  /orders/{id}/extend:
+    post:
+      operationId: Orders_ExtendOrder
+      summary: Extend Order
+      description: If the order has a status of ON_HOLD and you need more time before confirming the order.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: 0effd05e-d61e-47f2-8fc9-512f3144c69d
+          schema:
+            type: string
+            example: 0effd05e-d61e-47f2-8fc9-512f3144c69d
+        - $ref: "#/components/parameters/Octo.RequestHeaders.octoCapabilities"
+        - $ref: "#/components/parameters/Octo.RequestHeadersContent"
+      responses:
+        "200":
+          description: The request has succeeded.
+          headers:
+            Octo-Capabilities:
+              required: true
+              description: A list of the Capabilities (their IDs) initialized with your request.
+              schema:
+                type: string
+            Content-Language:
+              required: false
+              description: "This response header indicates the language of the content being returned in the response. The OCTO specification allows only one language to be returned per response. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  To obtain content in multiple languages, separate requests must be made for each desired language. This header is defined in the HTTP/1.1 specification (RFC 7231). For more information, see MDN Web Docs: Content-Language - HTTP | MDN. This response header is required when using Content capability."
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+            Available-Languages:
+              required: false
+              description: This response header is used to inform of the languages in which content is available, helping understand the language options without needing additional requests. This code must conform to the BCP 47 standard, following RFC 5646 and RFC 4647 specifications for language tags. Examples include en-US for American English, fr-FR for French (France), and es-ES for Spanish (Spain).  Although not a standard HTTP header, it is commonly used in APIs to list available languages, such as en-US, fr-CA, es-ES, indicating that content can be requested in U.S. English, Canadian French, or Spanish. This response header is required when using Content capability.
+              schema:
+                type: string
+                x-capability-data:
+                  capability: octo/content
+                  required: true
+              x-capability-data:
+                capability: octo/content
+                required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExtendOrderBody"
   /products/:
     get:
       operationId: Products_GetProducts
@@ -10495,6 +10611,20 @@ components:
         notes:
           type: string
           nullable: true
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreateTransactionBody"
+          description: |-
+            Payments to record on the order. Not an array fails with `ORDER_TRANSACTIONS_ARRAY`. When the order is confirmed
+            with the `DIRECT` settlement method, they must pay its balance in full, otherwise nothing is saved and the request
+            fails with `BALANCE_DUE`.
+        shiftId:
+          type: string
+          format: uuid
+          description: |-
+            The open shift the sale is made on. The order and its transactions belong to it, and a `CASH` transaction needs it
+            (`SHIFT_REQUIRED`). An unknown shift, or one that isn't open, fails with `INVALID_SHIFT_ID`.
         currency:
           type: string
           description: Optional ISO 4217 currency code for the order.
@@ -10531,6 +10661,13 @@ components:
           x-capability-data:
             capability: octo/gifts
             required: true
+        purchases:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreatePurchaseBody"
+          description: The shop items to buy in the order. Not an array fails with `ORDER_PURCHASES_ARRAY`. Ignored without octo/retail.
+          x-capability-data:
+            capability: octo/retail
       example:
         expirationMinutes: 30
         emailReceipt: true
@@ -10604,6 +10741,82 @@ components:
             required: true
       example:
         currency: USD
+    CreateOrderRetailBody:
+      type: object
+      properties:
+        purchases:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreatePurchaseBody"
+          description: The shop items to buy in the order. Not an array fails with `ORDER_PURCHASES_ARRAY`. Ignored without octo/retail.
+          x-capability-data:
+            capability: octo/retail
+    CreatePurchaseBody:
+      type: object
+      required:
+        - itemId
+      properties:
+        itemId:
+          type: string
+          format: uuid
+          description: The item to buy. Missing fails with `ITEM_ID_REQUIRED`, unknown with `INVALID_ITEM_ID`.
+          example: 9b2f4d1e-6a3c-4f8b-a7e2-5c1d9e0f3b64
+        quantity:
+          type: integer
+          description: How many of the item to buy. Defaults to 1.
+          example: 1
+        uuid:
+          type: string
+          format: uuid
+          description: A UUID you set as an idempotency key. A malformed one fails with `INVALID_UUID`.
+          example: 7c2e9a41-3d5b-4f8e-a1c6-0b9d8e7f6a52
+        resellerReference:
+          type: string
+          nullable: true
+          description: The reseller's reference for the purchase.
+      example:
+        itemId: 9b2f4d1e-6a3c-4f8b-a7e2-5c1d9e0f3b64
+        quantity: 1
+        uuid: 7c2e9a41-3d5b-4f8e-a1c6-0b9d8e7f6a52
+    CreateTransactionBody:
+      type: object
+      required:
+        - method
+        - amount
+      properties:
+        method:
+          allOf:
+            - $ref: "#/components/schemas/TransactionMethod"
+          description: |-
+            How the money is paid. `CARD` needs octo/cardPayments, `GIFT` needs octo/gifts and `CASH` needs a `shiftId` on the
+            order (`SHIFT_REQUIRED`); any other method fails with `INVALID_TRANSACTION_METHOD`.
+        amount:
+          type: integer
+          description: The amount, in the currency's minor units. A negative amount is a refund.
+          example: 2500
+        currency:
+          type: string
+          description: The ISO 4217 currency code. Defaults to the order's currency, and must be the order's.
+          example: EUR
+        otherType:
+          type: string
+          nullable: true
+          description: The kind of payment, for the `OTHER` method.
+        notes:
+          type: string
+          nullable: true
+          description: Notes on the transaction.
+        cashTendered:
+          type: integer
+          description: |-
+            The cash the customer handed over, in the currency's minor units, for a `CASH` transaction. Cash above the amount
+            is change given back, and doesn't count as paid.
+          example: 3000
+      example:
+        method: CASH
+        amount: 2500
+        currency: EUR
+        cashTendered: 3000
     CreateWaitlistRequest:
       type: object
       required:
@@ -12357,6 +12570,8 @@ components:
 
             A value that isn't a JSON object fails with `BAD_REQUEST` and "Filters must be a JSON object".
           example: '{"status":{"in":["confirmed","balance_due","part_checked_in","checked_in"]}}'
+    GetGiftSettingsRequest:
+      type: object
     GetMappingsQueryParams:
       type: object
       properties:
@@ -13217,6 +13432,81 @@ components:
           type: string
         giftCode:
           type: string
+    GiftSettings:
+      type: object
+      required:
+        - allowed
+        - title
+        - shortDescription
+        - description
+        - coverImageUrl
+        - restrictions
+        - validityAmount
+        - validityUnit
+      properties:
+        allowed:
+          type: boolean
+          description: Whether the supplier sells gift cards.
+          example: true
+        title:
+          type: string
+          description: The gift card's name.
+          example: Eastgate Gift Card
+        shortDescription:
+          type: string
+          nullable: true
+          description: A one-line description for lists, or null.
+          example: A chosen amount to spend on tickets, tours, memberships or the shop.
+        description:
+          type: string
+          nullable: true
+          description: The gift card's full description, or null.
+          example: Spend on any ticket, tour, membership or shop item at all three gardens. Valid for 24 months.
+        coverImageUrl:
+          type: string
+          nullable: true
+          description: The gift card's photo, or null.
+          example: https://example.com/gift-card.jpg
+        restrictions:
+          allOf:
+            - $ref: "#/components/schemas/GiftsRestrictions"
+          description: The lowest and highest amount a gift card can be sold for, in each currency, in the currency's minor units.
+          example:
+            minAmounts:
+              - amount: 1000
+                currency: EUR
+                currencyPrecision: 2
+            maxAmounts:
+              - amount: 30000
+                currency: EUR
+                currencyPrecision: 2
+        validityAmount:
+          type: integer
+          description: How long a gift card is valid from the day of purchase, in `validityUnit`.
+          example: 24
+        validityUnit:
+          allOf:
+            - $ref: "#/components/schemas/GiftExpiryUnit"
+          description: The unit of `validityAmount`.
+          example: month
+      description: "The supplier's gift card as it is sold: what it is called and shows, the amounts it can be sold for and how long it is valid."
+      example:
+        allowed: true
+        title: Eastgate Gift Card
+        shortDescription: A chosen amount to spend on tickets, tours, memberships or the shop.
+        description: Spend on any ticket, tour, membership or shop item at all three gardens. Valid for 24 months.
+        coverImageUrl: https://example.com/gift-card.jpg
+        restrictions:
+          minAmounts:
+            - amount: 1000
+              currency: EUR
+              currencyPrecision: 2
+          maxAmounts:
+            - amount: 30000
+              currency: EUR
+              currencyPrecision: 2
+        validityAmount: 24
+        validityUnit: month
     GiftVoucher:
       type: object
       required:
@@ -16138,6 +16428,7 @@ components:
         - requiredContactFields
         - voucher
         - active
+        - transactions
       properties:
         id:
           type: string
@@ -16208,22 +16499,28 @@ components:
           allOf:
             - $ref: "#/components/schemas/Channel"
           nullable: true
-          description: "The sales channel the order came through. Planned: the dashboard serves it under `ventrata/dashboard` only today."
+          description: The sales channel the order came through.
         via:
           allOf:
             - $ref: "#/components/schemas/Via"
           nullable: true
-          description: |-
-            How a staff member's sale reached them. Null when the order wasn't made by staff, or the way isn't known. Planned:
-            the dashboard doesn't record it yet.
+          description: How a staff member's sale reached them. Null when the order wasn't made by staff, or the way isn't known.
         user:
           type: object
           allOf:
             - $ref: "#/components/schemas/User"
           nullable: true
-          description: |-
-            The staff member who created the order. Null for orders no staff member created, such as online and API sales.
-            Planned: the dashboard serves it under `ventrata/dashboard` only today.
+          description: The staff member who created the order. Null for orders no staff member created, such as online and API sales.
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Transaction"
+          description: The order's payments and refunds, oldest first. Voided transactions are left out.
+        shiftId:
+          type: string
+          nullable: true
+          format: uuid
+          description: The shift the order was sold on, or null outside a shift.
         termsAccepted:
           type: boolean
           x-capability-data:
@@ -16348,6 +16645,14 @@ components:
         utmSource:
           type: string
           nullable: true
+        purchases:
+          type: array
+          items:
+            $ref: "#/components/schemas/Purchase"
+          description: The order's shop items, oldest first. Cancelled purchases are left out.
+          x-capability-data:
+            capability: octo/retail
+            required: true
     OrderCardPayments:
       type: object
       properties:
@@ -16487,6 +16792,17 @@ components:
           x-capability-data:
             capability: octo/questions
             required: true
+    OrderRetail:
+      type: object
+      properties:
+        purchases:
+          type: array
+          items:
+            $ref: "#/components/schemas/Purchase"
+          description: The order's shop items, oldest first. Cancelled purchases are left out.
+          x-capability-data:
+            capability: octo/retail
+            required: true
     OrderVentrataCheckout:
       type: object
       properties:
@@ -16516,6 +16832,125 @@ components:
         utmSource:
           type: string
           nullable: true
+    OrdersSummary:
+      type: object
+      required:
+        - orders
+        - bookings
+        - guests
+        - guestsConfirmed
+      properties:
+        orders:
+          type: integer
+          description: The number of matching orders.
+          example: 24
+        bookings:
+          type: integer
+          description: The number of bookings of the matching orders.
+          example: 31
+        guests:
+          type: integer
+          description: The number of guests on bookings that hold a seat.
+          example: 87
+        guestsConfirmed:
+          type: integer
+          description: The guests on bookings that hold a seat, other than `PENDING` ones.
+          example: 80
+        guestsCheckedIn:
+          type: integer
+          description: The guests checked in or redeemed.
+          example: 12
+          x-capability-data:
+            capability: octo/checkin
+            required: true
+        revenue:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrdersSummaryRevenue"
+          description: Revenue of the bookings that hold a seat, one entry per currency, sorted by currency code.
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+      description: |-
+        Figures for every order that `GET /orders` lists for the same query, regardless of paging.
+
+        Bookings count as the order serializes them, so cancelled bookings never count. Guests and revenue count only
+        bookings that hold a seat: `CONFIRMED`, `PENDING`, `REDEEMED` and `NO_SHOW`. A guest is a unit item that isn't
+        cancelled.
+    OrdersSummaryQueryParams:
+      type: object
+      properties:
+        contactEmailAddress:
+          type: string
+        contactLastName:
+          type: string
+        contactPhoneNumber:
+          type: string
+        supplierReference:
+          type: string
+        utcCreatedAtEnd:
+          type: string
+        utcCreatedAtStart:
+          type: string
+        utcUpdatedAtEnd:
+          type: string
+        utcUpdatedAtStart:
+          type: string
+        filters:
+          type: string
+          description: |-
+            A JSON object of conditions, applied on top of the other query parameters. An order is listed when it meets every
+            condition. With `filters`, none of the other query parameters is required.
+
+            A condition is `{ "<field>": { "<operator>": <value> } }`. Strings take the operators `equals`, `not_equals`, `in`,
+            `not_in`, `is_null`, `contains`, `starts_with` and `ends_with`; `in` and `not_in` take a list.
+
+            A condition on the order's bookings names the `bookings` association and how many of them must match: `any`,
+            `none` or `all`. An order with any booking in a status:
+
+            `{ "bookings": { "any": { "status": { "in": ["confirmed", "balance_due"] } } } }`
+
+            An order with any booking for one of several products, so an order with bookings for two products matches either:
+
+            `{ "bookings": { "any": { "product_id": { "in": ["<product id>", "<product id>"] } } } }`
+
+            ID fields such as `product_id` take UUIDs. An unknown ID matches no orders, and so does `in` with an empty list. A
+            value that isn't a UUID fails with `BAD_REQUEST` and "Invalid UUID".
+
+            Booking statuses here are the dashboard's own, not OCTO's: `pending`, `expired`, `balance_due`, `confirmed`,
+            `cancelled`, `part_redeemed`, `redeemed`, `upgraded`, `duplicate`, `noshow`, `pending_confirmation`, `rejected`,
+            `quote`, `fraud`, `disputed`, `part_checked_in`, `checked_in`. OCTO's `CONFIRMED` is `confirmed`, `balance_due`,
+            `part_checked_in` and `checked_in`; its `CANCELLED` is `cancelled`, `duplicate`, `fraud` and `disputed`.
+
+            Conditions combine under `and` or `or`, each taking a list, and `not` negates one:
+
+            `{ "and": [{ "bookings": { "any": { "status": { "in": ["confirmed"] } } } }, { "bookings": { "any": { "product_id": { "in": ["<product id>", "<product id>"] } } } }] }`
+
+            A value that isn't a JSON object fails with `BAD_REQUEST` and "Filters must be a JSON object".
+          example: '{"bookings":{"any":{"status":{"in":["confirmed","balance_due","part_checked_in","checked_in"]}}}}'
+      description: |-
+        The query of `GET /orders/summary`: the same parameters as `GET /orders`, which select the same orders and fail
+        with the same errors. There is no paging: the figures cover every matching order.
+    OrdersSummaryRevenue:
+      type: object
+      required:
+        - currency
+        - currencyPrecision
+        - retail
+      properties:
+        currency:
+          type: string
+          description: ISO 4217 currency code.
+          example: EUR
+        currencyPrecision:
+          type: integer
+          description: The number of decimal places of `retail`.
+          example: 2
+        retail:
+          type: integer
+          description: The retail price of the counted bookings, in minor units of `currency`.
+          example: 184500
+      description: Revenue in one currency.
     PackageAvailability:
       type: object
       required:
@@ -17123,6 +17558,37 @@ components:
       type: object
       allOf:
         - $ref: "#/components/schemas/RequestHeaders"
+    Payment:
+      type: object
+      required:
+        - id
+        - source
+        - gateway
+        - gatewayReference
+        - card
+      properties:
+        id:
+          type: string
+          format: uuid
+        source:
+          $ref: "#/components/schemas/PaymentSource"
+        gateway:
+          type: string
+          nullable: true
+        gatewayReference:
+          type: string
+          nullable: true
+        card:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Card"
+          nullable: true
+    PaymentSource:
+      type: string
+      enum:
+        - ECOM
+        - MOTO
+        - POS
     PaypalGateway:
       type: object
       properties:
@@ -18869,6 +19335,287 @@ components:
           allOf:
             - $ref: "#/components/schemas/AvailableLanguages"
           nullable: true
+    Purchase:
+      type: object
+      required:
+        - id
+        - uuid
+        - testMode
+        - weight
+        - resellerReference
+        - supplierReference
+        - tags
+        - label
+        - settlementMethod
+        - settlementMethods
+        - emailReceipt
+        - quote
+        - status
+        - internalStatus
+        - rebookingUuid
+        - utcRebookedAt
+        - originalRebookingUuid
+        - utcCreatedAt
+        - utcUpdatedAt
+        - utcExpiresAt
+        - utcConfirmedAt
+        - itemId
+        - item
+        - quantity
+        - retail
+        - cost
+        - cancellable
+        - updatable
+        - active
+        - confirmable
+        - cancellation
+        - contact
+        - visibleContactFields
+        - requiredContactFields
+        - reseller
+        - agent
+        - seller
+        - user
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the purchase.
+          example: 1f6e2d3c-4b5a-4968-8776-a5b4c3d2e1f0
+        uuid:
+          type: string
+          format: uuid
+          description: The UUID the purchase was created with, an idempotency key. The purchase's ID when none was sent.
+          example: 1f6e2d3c-4b5a-4968-8776-a5b4c3d2e1f0
+        testMode:
+          type: boolean
+        weight:
+          type: integer
+          description: Always 0.
+        resellerReference:
+          type: string
+          nullable: true
+          description: The reseller's reference for the purchase.
+        supplierReference:
+          type: string
+          nullable: true
+          description: The supplier's reference for the purchase.
+          example: P4H8N2RW
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+        label:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Label"
+          nullable: true
+        settlementMethod:
+          $ref: "#/components/schemas/SettlementMethod"
+        settlementMethods:
+          type: array
+          items:
+            $ref: "#/components/schemas/SettlementMethod"
+        emailReceipt:
+          type: boolean
+        quote:
+          type: boolean
+        status:
+          allOf:
+            - $ref: "#/components/schemas/BookingStatus"
+          description: The purchase's status.
+        internalStatus:
+          type: string
+          description: The supplier-facing status, finer grained than `status`. Not part of the OCTO state machine, so new values may appear at any time.
+        rebookingUuid:
+          type: string
+          nullable: true
+          format: uuid
+        utcRebookedAt:
+          type: string
+          format: date-time
+          nullable: true
+        originalRebookingUuid:
+          type: string
+          nullable: true
+          format: uuid
+        utcCreatedAt:
+          type: string
+          format: date-time
+          nullable: true
+        utcUpdatedAt:
+          type: string
+          format: date-time
+          nullable: true
+        utcExpiresAt:
+          type: string
+          format: date-time
+          nullable: true
+        utcConfirmedAt:
+          type: string
+          format: date-time
+          nullable: true
+        itemId:
+          type: string
+          format: uuid
+          description: The ID of the item bought.
+          example: 9b2f4d1e-6a3c-4f8b-a7e2-5c1d9e0f3b64
+        item:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Item"
+          nullable: true
+          description: The item bought.
+        quantity:
+          type: integer
+          description: How many of the item were bought.
+          example: 1
+        retail:
+          type: integer
+          nullable: true
+          description: The custom retail price per unit, in the currency's minor units, for an item with `customRetail`. Null otherwise.
+        cost:
+          type: integer
+          nullable: true
+          description: The custom cost per unit, in the currency's minor units, for an item with a custom cost. Null otherwise.
+        cancellable:
+          type: boolean
+        updatable:
+          type: boolean
+        active:
+          type: boolean
+        confirmable:
+          type: boolean
+        cancellation:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/PurchaseCancellation"
+          nullable: true
+          description: How the purchase was cancelled, or null while it isn't.
+        contact:
+          $ref: "#/components/schemas/CustomerContact"
+        visibleContactFields:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContactField"
+        requiredContactFields:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContactField"
+        reseller:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Reseller"
+          nullable: true
+        agent:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Agent"
+          nullable: true
+        seller:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Seller"
+          nullable: true
+        user:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/User"
+          nullable: true
+        pricing:
+          allOf:
+            - $ref: "#/components/schemas/Pricing"
+          description: "Is on the object when Pricing capability is requested. "
+          example:
+            original: 2000
+            retail: 2000
+            net: 1600
+            currency: EUR
+            currencyPrecision: 2
+            includedTaxes: []
+          x-capability-data:
+            capability: octo/pricing
+            required: true
+        primary:
+          type: boolean
+          x-capability-data:
+            capability: octo/cart
+            required: true
+        orderId:
+          type: string
+          format: uuid
+          x-capability-data:
+            capability: octo/cart
+            required: true
+        orderReference:
+          type: string
+          x-capability-data:
+            capability: octo/cart
+            required: true
+        orderInvoicePdfUrl:
+          type: string
+          nullable: true
+          x-capability-data:
+            capability: octo/cart
+            required: true
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Transaction"
+          description: The order's transactions, split to the share this purchase took, oldest first.
+          x-capability-data:
+            capability: octo/cart
+            required: true
+      description: A shop item bought in an order, without a booking. Requires the octo/retail capability.
+    PurchaseCancellation:
+      type: object
+      required:
+        - refund
+        - reason
+        - utcCancelledAt
+      properties:
+        refund:
+          $ref: "#/components/schemas/Refund"
+        reason:
+          type: string
+          nullable: true
+        utcCancelledAt:
+          type: string
+          format: date-time
+    PurchaseCart:
+      type: object
+      properties:
+        primary:
+          type: boolean
+          x-capability-data:
+            capability: octo/cart
+            required: true
+        orderId:
+          type: string
+          format: uuid
+          x-capability-data:
+            capability: octo/cart
+            required: true
+        orderReference:
+          type: string
+          x-capability-data:
+            capability: octo/cart
+            required: true
+        orderInvoicePdfUrl:
+          type: string
+          nullable: true
+          x-capability-data:
+            capability: octo/cart
+            required: true
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Transaction"
+          description: The order's transactions, split to the share this purchase took, oldest first.
+          x-capability-data:
+            capability: octo/cart
+            required: true
     Question:
       type: object
       required:
@@ -21169,6 +21916,123 @@ components:
         id: c5a8d7a9-9279-4b2e-bd5d-21933cfd1234
         internalName: urban_adventures_bangkok
         title: Bangkok City Highlights
+    Transaction:
+      type: object
+      required:
+        - id
+        - supplierReference
+        - method
+        - action
+        - otherType
+        - notes
+        - amount
+        - surcharge
+        - gratuity
+        - currency
+        - currencyPrecision
+        - utcCreatedAt
+        - payment
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the transaction.
+          example: 0196b3a2-5c1e-7d4f-9a8b-3e2f1c0d9b7a
+        supplierReference:
+          type: string
+          nullable: true
+          description: The supplier's reference for the transaction.
+          example: T7K2M9QX
+        method:
+          allOf:
+            - $ref: "#/components/schemas/TransactionMethod"
+          description: How the money was paid or refunded.
+        action:
+          allOf:
+            - $ref: "#/components/schemas/TransactionAction"
+          description: What the transaction does to the order's balance. A payment is `PAYMENT`, a refund `REFUND`.
+        otherType:
+          type: string
+          nullable: true
+          description: The kind of payment, for the `OTHER` method.
+        notes:
+          type: string
+          nullable: true
+          description: Notes on the transaction.
+        amount:
+          type: integer
+          description: The amount, in the currency's minor units. Negative for a refund.
+          example: 2500
+        surcharge:
+          type: integer
+          description: The surcharge taken on top of the amount, in the currency's minor units.
+          example: 0
+        gratuity:
+          type: integer
+          description: The gratuity taken on top of the amount, in the currency's minor units.
+          example: 0
+        currency:
+          type: string
+          description: The ISO 4217 currency code of the amounts.
+          example: EUR
+        currencyPrecision:
+          type: integer
+          description: The number of decimal places of the currency.
+          example: 2
+        utcCreatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the transaction was created.
+        payment:
+          type: object
+          allOf:
+            - $ref: "#/components/schemas/Payment"
+          nullable: true
+          description: The card payment behind the transaction, or null for one without a payment, such as cash.
+        shiftId:
+          type: string
+          nullable: true
+          format: uuid
+          description: The shift the transaction was taken on, or null outside a shift.
+          example: 6a1d2e3f-4b5c-4d6e-8f70-1a2b3c4d5e6f
+      description: A payment or refund on an order.
+      example:
+        id: 0196b3a2-5c1e-7d4f-9a8b-3e2f1c0d9b7a
+        supplierReference: T7K2M9QX
+        method: CASH
+        action: PAYMENT
+        otherType: null
+        notes: null
+        amount: 2500
+        surcharge: 0
+        gratuity: 0
+        currency: EUR
+        currencyPrecision: 2
+        utcCreatedAt: "2026-11-20T10:15:00Z"
+        payment: null
+        shiftId: 6a1d2e3f-4b5c-4d6e-8f70-1a2b3c4d5e6f
+    TransactionAction:
+      type: string
+      enum:
+        - PAYMENT
+        - REFUND
+        - DISPUTE
+        - ADJUSTMENT
+        - BILL
+        - PAYOUT
+        - CREDIT
+        - DEBIT
+    TransactionMethod:
+      type: string
+      enum:
+        - CARD
+        - CASH
+        - VOUCHER
+        - GIFT
+        - OTHER
+        - BALANCE_TRANSFER
+      description: How a transaction was paid.
     UUID:
       type: string
       format: uuid

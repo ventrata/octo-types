@@ -9,6 +9,7 @@ import { giftVoucherSchema } from './GiftVoucher';
 import { channelSchema } from './Channel';
 import { viaSchema } from './Via';
 import { userSchema } from './User';
+import { transactionSchema } from './Transaction';
 import { destinationSchema } from './Destination';
 import { brandSchema } from './Brand';
 import { pricingSchema } from './Pricing';
@@ -19,6 +20,7 @@ import { giftPaymentSchema } from './GiftPayment';
 import { giftSchema } from './Gift';
 import { membershipSchema } from './Membership';
 import { cardPaymentGatewaySchema } from './CardPaymentGateway';
+import { purchaseSchema } from './Purchase';
 
 export const orderSchema = z.object({
 	id: z.string(),
@@ -48,6 +50,8 @@ export const orderSchema = z.object({
 	channel: channelSchema.optional().nullable(),
 	via: viaSchema.optional().nullable(),
 	user: userSchema.optional().nullable(),
+	transactions: z.array(transactionSchema),
+	shiftId: z.string().optional().nullable(),
 	termsAccepted: z.boolean().optional(),
 	destination: destinationSchema.optional(),
 	brand: brandSchema.optional(),
@@ -72,4 +76,5 @@ export const orderSchema = z.object({
 	utmContent: z.string().optional().nullable(),
 	utmMedium: z.string().optional().nullable(),
 	utmSource: z.string().optional().nullable(),
+	purchases: z.array(purchaseSchema).optional(),
 });

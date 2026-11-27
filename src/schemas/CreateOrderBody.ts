@@ -3,8 +3,10 @@ import * as z from 'zod';
 import { bookingReservationBodySchema } from './BookingReservationBody';
 import { bookingContactSchema } from './BookingContact';
 import { settlementMethodSchema } from './SettlementMethod';
+import { createTransactionBodySchema } from './CreateTransactionBody';
 import { cardPaymentSchema } from './CardPayment';
 import { createGiftBodySchema } from './CreateGiftBody';
+import { createPurchaseBodySchema } from './CreatePurchaseBody';
 
 export const createOrderBodySchema = z.object({
 	bookings: z.array(bookingReservationBodySchema).optional(),
@@ -14,10 +16,13 @@ export const createOrderBodySchema = z.object({
 	quote: z.boolean().optional(),
 	settlementMethod: settlementMethodSchema.optional(),
 	notes: z.string().optional().nullable(),
+	transactions: z.array(createTransactionBodySchema).optional(),
+	shiftId: z.string().optional(),
 	currency: z.string().optional(),
 	cardPayment: cardPaymentSchema.optional(),
 	returnUrl: z.string().optional().nullable(),
 	gatewayId: z.string().optional(),
 	gifts: z.array(createGiftBodySchema).optional(),
 	identityId: z.string().optional(),
+	purchases: z.array(createPurchaseBodySchema).optional(),
 });
