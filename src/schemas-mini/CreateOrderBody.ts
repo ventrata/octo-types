@@ -10,6 +10,7 @@ import { createPurchaseBodySchema } from './CreatePurchaseBody';
 export const createOrderBodySchema = z.object({
 	bookings: z.optional(z.array(bookingReservationBodySchema)),
 	contact: z.optional(bookingContactSchema),
+	customerId: z.optional(z.string()),
 	emailReceipt: z.optional(z.boolean()),
 	expirationMinutes: z.optional(z.number()),
 	quote: z.optional(z.boolean()),
