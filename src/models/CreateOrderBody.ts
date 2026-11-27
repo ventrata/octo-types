@@ -16,6 +16,11 @@ export type CreateOrderBody = {
 	 */
 	contact?: BookingContact;
 	/**
+	 * An existing customer to sell the order to, from `GET /customers`, instead of creating a new one. The `contact`
+	 * fields sent update that customer. An unknown ID fails with `BAD_REQUEST` and "Unknown customer".
+	 */
+	customerId?: string;
+	/**
 	 * Whether to send a receipt to the customer's email.
 	 */
 	emailReceipt?: boolean;
